@@ -16,9 +16,16 @@ fee on jobs sourced through the platform.
     contractor bench with compliance state, and the network-fee ledger.
   - **Contractor** — a job offer with a countdown, job list, and the monthly
     earnings view that shows the fee against zero ad spend.
-- **`ARCHITECTURE.md`** — how to ship this to iOS, iPadOS, Android and the web
-  from one codebase, what to build in what order, what it costs, and the two
-  App Store rules that will cause a rejection.
+- **`site/`** — the Phase 0 website, ready to deploy: a homeowner landing page
+  wired to Stripe for membership payments, and a contractor recruiting page
+  with an application form. Static HTML; all configuration lives in one file.
+  See `site/SETUP.md`.
+- **`ARCHITECTURE.md`** — how to ship the product to iOS, iPadOS, Android and
+  the web from one codebase, what to build in what order, what it costs, and
+  the two App Store rules that will cause a rejection.
+- **`CONTRACTOR-NETWORK.md`** — what to collect from every vendor, what blocks
+  activation, how the 10% fee is calculated and collected, the database shape
+  behind it, and how to recruit the first fifteen.
 
 ## Note on the demo data
 
