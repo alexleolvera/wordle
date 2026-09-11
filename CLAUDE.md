@@ -34,7 +34,7 @@ Published previews (private to the owner's account):
 
 Republishing keeps those URLs. See the skill for how.
 
-`proposal/` is Leolvera Consulting's pitch to the prospective owner, not part
+`proposal/` is Le’Olvera Consulting's pitch to the prospective owner, not part
 of the product. It links the three prototypes, recommends explicitly against
 building the mobile app yet, and prices the engagement. Pricing and the
 consulting identity live in that file — update them there.
