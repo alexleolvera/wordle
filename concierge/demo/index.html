@@ -1,0 +1,1468 @@
+<title>Baton Rouge Home Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#EDF0EC;
+  --stage:#E1E7E1;
+  --surface:#FFFFFF;
+  --surface-2:#F6F9F5;
+  --line:#D4DCD4;
+  --line-soft:#E4EAE3;
+  --ink:#14201A;
+  --ink-2:#3F4F48;
+  --ink-3:#6E7C76;
+  --cypress:#1F4D3D;
+  --cypress-2:#2C6A54;
+  --cypress-soft:#E2EDE7;
+  --on-primary:#FFFFFF;
+  --brass:#A8761F;
+  --brass-soft:#F5EBD6;
+  --good:#2E7D5B;  --good-soft:#E1F0E8;
+  --warn:#A97615;  --warn-soft:#F7EDD8;
+  --crit:#A8402F;  --crit-soft:#F7E5E1;
+  --shadow-sm:0 1px 2px rgba(20,32,26,.06), 0 1px 1px rgba(20,32,26,.04);
+  --shadow-lg:0 24px 60px rgba(16,28,22,.18), 0 4px 14px rgba(16,28,22,.08);
+  --r-s:8px; --r-m:12px; --r-l:18px;
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --disp:"Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1310; --stage:#080B09; --surface:#161D19; --surface-2:#1C241F;
+    --line:#2A342E; --line-soft:#222B26;
+    --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+    --cypress:#5FA98A; --cypress-2:#7CC0A3; --cypress-soft:#192C24; --on-primary:#0A120E;
+    --brass:#D7A448; --brass-soft:#2B2416;
+    --good:#59AE85; --good-soft:#172A22;
+    --warn:#D2A04A; --warn-soft:#2A2416;
+    --crit:#D4755F; --crit-soft:#2C1B17;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+    --shadow-lg:0 24px 60px rgba(0,0,0,.55), 0 4px 14px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1310; --stage:#080B09; --surface:#161D19; --surface-2:#1C241F;
+  --line:#2A342E; --line-soft:#222B26;
+  --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+  --cypress:#5FA98A; --cypress-2:#7CC0A3; --cypress-soft:#192C24; --on-primary:#0A120E;
+  --brass:#D7A448; --brass-soft:#2B2416;
+  --good:#59AE85; --good-soft:#172A22;
+  --warn:#D2A04A; --warn-soft:#2A2416;
+  --crit:#D4755F; --crit-soft:#2C1B17;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-lg:0 24px 60px rgba(0,0,0,.55), 0 4px 14px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:14.5px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit; color:inherit; cursor:pointer; border:0; background:none}
+:focus-visible{outline:2px solid var(--brass); outline-offset:2px; border-radius:4px}
+h1,h2,h3,h4{margin:0; font-family:var(--disp); text-wrap:balance; letter-spacing:-.015em}
+p{margin:0}
+ul{margin:0; padding:0; list-style:none}
+
+.label{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
+.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  position:sticky; top:0; z-index:40;
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  padding-block:12px; padding-inline:clamp(16px,3vw,32px);
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:10px; margin-right:auto}
+.brand__mark{
+  width:32px; height:32px; border-radius:9px; flex:none;
+  background:var(--cypress); color:var(--on-primary);
+  display:grid; place-items:center; font-family:var(--disp); font-weight:700; font-size:14px;
+}
+.brand__name{font-family:var(--disp); font-weight:700; font-size:15px; line-height:1.15; letter-spacing:-.02em}
+.brand__sub{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+
+.seg{display:flex; gap:2px; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:11px}
+.seg button{
+  padding:7px 13px; border-radius:8px; font-size:13px; font-weight:600; color:var(--ink-2);
+  display:flex; align-items:center; gap:7px; white-space:nowrap;
+}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-sm)}
+.seg .dot{width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.4}
+.seg button[aria-pressed="true"] .dot{opacity:1; background:var(--cypress)}
+
+.protochip{
+  display:inline-flex; align-items:center; gap:7px; padding:6px 11px; border-radius:999px;
+  background:var(--brass-soft); color:var(--brass);
+  font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.09em;
+}
+.protochip::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
+
+/* ============ STAGE ============ */
+.stage{
+  display:grid; grid-template-columns:minmax(0,1fr) 348px; gap:clamp(20px,3vw,40px); align-items:start;
+  padding-inline:clamp(16px,3vw,32px); padding-block:clamp(20px,3vw,34px);
+  max-width:1400px; margin:0 auto;
+}
+.stage[data-mode="phone"]{max-width:944px}
+.stage[data-wide="true"]{grid-template-columns:minmax(0,1fr)}
+.stage[data-wide="true"] .rail{position:static; flex-direction:row; flex-wrap:wrap; align-items:stretch}
+.stage[data-wide="true"] .rail__card{flex:1 1 320px}
+.stage[data-wide="true"] .rail__note{flex:1 1 100%}
+@media (max-width:1080px){ .stage{grid-template-columns:minmax(0,1fr)} }
+
+.devicewrap{display:flex; justify-content:center}
+
+/* ============ PHONE ============ */
+.phone{
+  width:392px; max-width:100%; height:800px; max-height:calc(100vh - 150px); min-height:640px;
+  background:var(--surface); border:1px solid var(--line); border-radius:38px;
+  box-shadow:var(--shadow-lg);
+  display:flex; flex-direction:column; overflow:hidden; position:relative;
+}
+.phone__bar{
+  flex:none; display:flex; align-items:center; justify-content:space-between;
+  padding:12px 26px 6px; font-family:var(--mono); font-size:11px; color:var(--ink-3);
+}
+.phone__bars{display:flex; gap:3px; align-items:flex-end}
+.phone__bars i{width:3px; background:var(--ink-3); border-radius:1px; display:block}
+.screen{flex:1; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin}
+.screen__pad{padding:4px 20px 26px; display:flex; flex-direction:column; gap:18px}
+
+@media (max-width:560px){
+  .phone{height:auto; max-height:none; min-height:0; border-radius:16px; border-left:0; border-right:0;
+         width:100%; box-shadow:none; background:var(--ground)}
+  .phone__bar{display:none}
+  .screen{overflow:visible}
+  .screen__pad{padding:8px 0 26px}
+  .tabbar{position:sticky; bottom:0}
+}
+
+/* ============ TAB BAR ============ */
+.tabbar{
+  flex:none; display:grid; grid-auto-flow:column; grid-auto-columns:1fr;
+  border-top:1px solid var(--line); background:var(--surface); padding:6px 6px 12px;
+}
+.tabbar button{
+  display:flex; flex-direction:column; align-items:center; gap:3px; padding:7px 2px 4px;
+  font-size:10.5px; font-weight:600; color:var(--ink-3); border-radius:10px;
+}
+.tabbar button[aria-pressed="true"]{color:var(--cypress)}
+.tabbar svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round}
+
+/* ============ APP PRIMITIVES ============ */
+.apphead{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-top:12px}
+.apphead h1{font-size:25px; font-weight:700; line-height:1.15}
+.apphead p{font-size:13px; color:var(--ink-3); margin-top:3px}
+
+.card{background:var(--surface); border:1px solid var(--line-soft); border-radius:var(--r-l); padding:16px}
+.card--flat{background:var(--surface-2); border-color:transparent}
+.card--lift{box-shadow:var(--shadow-sm)}
+@media (max-width:560px){ .card{background:var(--surface)} }
+
+.sec{display:flex; flex-direction:column; gap:10px}
+.sec__head{display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+.sec__head h2{font-size:13px; font-family:var(--mono); font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
+.sec__head button{font-size:12.5px; font-weight:600; color:var(--cypress)}
+
+.pill{
+  display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px;
+  font-family:var(--mono); font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.08em;
+  background:var(--surface-2); color:var(--ink-2); white-space:nowrap;
+}
+.pill--good{background:var(--good-soft); color:var(--good)}
+.pill--warn{background:var(--warn-soft); color:var(--warn)}
+.pill--crit{background:var(--crit-soft); color:var(--crit)}
+.pill--brass{background:var(--brass-soft); color:var(--brass)}
+.pill--cyp{background:var(--cypress-soft); color:var(--cypress)}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:12px 18px; border-radius:12px; font-size:14.5px; font-weight:600;
+  background:var(--cypress); color:var(--on-primary); transition:filter .15s ease;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn--ghost{background:transparent; color:var(--ink); border:1px solid var(--line)}
+.btn--ghost:hover{background:var(--surface-2); filter:none}
+.btn--full{width:100%}
+.btn--sm{padding:9px 14px; font-size:13px; border-radius:10px}
+
+.rows{display:flex; flex-direction:column}
+.row{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line-soft); text-align:left; width:100%}
+.row:last-child{border-bottom:0}
+.row__main{flex:1; min-width:0}
+.row__title{font-size:14px; font-weight:600; line-height:1.3}
+.row__meta{font-size:12.5px; color:var(--ink-3); margin-top:2px}
+.row__end{flex:none; text-align:right; font-size:13px; font-weight:600}
+.chev{flex:none; width:16px; height:16px; stroke:var(--ink-3); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+/* ============ COMPOSER (the thesis) ============ */
+.composer{
+  border:1px solid var(--line); border-radius:var(--r-l); background:var(--surface);
+  box-shadow:var(--shadow-sm); overflow:hidden;
+}
+.composer__top{display:flex; align-items:center; gap:9px; padding:12px 14px 0}
+.composer__top .label{color:var(--cypress)}
+.composer__row{display:flex; align-items:flex-end; gap:10px; padding:8px 12px 12px}
+.composer textarea{
+  flex:1; border:0; background:none; resize:none; font:inherit; color:var(--ink);
+  font-size:15.5px; line-height:1.45; min-height:58px; padding:4px 2px;
+}
+.composer textarea::placeholder{color:var(--ink-3)}
+.composer textarea:focus{outline:none}
+.send{
+  flex:none; width:40px; height:40px; border-radius:50%; background:var(--cypress); color:var(--on-primary);
+  display:grid; place-items:center; transition:transform .15s ease;
+}
+.send:hover{transform:scale(1.06)}
+.send svg{width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.chips{display:flex; gap:7px; flex-wrap:wrap}
+.chip{
+  padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--surface);
+  font-size:12.5px; font-weight:500; color:var(--ink-2);
+}
+.chip:hover{border-color:var(--cypress); color:var(--cypress)}
+.chip[aria-pressed="true"]{background:var(--cypress); border-color:var(--cypress); color:var(--on-primary)}
+
+/* ============ TIMELINE ============ */
+.tl{display:flex; flex-direction:column}
+.tl__item{display:grid; grid-template-columns:20px 1fr; gap:12px; position:relative; padding-bottom:16px}
+.tl__item:last-child{padding-bottom:0}
+.tl__item::before{
+  content:""; position:absolute; left:9px; top:18px; bottom:0; width:2px; background:var(--line);
+}
+.tl__item:last-child::before{display:none}
+.tl__dot{
+  width:20px; height:20px; border-radius:50%; border:2px solid var(--line); background:var(--surface);
+  display:grid; place-items:center; z-index:1; margin-top:1px;
+}
+.tl__dot svg{width:10px; height:10px; stroke:var(--on-primary); fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round}
+.tl__item[data-s="done"] .tl__dot{background:var(--cypress); border-color:var(--cypress)}
+.tl__item[data-s="done"]::before{background:var(--cypress); opacity:.35}
+.tl__item[data-s="active"] .tl__dot{border-color:var(--brass); background:var(--brass-soft); box-shadow:0 0 0 4px var(--brass-soft)}
+.tl__item[data-s="todo"] .tl__dot{border-style:dashed}
+.tl__t{font-size:13.5px; font-weight:600; line-height:1.35}
+.tl__time{font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:1px}
+.tl__note{
+  font-size:12.5px; color:var(--ink-2); margin-top:7px; padding:9px 11px;
+  background:var(--surface-2); border-left:2px solid var(--brass); border-radius:0 var(--r-s) var(--r-s) 0;
+}
+.tl__item[data-s="todo"] .tl__t{color:var(--ink-3); font-weight:500}
+
+/* ============ KEY/VALUE ============ */
+.kv{display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid var(--line-soft); font-size:13.5px}
+.kv:last-child{border-bottom:0}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0; font-weight:600; text-align:right}
+
+/* ============ PRO CARD ============ */
+.pro{display:flex; gap:12px; align-items:flex-start}
+.avatar{
+  width:42px; height:42px; border-radius:12px; flex:none; display:grid; place-items:center;
+  background:var(--cypress-soft); color:var(--cypress); font-family:var(--disp); font-weight:700; font-size:14px;
+}
+.verif{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+
+/* ============ MATCHING OVERLAY ============ */
+.sheet{
+  position:absolute; inset:0; z-index:30; background:var(--surface);
+  display:flex; flex-direction:column; animation:rise .28s cubic-bezier(.22,1,.36,1);
+}
+@keyframes rise{from{transform:translateY(14px); opacity:0} to{transform:none; opacity:1}}
+@media (prefers-reduced-motion:reduce){ .sheet{animation:none} }
+.sheet__head{
+  flex:none; display:flex; align-items:center; gap:12px; padding:16px 18px 12px; border-bottom:1px solid var(--line-soft);
+}
+.sheet__head h2{font-size:16px; font-weight:600; flex:1}
+.iconbtn{width:32px; height:32px; border-radius:9px; display:grid; place-items:center; color:var(--ink-2)}
+.iconbtn:hover{background:var(--surface-2)}
+.iconbtn svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.sheet__body{flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:18px}
+.sheet__foot{flex:none; padding:14px 18px 18px; border-top:1px solid var(--line-soft); display:flex; gap:10px}
+.steps{display:flex; gap:5px; padding:0 18px 12px}
+.steps i{height:3px; flex:1; border-radius:2px; background:var(--line); display:block}
+.steps i[data-on="1"]{background:var(--cypress)}
+
+.match{display:flex; flex-direction:column; gap:14px; align-items:center; text-align:center; padding:28px 8px}
+.match__ring{
+  width:76px; height:76px; border-radius:50%; border:3px solid var(--cypress-soft); border-top-color:var(--cypress);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .match__ring{animation:none; border-top-color:var(--cypress-soft)} }
+.match__log{display:flex; flex-direction:column; gap:8px; width:100%; margin-top:6px}
+.match__log li{
+  display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-3);
+  padding:9px 12px; background:var(--surface-2); border-radius:10px; text-align:left; opacity:.35;
+  transition:opacity .3s ease, color .3s ease;
+}
+.match__log li[data-on="1"]{opacity:1; color:var(--ink)}
+.match__log b{font-weight:600}
+.tick{width:15px; height:15px; flex:none; border-radius:50%; background:var(--cypress); display:grid; place-items:center}
+.tick svg{width:9px; height:9px; stroke:var(--on-primary); fill:none; stroke-width:3.2; stroke-linecap:round; stroke-linejoin:round}
+
+/* ============ HOME SYSTEMS ============ */
+.sysgrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px}
+.sys{padding:12px; border-radius:var(--r-m); background:var(--surface-2); display:flex; flex-direction:column; gap:3px}
+.sys__n{font-size:13.5px; font-weight:600}
+.sys__d{font-size:12px; color:var(--ink-3)}
+.sys__age{font-family:var(--mono); font-size:11px; font-weight:500; margin-top:4px}
+.sys[data-flag="warn"]{background:var(--warn-soft)}
+.sys[data-flag="warn"] .sys__age{color:var(--warn)}
+.sys[data-flag="warn"] .sys__d{color:color-mix(in srgb, var(--warn) 78%, var(--ink))}
+
+.bigcta{
+  display:flex; align-items:center; gap:13px; padding:14px 16px; border-radius:var(--r-l);
+  background:var(--cypress); color:var(--on-primary); box-shadow:var(--shadow-sm);
+}
+.bigcta__ic{width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,.15); display:grid; place-items:center; flex:none}
+.bigcta__ic svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round}
+.bigcta__t{font-size:14.5px; font-weight:700; font-family:var(--disp)}
+.bigcta__s{font-size:12.5px; opacity:.82; margin-top:1px}
+
+/* ============ OFFER COUNTDOWN ============ */
+.offer{border:1px solid var(--brass); border-radius:var(--r-l); overflow:hidden; background:var(--surface); box-shadow:var(--shadow-sm)}
+.offer__top{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:9px 14px; background:var(--brass-soft); color:var(--brass);
+}
+.offer__clock{font-family:var(--mono); font-size:15px; font-weight:600; font-variant-numeric:tabular-nums}
+.offer__body{padding:14px; display:flex; flex-direction:column; gap:12px}
+.offer__acts{display:grid; grid-template-columns:1fr 1.6fr; gap:9px}
+
+/* ============ OPS CONSOLE ============ */
+.console{display:flex; flex-direction:column; gap:20px}
+.kpis{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:var(--r-l); overflow:hidden}
+.kpi{background:var(--surface); padding:14px 16px; display:flex; flex-direction:column; gap:3px}
+.kpi__v{font-family:var(--disp); font-size:23px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.kpi__d{font-family:var(--mono); font-size:11px; font-weight:500}
+.kpi__d[data-dir="up"]{color:var(--good)}
+.kpi__d[data-dir="flat"]{color:var(--ink-3)}
+
+@media (max-width:1180px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:620px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.board{display:grid; grid-auto-flow:column; grid-auto-columns:minmax(238px,1fr); gap:12px; overflow-x:auto; padding-bottom:6px}
+.col{display:flex; flex-direction:column; gap:9px; min-width:0}
+.col__head{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 2px 2px}
+.col__count{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.jcard{
+  background:var(--surface); border:1px solid var(--line-soft); border-radius:var(--r-m); padding:12px;
+  display:flex; flex-direction:column; gap:8px; text-align:left; width:100%; box-shadow:var(--shadow-sm);
+  border-left:3px solid var(--line);
+}
+.jcard:hover{border-color:var(--cypress)}
+.jcard[data-sla="ok"]{border-left-color:var(--good)}
+.jcard[data-sla="warn"]{border-left-color:var(--warn)}
+.jcard[data-sla="late"]{border-left-color:var(--crit)}
+.jcard[data-sla="none"]{border-left-color:var(--line)}
+.jcard__id{font-family:var(--mono); font-size:10.5px; color:var(--ink-3); letter-spacing:.04em}
+.jcard__t{font-size:13.5px; font-weight:600; line-height:1.35}
+.jcard__m{font-size:12px; color:var(--ink-3)}
+.jcard__f{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:1px}
+
+.tablewrap{overflow-x:auto; border:1px solid var(--line-soft); border-radius:var(--r-l); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:720px; font-size:13.5px}
+th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:nowrap}
+th{
+  font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--ink-3); background:var(--surface-2); position:sticky; top:0;
+}
+th button{display:flex; align-items:center; gap:5px; font:inherit; color:inherit; text-transform:inherit; letter-spacing:inherit}
+th button:hover{color:var(--ink)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+td.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.who{display:flex; align-items:center; gap:10px}
+.who .avatar{width:30px; height:30px; border-radius:9px; font-size:11px}
+.bar{height:5px; border-radius:3px; background:var(--line); overflow:hidden; width:62px; display:inline-block; vertical-align:middle; margin-right:8px}
+.bar i{display:block; height:100%; border-radius:3px; background:var(--cypress)}
+
+.split{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:20px; align-items:start}
+
+.ledgerfoot{
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  padding:13px 16px; background:var(--cypress-soft); border-radius:var(--r-m); font-size:13px; color:var(--ink-2);
+}
+.ledgerfoot b{color:var(--ink)}
+
+.opstabs{display:flex; gap:4px; border-bottom:1px solid var(--line); padding-bottom:0}
+.opstabs button{padding:9px 14px; font-size:13.5px; font-weight:600; color:var(--ink-3); border-bottom:2px solid transparent; border-radius:6px 6px 0 0}
+.opstabs button[aria-pressed="true"]{color:var(--ink); border-bottom-color:var(--cypress)}
+
+/* ============ PITCH RAIL ============ */
+.rail{display:flex; flex-direction:column; gap:14px; position:sticky; top:76px}
+@media (max-width:1080px){ .rail{position:static} }
+.rail__card{background:var(--surface); border:1px solid var(--line-soft); border-radius:var(--r-l); padding:16px; display:flex; flex-direction:column; gap:9px}
+.rail__card h3{font-size:14.5px; font-weight:700}
+.rail__card p{font-size:13.5px; color:var(--ink-2); line-height:1.55}
+.rail__eyebrow{display:flex; align-items:center; gap:7px}
+.rail__eyebrow i{width:7px; height:7px; border-radius:2px; background:var(--brass); display:block}
+.rail__card--mech{background:var(--cypress); border-color:var(--cypress); color:var(--on-primary)}
+.rail__card--mech p{color:color-mix(in srgb, var(--on-primary) 84%, transparent)}
+.rail__card--mech .rail__eyebrow i{background:var(--on-primary)}
+.rail__card--mech .label{color:color-mix(in srgb, var(--on-primary) 70%, transparent)}
+.rail__math{display:flex; flex-direction:column; gap:0; margin-top:3px}
+.rail__math div{display:flex; justify-content:space-between; gap:10px; padding:6px 0; font-family:var(--mono); font-size:12.5px; border-bottom:1px solid color-mix(in srgb, var(--on-primary) 18%, transparent)}
+.rail__math div:last-child{border-bottom:0; font-weight:600}
+.rail__note{font-size:12.5px; color:var(--ink-3); line-height:1.55; padding-inline:2px}
+.rail__note b{color:var(--ink-2)}
+
+.legal{border-left:2px solid var(--brass); padding-left:12px; display:flex; flex-direction:column; gap:5px}
+.legal p{font-size:12.5px; color:var(--ink-2); line-height:1.5}
+
+.footer{
+  padding-inline:clamp(16px,3vw,32px); padding-block:24px 40px; max-width:1400px; margin:0 auto;
+  border-top:1px solid var(--line); display:flex; gap:14px; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  font-size:12.5px; color:var(--ink-3);
+}
+.footer b{color:var(--ink-2); font-weight:600}
+</style>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand__mark">BR</div>
+    <div>
+      <div class="brand__name">Baton Rouge Home Concierge</div>
+      <div class="brand__sub">One number for your house</div>
+    </div>
+  </div>
+  <div class="seg" role="group" aria-label="Choose which app to view">
+    <button id="role-member" data-act="role" data-arg="member"><span class="dot"></span>Member</button>
+    <button id="role-ops" data-act="role" data-arg="ops"><span class="dot"></span>Concierge Ops</button>
+    <button id="role-pro" data-act="role" data-arg="pro"><span class="dot"></span>Contractor</button>
+  </div>
+  <span class="protochip">Prototype · sample data</span>
+</header>
+
+<main class="stage" id="stage">
+  <div id="mount"></div>
+  <aside class="rail" id="rail"></aside>
+</main>
+
+<footer class="footer">
+  <div><b>Baton Rouge Home Concierge</b> — interactive prototype. Every name, address, price and contractor in this demo is fabricated for illustration.</div>
+  <div>Membership <b>$39/mo</b> · Contractor network fee <b>10%</b> · Contractors invoice homeowners directly</div>
+</footer>
+
+<script>
+/* ============================================================
+   ICONS
+   ============================================================ */
+const P = {
+  home:'M3 10.6 12 3.2l9 7.4V20a1 1 0 0 1-1 1h-4.8v-6H8.8v6H4a1 1 0 0 1-1-1z',
+  list:'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',
+  folder:'M3 6.5h6.5l2 2.2H21V19a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z',
+  card:'M2.5 6.5h19v11h-19zM2.5 10.5h19',
+  send:'M21.5 2.5 11 13M21.5 2.5l-6.8 19-3.7-8.5L2.5 10z',
+  chev:'M9 5l7 7-7 7',
+  check:'M4 12.5l5 5L20 6.5',
+  x:'M6 6l12 12M18 6L6 18',
+  bell:'M6 9.5a6 6 0 1 1 12 0c0 4.6 2 5.8 2 5.8H4s2-1.2 2-5.8M10 19.5a2 2 0 0 0 4 0',
+  cash:'M12 3.2v17.6M16.2 7.6c0-1.9-1.9-2.6-4.2-2.6s-4.2.9-4.2 2.9c0 4.1 8.4 1.7 8.4 5.6 0 2-1.9 2.9-4.2 2.9s-4.2-.7-4.2-2.6',
+  chat:'M20.5 12.2a7.7 7.7 0 0 1-11.1 6.9L4 20.5l1.5-5A7.7 7.7 0 1 1 20.5 12.2z',
+  pin:'M12 21s6.5-6.1 6.5-10.4a6.5 6.5 0 1 0-13 0C5.5 14.9 12 21 12 21zM12 13a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8z'
+};
+const svg = (k, cls) => `<svg class="${cls||''}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[k]}"/></svg>`;
+const m0 = n => '$' + Math.round(n).toLocaleString('en-US');
+const m2 = n => '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============================================================
+   SAMPLE DATA  (fabricated — Greater Baton Rouge)
+   ============================================================ */
+const PROS = {
+  broussard:{n:'Broussard Plumbing & Drain', i:'BP', trade:'Plumbing',     lic:'LA Master Plumber #8842', rating:4.9, accept:92, resp:6,  jobs:9, fees:412,  docs:'COI good thru 04/12/27', docState:'ok',   status:'Active'},
+  delta:    {n:'Delta Bayou Mechanical',     i:'DB', trade:'HVAC',         lic:'LA Mechanical #C-4471',   rating:4.8, accept:88, resp:9,  jobs:7, fees:503,  docs:'COI good thru 01/30/27', docState:'ok',   status:'Active'},
+  hebert:   {n:'Hebert Electric',            i:'HE', trade:'Electrical',   lic:'LA Electrical #EC-5590',  rating:4.9, accept:81, resp:14, jobs:6, fees:288,  docs:'COI good thru 08/03/27', docState:'ok',   status:'Active'},
+  perkins:  {n:'Perkins Handyman Co.',       i:'PH', trade:'Handyman',     lic:'Home Improv. Reg. #21107',rating:4.7, accept:95, resp:4,  jobs:11,fees:361,  docs:'COI good thru 06/22/27', docState:'ok',   status:'Active'},
+  cypress:  {n:'Cypress Roofing & Gutters',  i:'CR', trade:'Roofing',      lic:'LA Residential #58210',   rating:4.6, accept:73, resp:22, jobs:3, fees:268,  docs:'COI expires in 21 days', docState:'warn', status:'Active'},
+  amite:    {n:'Amite Pressure Washing',     i:'AP', trade:'Exterior',     lic:'Occupational lic. only',  rating:4.8, accept:90, resp:8,  jobs:5, fees:196,  docs:'COI good thru 02/18/27', docState:'ok',   status:'Active'},
+  tiger:    {n:'Tiger Appliance Repair',     i:'TA', trade:'Appliance',    lic:'Factory authorized',      rating:4.5, accept:77, resp:17, jobs:2, fees:74,   docs:'W-9 not on file',        docState:'crit', status:'Paused'},
+  gonzales: {n:'Gonzales Paint & Drywall',   i:'GP', trade:'Paint/Drywall',lic:'Home Improv. Reg. #19884',rating:4.7, accept:84, resp:12, jobs:4, fees:310,  docs:'COI good thru 09/29/26', docState:'warn', status:'Active'}
+};
+
+const MEMBER = {
+  first:'Dana', last:'Fontenot', num:'017',
+  address:'1247 Marquette Ave', city:'Baton Rouge, LA 70808',
+  joined:'March 12, 2026', plan:'Founding Member', annual:299, standard:39, renews:'March 12, 2027',
+  systems:[
+    {n:'HVAC',          d:'Trane XR14, 3-ton',       yr:2014, life:'12–15 yr typical', flag:'warn'},
+    {n:'Roof',          d:'Architectural shingle',   yr:2016, life:'20–25 yr typical', flag:'ok'},
+    {n:'Water heater',  d:'Rheem 40 gal, gas',       yr:2019, life:'10–12 yr typical', flag:'ok'},
+    {n:'Foundation',    d:'Post-tension slab',       yr:1998, life:'Original to build',flag:'ok'}
+  ],
+  reminders:[
+    {t:'HVAC fall service is overdue', s:'Last serviced March 2026. Unit is 12 years old — we watch these closely.', tone:'warn'},
+    {t:'Gutters before the next storm', s:'Peak Gulf storm season runs through October. Last cleaned March 2026.', tone:'ok'},
+    {t:'Dryer vent has never been cleaned', s:'Nothing on record since you joined. Typical job runs $90–$140.', tone:'ok'}
+  ]
+};
+
+const ACTIVE = {
+  id:'BR-2418', trade:'Plumbing', title:'Water heater weeping at the base',
+  pro:'broussard', quote:385, window:'Thursday, Sep 17 · 1–3 PM', status:'Scheduled',
+  timeline:[
+    {s:'done', t:'You texted us', time:'Tue 7:42 AM', note:'"There’s water pooling under the water heater in the garage. Not a lot but it’s definitely wet."'},
+    {s:'done', t:'Concierge triage', time:'Tue 7:44 AM', note:'Your photo showed corrosion at the T&P discharge line, not the tank seam — that usually means a repair, not a $1,900 replacement. We routed it as a repair call.'},
+    {s:'done', t:'Matched with Broussard Plumbing & Drain', time:'Tue 7:51 AM · 9 min to match'},
+    {s:'done', t:'Quote received — $385', time:'Tue 2:10 PM', note:'T&P valve replacement + thermal expansion tank, parts and labor included.'},
+    {s:'done', t:'We reviewed the quote for you', time:'Tue 2:38 PM', note:'Checked against two comparable jobs in our network this quarter ($350 and $420). In range. Sent to you with our OK.'},
+    {s:'done', t:'You approved it', time:'Wed 9:05 AM'},
+    {s:'active', t:'Scheduled — Thursday 1–3 PM', time:'Broussard will text 30 min out'},
+    {s:'todo', t:'Work completed & photographed'},
+    {s:'todo', t:'Broussard invoices you directly · network fee $38.50 to us'}
+  ]
+};
+
+const HISTORY = [
+  {id:'BR-2301', t:'Pressure washed house, drive & patio', pro:'amite',    date:'Aug 22, 2026', amt:410},
+  {id:'BR-2260', t:'Two ceiling fans installed',           pro:'hebert',   date:'Jun 14, 2026', amt:285},
+  {id:'BR-2188', t:'Garbage disposal replaced',            pro:'broussard',date:'May 3, 2026',  amt:265},
+  {id:'BR-2104', t:'Back fence gate rebuilt',              pro:'perkins',  date:'Apr 9, 2026',  amt:520},
+  {id:'BR-2041', t:'HVAC spring service',                  pro:'delta',    date:'Mar 18, 2026', amt:180}
+];
+
+const BOARD = [
+  {id:'BR-2431', col:'new',       t:'No power to half the kitchen', trade:'Electrical', who:'K. Ellison',    loc:'3312 Kenilworth Pkwy', mins:4,  pro:null},
+  {id:'BR-2430', col:'new',       t:'Upstairs not cooling',         trade:'HVAC',       who:'R. Thibodeaux', loc:'18 Stanford Ct, Prairieville', mins:12, pro:null},
+  {id:'BR-2429', col:'matching',  t:'Shingles off after Tuesday storm', trade:'Roofing',who:'J. Landry',     loc:'740 Church St, Zachary', mins:38, pro:'2 pros pinged'},
+  {id:'BR-2428', col:'matching',  t:'Front door lock sticking',     trade:'Handyman',   who:'C. Navarro',    loc:'9 Drusilla Ln',        mins:21, pro:'1 pro pinged'},
+  {id:'BR-2427', col:'quoted',    t:'Slow drain, both bathrooms',   trade:'Plumbing',   who:'M. Guidry',     loc:'2201 Ferndale Ave',    mins:0,  pro:'broussard', amt:385},
+  {id:'BR-2425', col:'quoted',    t:'Ice maker not filling',        trade:'Appliance',  who:'P. Moreau',     loc:'615 Goodwood Blvd',    mins:0,  pro:'tiger', amt:240, flag:'Second opinion requested'},
+  {id:'BR-2422', col:'scheduled', t:'Pressure wash siding & walk',  trade:'Exterior',   who:'A. Boudreaux',  loc:'44 Lee Dr',            mins:0,  pro:'amite', amt:330, when:'Thu 8 AM'},
+  {id:'BR-2418', col:'scheduled', t:'Water heater weeping',         trade:'Plumbing',   who:'D. Fontenot',   loc:'1247 Marquette Ave',   mins:0,  pro:'broussard', amt:385, when:'Thu 1–3 PM'},
+  {id:'BR-2414', col:'done',      t:'Gutter clean, full house',     trade:'Roofing',    who:'S. Ancelet',    loc:'88 Highland Rd',       mins:0,  pro:'cypress', amt:310, fee:'paid'},
+  {id:'BR-2411', col:'done',      t:'Drywall patch & repaint hall', trade:'Paint/Drywall',who:'T. Vidrine',  loc:'16 Oak Villa Rd, Central', mins:0, pro:'gonzales', amt:640, fee:'invoiced'}
+];
+
+const LEDGER = [
+  {id:'BR-2414', pro:'cypress',  who:'S. Ancelet', t:'Gutter clean',        amt:310, st:'paid'},
+  {id:'BR-2411', pro:'gonzales', who:'T. Vidrine', t:'Drywall & repaint',   amt:640, st:'invoiced'},
+  {id:'BR-2409', pro:'perkins',  who:'K. Ellison', t:'Attic stair repair',  amt:295, st:'paid'},
+  {id:'BR-2406', pro:'delta',    who:'M. Guidry',  t:'Condenser fan motor', amt:480, st:'paid'},
+  {id:'BR-2402', pro:'hebert',   who:'J. Landry',  t:'Panel breaker swap',  amt:265, st:'invoiced'},
+  {id:'BR-2398', pro:'broussard',who:'C. Navarro', t:'Toilet reset & seal', amt:210, st:'paid'}
+];
+
+const KPI = [
+  {k:'Active members',   v:'147',    d:'+18 this month',  dir:'up'},
+  {k:'Membership MRR',   v:'$5,733', d:'147 × $39',       dir:'flat'},
+  {k:'Jobs booked MTD',  v:'38',     d:'+9 vs. August',   dir:'up'},
+  {k:'Median match time',v:'11 min', d:'target < 15 min', dir:'up'},
+  {k:'Fill rate',        v:'94%',    d:'target > 90%',    dir:'up'},
+  {k:'Network fees MTD', v:'$1,412', d:'10% of $14,120',  dir:'up'}
+];
+
+/* ============================================================
+   PITCH RAIL COPY
+   ============================================================ */
+const RAIL = {
+  'member:home':{
+    e:'The product thesis', h:'The whole app is one text box',
+    p:'A homeowner in a panic will not browse a directory or learn a booking flow. They describe the problem in their own words and stop thinking about it. Everything else on this screen — the maintenance nudges, the home file — exists to give them a reason to open the app on a day nothing is broken.',
+    mech:{t:'Revenue 1 — Membership', rows:[['$39','per member / month'],['×147','active members'],['$5,733','MRR, no labor cost']],
+          n:'Billed through Stripe. It arrives whether or not anything breaks that month — that is the point.'}
+  },
+  'member:request':{
+    e:'Where the membership earns its keep', h:'Quote review is the visible value',
+    p:'Anyone can hand a homeowner a phone number. The concierge note on this timeline — the one that says a $385 repair beat a $1,900 replacement — is the thing a member repeats to a neighbor. Log every one of these; they are your retention story and your referral engine.',
+    mech:{t:'Revenue 2 — Network fee', rows:[['$385','contractor invoices member'],['× 10%','network & marketing fee'],['$38.50','to the platform']],
+          n:'The member pays the contractor. You invoice the contractor separately for the fee.'}
+  },
+  'member:house':{
+    e:'The moat', h:'The home file is what nobody can copy',
+    p:'A competitor can sign your contractors tomorrow. They cannot reproduce the fact that you know this roof went on in 2016 and this Trane is twelve years old. Two years in, the maintenance reminders write themselves — and every reminder is a job for the network.',
+    mech:{t:'Compounding', rows:[['3.0','jobs / member / yr, Yr 1'],['4.0','jobs / member / yr, Yr 3'],['$475','avg ticket, Yr 3']],
+          n:'Same member, more jobs, bigger tickets — because the home file keeps telling you what is coming due.'}
+  },
+  'member:plan':{
+    e:'Pricing', h:'Launch with one plan, not three',
+    p:'Three tiers at launch means three things to explain and no clean read on what people will actually pay for. Ship one $39 plan, add Priority at $79 in year two once you know which requests members wish they could jump the line on.',
+    mech:{t:'Founding offer', rows:[['$299','first-year annual'],['$399','standard annual'],['$468','12 × $39 monthly']],
+          n:'Annual plans front-load cash and cut churn. Cap the $299 rate at the first 50 members so it stays a reason to sign now.'}
+  },
+  'ops:board':{
+    e:'The real product', h:'This board is the business',
+    p:'The member app is a text box; the console is where margin lives. Every minute a request sits in the first column is a minute of the promise you sold. The colored edge is the SLA clock — under 15 minutes green, past 30 red.',
+    mech:{t:'Staffing trigger', rows:[['147','members today'],['~150','hire a coordinator'],['38','jobs / month now']],
+          n:'Past roughly 150 members the founder should be recruiting contractors, not answering texts at 8:30 on a Tuesday.'}
+  },
+  'ops:bench':{
+    e:'Vetting is an operation, not a checkbox', h:'The docs column is the liability column',
+    p:'An expired certificate of insurance is the single cheapest way to lose this business. Tiger Appliance is paused here because a W-9 is missing — that pause should be automatic, not something someone remembers. Two vendors minimum in every trade so one bad week never breaks the promise.',
+    mech:{t:'Network targets', rows:[['15–20','vendors at launch'],['2+','per major trade'],['>75%','job acceptance rate']],
+          n:'Track acceptance and response per vendor from job one. That data is how you route work later.'}
+  },
+  'ops:ledger':{
+    e:'Collections', h:'The fee only works if it gets collected',
+    p:'A 10% fee on work you never see invoiced is a 0% fee. Reconcile against contractor invoices monthly, and make the vendor agreement require reporting on every job sourced through the platform — including the ones where the member calls the contractor directly the second time.',
+    mech:{t:'September to date', rows:[['$14,120','contractor GMV'],['$1,412','fees earned'],['$1,089','collected so far']],
+          n:'GMV is not your revenue. Only the fee line is — which is exactly why the membership matters more.'}
+  },
+  'pro:offers':{
+    e:'The other side of the marketplace', h:'Contractors need a reason to say yes',
+    p:'Contractors are not short on leads; they are short on qualified, pre-scoped, already-trusting customers. The offer card leads with what they actually decide on — trade, distance, scope, likely ticket — and a countdown, so slow responders lose work to fast ones.',
+    mech:{t:'The pitch to a contractor', rows:[['$0','spent on ads or leads'],['10%','only when they get paid'],['0','quotes chased']],
+          n:'Success-based beats lead-based. Say that in the first sentence of every contractor meeting.'}
+  },
+  'pro:jobs':{
+    e:'Accountability', h:'Photos are how you keep the promise',
+    p:'Before-and-after photos do three jobs at once: they close out the ticket, they feed the member’s home file, and they are your evidence when someone disputes the work. Make them a requirement of the vendor agreement, not a nice-to-have.',
+    mech:{t:'Quality bar', rows:[['>4.7','member rating'],['<5%','rework rate'],['>90%','fill rate']],
+          n:'A vendor that misses these twice comes off the bench. The bench only means something if you use it.'}
+  },
+  'pro:earn':{
+    e:'Why they stay', h:'Show the contractor the math every month',
+    p:'This screen is the retention tool for the supply side. A contractor who can see that nineteen jobs came in for $845 — against the $1,240 a month they used to hand a lead service for leads they had to fight over — does not leave, and does not argue about the rate when you test 12.5% next year.',
+    mech:{t:'Fee headroom', rows:[['10%','launch rate'],['12.5–15%','test with new vendors'],['$845','this vendor, this month']],
+          n:'Earn the increase with proof. Never raise it on the vendors who took the early risk with you.'}
+  }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const S = {
+  role:'member', tab:'home', detail:false, sheet:0, matching:0, submitted:false,
+  draft:{text:'', cat:null, urg:'week', access:''},
+  offerSecs:761, offerState:'open', opsTab:'board', sort:{k:'jobs', dir:-1}, tick:0
+};
+const CATS = ['Plumbing','Electrical','HVAC','Appliance','Roofing/Gutters','Handyman','Paint/Drywall','Exterior','Locksmith','Flooring'];
+
+/* ============================================================
+   SHARED FRAGMENTS
+   ============================================================ */
+const phone = (body, tabs) => `
+  <div class="phone">
+    <div class="phone__bar">
+      <span>9:41</span>
+      <span class="phone__bars">
+        <i style="height:5px"></i><i style="height:7px"></i><i style="height:9px"></i><i style="height:11px"></i>
+      </span>
+    </div>
+    <div class="screen" id="screen"><div class="screen__pad">${body}</div></div>
+    ${tabs}
+    ${S.sheet ? sheetView() : ''}
+  </div>`;
+
+const tabbar = (items, cur) => `<nav class="tabbar">${items.map(t=>`
+  <button data-act="tab" data-arg="${t.k}" aria-pressed="${cur===t.k}">
+    ${svg(t.i)}<span>${t.l}</span>
+  </button>`).join('')}</nav>`;
+
+const proCard = (key, extra='') => {
+  const p = PROS[key];
+  return `<div class="pro">
+    <div class="avatar">${p.i}</div>
+    <div class="row__main">
+      <div class="row__title">${p.n}</div>
+      <div class="row__meta">${p.trade} · ★ ${p.rating} · typically replies in ${p.resp} min</div>
+      <div class="verif">
+        <span class="pill pill--good">✓ Insured</span>
+        <span class="pill pill--good">✓ Background checked</span>
+        <span class="pill">${esc(p.lic)}</span>
+      </div>
+      ${extra}
+    </div>
+  </div>`;
+};
+
+/* ============================================================
+   MEMBER — HOME
+   ============================================================ */
+function memberHome(){
+  const p = PROS[ACTIVE.pro];
+  return `
+  <div class="apphead">
+    <div>
+      <h1>Morning, ${MEMBER.first}.</h1>
+      <p>${MEMBER.address} · Baton Rouge</p>
+    </div>
+    <span class="pill pill--brass">Member #${MEMBER.num}</span>
+  </div>
+
+  <div class="composer">
+    <div class="composer__top"><span class="label">Tell us what's going on</span></div>
+    <div class="composer__row">
+      <textarea id="composer" placeholder="The disposal is humming but not spinning…">${esc(S.draft.text)}</textarea>
+      <button class="send" data-act="open-sheet" aria-label="Send request">${svg('send')}</button>
+    </div>
+  </div>
+  <div class="chips">
+    ${['Something is leaking','AC not cooling','No power','Appliance broken','Storm damage'].map(c=>
+      `<button class="chip" data-act="quick" data-arg="${esc(c)}">${c}</button>`).join('')}
+  </div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>In progress</h2><button data-act="detail">View</button></div>
+    <button class="card card--lift" data-act="detail" style="display:block;text-align:left;width:100%">
+      <div class="jcard__f" style="margin:0 0 10px">
+        <span class="label">${ACTIVE.id}</span>
+        <span class="pill pill--cyp">${ACTIVE.status}</span>
+      </div>
+      <div class="row__title" style="font-size:15.5px">${ACTIVE.title}</div>
+      <div class="row__meta" style="margin-bottom:12px">${p.n} · ${ACTIVE.window}</div>
+      <dl style="margin:0">
+        <div class="kv"><dt>Quote (reviewed by us)</dt><dd>${m0(ACTIVE.quote)}</dd></div>
+        <div class="kv"><dt>Matched in</dt><dd>9 minutes</dd></div>
+      </dl>
+    </button>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Coming due on your house</h2></div>
+    <div class="card" style="padding:4px 16px">
+      <ul class="rows">
+        ${MEMBER.reminders.map(r=>`
+          <li class="row">
+            <div class="row__main">
+              <div class="row__title">${r.t}</div>
+              <div class="row__meta">${r.s}</div>
+            </div>
+            ${r.tone==='warn'?'<span class="pill pill--warn">Overdue</span>':''}
+          </li>`).join('')}
+      </ul>
+    </div>
+  </section>
+
+  <div class="bigcta">
+    <div class="bigcta__ic">${svg('chat')}</div>
+    <div>
+      <div class="bigcta__t">Or just text (225) 555-0142</div>
+      <div class="bigcta__s">Answered by a person, 7 AM – 7 PM</div>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   MEMBER — REQUEST DETAIL
+   ============================================================ */
+function memberDetail(){
+  const p = PROS[ACTIVE.pro];
+  return `
+  <div class="apphead">
+    <div>
+      <button class="btn btn--ghost btn--sm" data-act="back" style="margin-bottom:12px">← Back</button>
+      <h1 style="font-size:21px">${ACTIVE.title}</h1>
+      <p><span class="num">${ACTIVE.id}</span> · ${ACTIVE.trade}</p>
+    </div>
+  </div>
+
+  <div class="card">${proCard(ACTIVE.pro, `
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn--ghost btn--sm">Message</button>
+      <button class="btn btn--ghost btn--sm">Reschedule</button>
+    </div>`)}
+  </div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>What has happened</h2></div>
+    <div class="card">
+      <div class="tl">
+        ${ACTIVE.timeline.map(i=>`
+          <div class="tl__item" data-s="${i.s}">
+            <div class="tl__dot">${i.s==='done'?svg('check'):''}</div>
+            <div>
+              <div class="tl__t">${i.t}</div>
+              ${i.time?`<div class="tl__time">${i.time}</div>`:''}
+              ${i.note?`<div class="tl__note">${esc(i.note)}</div>`:''}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+  </section>
+
+  <div class="card card--flat">
+    <span class="label">How the money moves</span>
+    <dl style="margin:8px 0 0">
+      <div class="kv"><dt>You pay Broussard directly</dt><dd>${m0(ACTIVE.quote)}</dd></div>
+      <div class="kv"><dt>Broussard pays our network fee</dt><dd>${m2(ACTIVE.quote*0.1)}</dd></div>
+      <div class="kv"><dt>You pay us for this repair</dt><dd>$0</dd></div>
+    </dl>
+    <p style="font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.5">
+      Your membership covers coordination. Labor and materials are billed by the licensed contractor who performs the work.
+    </p>
+  </div>`;
+}
+
+/* ============================================================
+   MEMBER — REQUESTS LIST
+   ============================================================ */
+function memberRequests(){
+  const done = HISTORY.reduce((a,h)=>a+h.amt,0);
+  return `
+  <div class="apphead"><div><h1>Requests</h1><p>${HISTORY.length+1} since you joined</p></div></div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Open</h2></div>
+    <button class="card card--lift" data-act="detail" style="display:block;text-align:left;width:100%">
+      <div class="jcard__f" style="margin:0 0 8px">
+        <span class="label">${ACTIVE.id}</span><span class="pill pill--cyp">${ACTIVE.status}</span>
+      </div>
+      <div class="row__title">${ACTIVE.title}</div>
+      <div class="row__meta">${PROS[ACTIVE.pro].n} · ${ACTIVE.window}</div>
+    </button>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Completed</h2><span class="label">${m0(done)} total</span></div>
+    <div class="card" style="padding:4px 16px">
+      <ul class="rows">
+        ${HISTORY.map(h=>`
+          <li class="row">
+            <div class="avatar" style="width:34px;height:34px;font-size:12px">${PROS[h.pro].i}</div>
+            <div class="row__main">
+              <div class="row__title">${h.t}</div>
+              <div class="row__meta">${PROS[h.pro].n} · ${h.date}</div>
+            </div>
+            <div class="row__end num">${m0(h.amt)}</div>
+          </li>`).join('')}
+      </ul>
+    </div>
+  </section>`;
+}
+
+/* ============================================================
+   MEMBER — MY HOME
+   ============================================================ */
+function memberHouse(){
+  return `
+  <div class="apphead">
+    <div><h1>Your home file</h1><p>${MEMBER.address} · ${MEMBER.city}</p></div>
+  </div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Systems we track</h2></div>
+    <div class="sysgrid">
+      ${MEMBER.systems.map(s=>{
+        const age = 2026 - s.yr;
+        return `<div class="sys" data-flag="${s.flag}">
+          <div class="sys__n">${s.n}</div>
+          <div class="sys__d">${s.d}</div>
+          <div class="sys__age">${s.yr} · ${age} yr${age===1?'':'s'}</div>
+          <div class="sys__d" style="font-size:11px">${s.life}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Work done on this house</h2></div>
+    <div class="card" style="padding:4px 16px">
+      <ul class="rows">
+        ${HISTORY.map(h=>`
+          <li class="row">
+            <div class="row__main">
+              <div class="row__title">${h.t}</div>
+              <div class="row__meta">${h.date} · ${PROS[h.pro].n}</div>
+            </div>
+            <div class="row__end num">${m0(h.amt)}</div>
+          </li>`).join('')}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>On file</h2></div>
+    <div class="card" style="padding:4px 16px">
+      <ul class="rows">
+        <li class="row"><div class="row__main"><div class="row__title">Home inspection report</div><div class="row__meta">PDF · uploaded at signup</div></div>${svg('chev','chev')}</li>
+        <li class="row"><div class="row__main"><div class="row__title">Rheem water heater warranty</div><div class="row__meta">Expires Nov 2027</div></div>${svg('chev','chev')}</li>
+        <li class="row"><div class="row__main"><div class="row__title">Gate code & dog notes</div><div class="row__meta">Shared with pros on arrival day only</div></div>${svg('chev','chev')}</li>
+      </ul>
+    </div>
+  </section>`;
+}
+
+/* ============================================================
+   MEMBER — MEMBERSHIP
+   ============================================================ */
+function memberPlan(){
+  const coord = HISTORY.reduce((a,h)=>a+h.amt,0);
+  return `
+  <div class="apphead"><div><h1>Membership</h1><p>Member #${MEMBER.num} since ${MEMBER.joined}</p></div></div>
+
+  <div class="card" style="background:var(--cypress);border-color:var(--cypress);color:var(--on-primary)">
+    <span class="label" style="color:rgba(255,255,255,.65)">Your plan</span>
+    <h2 style="font-size:22px;margin:6px 0 4px">${MEMBER.plan}</h2>
+    <p style="font-size:13.5px;opacity:.85">${m0(MEMBER.annual)} per year · renews ${MEMBER.renews}</p>
+    <p style="font-size:12.5px;opacity:.7;margin-top:10px">Standard rate is ${m0(MEMBER.standard)}/month. Your founding rate is locked as long as you stay.</p>
+  </div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>What it has done so far</h2></div>
+    <div class="card">
+      <dl style="margin:0">
+        <div class="kv"><dt>Requests handled</dt><dd>6</dd></div>
+        <div class="kv"><dt>Median time to a matched pro</dt><dd>9 minutes</dd></div>
+        <div class="kv"><dt>Work coordinated for you</dt><dd class="num">${m0(coord)}</dd></div>
+        <div class="kv"><dt>Quotes we reviewed</dt><dd>3</dd></div>
+        <div class="kv"><dt>Quotes we sent back</dt><dd>1 · saved $120</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Refer a neighbor</h2></div>
+    <div class="card">
+      <p style="font-size:13.5px;color:var(--ink-2)">They get their first month free. You get a month credited. Two neighbors on Marquette have joined on your name.</p>
+      <button class="btn btn--full" style="margin-top:12px">Share your link</button>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Coming in 2027</h2></div>
+    <div class="card" style="border-color:var(--brass)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+        <h3 style="font-size:16px">Priority Concierge</h3>
+        <span class="pill pill--brass">$79 / mo</span>
+      </div>
+      <ul class="rows" style="margin-top:6px">
+        <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">Same-week scheduling, ahead of standard members</div></div></li>
+        <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">Two walkthroughs a year, spring and storm season</div></div></li>
+        <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">After-hours emergency coordination</div></div></li>
+        <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">House checks while you travel</div></div></li>
+      </ul>
+      <button class="btn btn--ghost btn--full" style="margin-top:10px">Join the waitlist</button>
+    </div>
+  </section>`;
+}
+
+/* ============================================================
+   NEW REQUEST SHEET
+   ============================================================ */
+function sheetView(){
+  if(S.matching) return matchingView();
+  if(S.submitted) return submittedView();
+  const st = S.sheet;
+  const body =
+    st===1 ? `
+      <div>
+        <span class="label">In your words</span>
+        <div class="composer" style="margin-top:8px;box-shadow:none">
+          <div class="composer__row" style="padding:12px">
+            <textarea id="sheet-text" placeholder="Describe what's happening…">${esc(S.draft.text)}</textarea>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="label">We think this is</span>
+        <div class="chips" style="margin-top:8px">
+          ${CATS.map(c=>`<button class="chip" data-act="cat" data-arg="${c}" aria-pressed="${S.draft.cat===c}">${c}</button>`).join('')}
+        </div>
+      </div>
+      <div>
+        <span class="label">How soon</span>
+        <div class="chips" style="margin-top:8px">
+          ${[['today','Today if possible'],['week','This week'],['when','Whenever it fits']].map(([k,l])=>
+            `<button class="chip" data-act="urg" data-arg="${k}" aria-pressed="${S.draft.urg===k}">${l}</button>`).join('')}
+        </div>
+      </div>`
+    : st===2 ? `
+      <div>
+        <span class="label">A photo helps us scope it</span>
+        <button class="card card--flat" style="width:100%;margin-top:8px;display:flex;align-items:center;gap:12px;text-align:left">
+          <div class="avatar" style="background:var(--brass-soft);color:var(--brass)">+</div>
+          <div class="row__main">
+            <div class="row__title">Add a photo</div>
+            <div class="row__meta">Most quotes get tighter with one</div>
+          </div>
+        </button>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <div class="card card--flat" style="flex:1;height:74px;display:grid;place-items:center;color:var(--ink-3);font-size:12px">IMG_4471.heic</div>
+          <div class="card card--flat" style="flex:1;height:74px;display:grid;place-items:center;color:var(--ink-3);font-size:12px">IMG_4472.heic</div>
+        </div>
+      </div>
+      <div>
+        <span class="label">Getting in</span>
+        <div class="card card--flat" style="margin-top:8px;padding:4px 14px">
+          <ul class="rows">
+            <li class="row"><div class="row__main"><div class="row__title">Gate code on file</div><div class="row__meta">Shared only on the day of the visit</div></div><span class="pill pill--good">✓</span></li>
+            <li class="row"><div class="row__main"><div class="row__title">Dog in the back yard</div><div class="row__meta">Friendly, but we tell the pro</div></div><span class="pill pill--good">✓</span></li>
+            <li class="row"><div class="row__main"><div class="row__title">Someone home?</div><div class="row__meta">Weekday afternoons work best</div></div>${svg('chev','chev')}</li>
+          </ul>
+        </div>
+      </div>`
+    : `
+      <div class="card card--flat">
+        <span class="label">Your request</span>
+        <p style="font-size:15px;margin-top:8px;line-height:1.5">${esc(S.draft.text || 'Water is pooling under the water heater in the garage.')}</p>
+        <dl style="margin:12px 0 0">
+          <div class="kv"><dt>Trade</dt><dd>${S.draft.cat || 'Plumbing'}</dd></div>
+          <div class="kv"><dt>Urgency</dt><dd>${({today:'Today if possible',week:'This week',when:'Whenever it fits'})[S.draft.urg]}</dd></div>
+          <div class="kv"><dt>Address</dt><dd>${MEMBER.address}</dd></div>
+          <div class="kv"><dt>Photos</dt><dd>2</dd></div>
+        </dl>
+      </div>
+      <div class="legal">
+        <span class="label">Before you send</span>
+        <p>We will match you with a licensed, insured contractor from our network and review their quote before it reaches you. <b style="color:var(--ink)">The contractor quotes and invoices you directly</b> — we never mark up the work.</p>
+      </div>`;
+
+  return `<div class="sheet">
+    <div class="sheet__head">
+      <button class="iconbtn" data-act="close-sheet" aria-label="Close">${svg('x')}</button>
+      <h2>${st===1?'What is going on':st===2?'Details that help':'Send it over'}</h2>
+      <span class="label">${st} of 3</span>
+    </div>
+    <div class="steps"><i data-on="1"></i><i data-on="${st>1?1:0}"></i><i data-on="${st>2?1:0}"></i></div>
+    <div class="sheet__body">${body}</div>
+    <div class="sheet__foot">
+      ${st>1?`<button class="btn btn--ghost" data-act="sheet-back">Back</button>`:''}
+      <button class="btn btn--full" data-act="${st===3?'submit':'sheet-next'}">${st===3?'Send to concierge':'Continue'}</button>
+    </div>
+  </div>`;
+}
+
+function matchingView(){
+  const n = S.matching;
+  return `<div class="sheet">
+    <div class="sheet__head"><h2 style="text-align:center">Finding your pro</h2></div>
+    <div class="sheet__body">
+      <div class="match">
+        <div class="match__ring"></div>
+        <div>
+          <h3 style="font-size:17px">Working on it</h3>
+          <p style="font-size:13.5px;color:var(--ink-3);margin-top:4px">Most members are matched in under 15 minutes.</p>
+        </div>
+        <ul class="match__log">
+          <li data-on="${n>=1?1:0}"><span class="tick">${svg('check')}</span><span>Request read and scoped by a person</span></li>
+          <li data-on="${n>=2?1:0}"><span class="tick">${svg('check')}</span><span>Checked <b>4 plumbers</b> covering 70808</span></li>
+          <li data-on="${n>=3?1:0}"><span class="tick">${svg('check')}</span><span>Insurance and license verified as current</span></li>
+          <li data-on="${n>=4?1:0}"><span class="tick">${svg('check')}</span><span><b>Broussard Plumbing</b> accepted the job</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>`;
+}
+
+function submittedView(){
+  return `<div class="sheet">
+    <div class="sheet__head">
+      <button class="iconbtn" data-act="close-sheet" aria-label="Close">${svg('x')}</button>
+      <h2>You're matched</h2>
+    </div>
+    <div class="sheet__body">
+      <div class="card" style="border-color:var(--cypress)">
+        ${proCard('broussard')}
+      </div>
+      <div class="card card--flat">
+        <dl style="margin:0">
+          <div class="kv"><dt>Matched in</dt><dd>7 minutes</dd></div>
+          <div class="kv"><dt>They can come</dt><dd>Thursday, 1–3 PM</dd></div>
+          <div class="kv"><dt>Estimate range</dt><dd>$280 – $450</dd></div>
+          <div class="kv"><dt>Firm quote</dt><dd>After we review it</dd></div>
+        </dl>
+      </div>
+      <p style="font-size:13px;color:var(--ink-3);line-height:1.55">
+        We'll text you the quote once Broussard sends it and we've compared it against recent jobs in the network. Nothing is booked until you say yes.
+      </p>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--full" data-act="close-sheet">Got it</button>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   OPS CONSOLE
+   ============================================================ */
+const slaOf = m => m===0 ? 'none' : m < 15 ? 'ok' : m < 30 ? 'warn' : 'late';
+const COLS = [['new','Inbox'],['matching','Matching'],['quoted','Quoted'],['scheduled','Scheduled'],['done','Completed']];
+
+function opsBoard(){
+  return `
+  <div class="board">
+    ${COLS.map(([k,l])=>{
+      const items = BOARD.filter(b=>b.col===k);
+      return `<div class="col">
+        <div class="col__head"><span class="label">${l}</span><span class="col__count">${items.length}</span></div>
+        ${items.map(j=>{
+          const sla = slaOf(j.mins + (j.mins?S.tick:0));
+          const mins = j.mins ? j.mins + S.tick : 0;
+          return `<button class="jcard" data-sla="${sla}">
+            <div class="jcard__f">
+              <span class="jcard__id">${j.id}</span>
+              ${mins?`<span class="pill pill--${sla==='ok'?'good':sla==='warn'?'warn':'crit'}">${mins}m open</span>`
+                    :j.when?`<span class="pill pill--cyp">${j.when}</span>`
+                    :j.fee?`<span class="pill pill--${j.fee==='paid'?'good':'warn'}">Fee ${j.fee}</span>`:''}
+            </div>
+            <div class="jcard__t">${j.t}</div>
+            <div class="jcard__m">${j.who} · ${j.loc}</div>
+            <div class="jcard__f">
+              <span class="pill">${j.trade}</span>
+              ${j.amt?`<span class="num" style="font-size:12.5px;font-weight:600">${m0(j.amt)}</span>`
+                     :j.pro?`<span class="jcard__m">${j.pro}</span>`:''}
+            </div>
+            ${j.flag?`<div class="jcard__m" style="color:var(--warn)">⚠ ${j.flag}</div>`:''}
+            ${j.pro && PROS[j.pro] ? `<div class="jcard__m">${PROS[j.pro].n}</div>`:''}
+          </button>`;
+        }).join('') || `<div class="card card--flat" style="color:var(--ink-3);font-size:12.5px;text-align:center">Clear</div>`}
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="ledgerfoot">
+    <span>Left edge is the response clock — <b>green under 15 min</b>, amber to 30, red past that. Two requests are live right now.</span>
+    <span class="label">Auto-refreshing</span>
+  </div>`;
+}
+
+function opsBench(){
+  const keys = Object.keys(PROS).sort((a,b)=>{
+    const k=S.sort.k, va=PROS[a][k], vb=PROS[b][k];
+    return (typeof va==='string' ? va.localeCompare(vb) : va-vb) * S.sort.dir;
+  });
+  const th = (k,l) => `<th><button data-act="sort" data-arg="${k}">${l}${S.sort.k===k?(S.sort.dir<0?' ↓':' ↑'):''}</button></th>`;
+  return `
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        ${th('n','Contractor')}${th('trade','Trade')}${th('accept','Accept %')}${th('resp','Median reply')}
+        ${th('rating','Rating')}${th('jobs','Jobs MTD')}${th('fees','Fees MTD')}<th>Compliance</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        ${keys.map(k=>{const p=PROS[k];return `<tr>
+          <td><div class="who"><div class="avatar">${p.i}</div><div><div style="font-weight:600">${p.n}</div><div style="font-size:12px;color:var(--ink-3)">${esc(p.lic)}</div></div></div></td>
+          <td>${p.trade}</td>
+          <td class="n"><span class="bar"><i style="width:${p.accept}%"></i></span>${p.accept}%</td>
+          <td class="n">${p.resp} min</td>
+          <td class="n">★ ${p.rating}</td>
+          <td class="n">${p.jobs}</td>
+          <td class="n">${m0(p.fees)}</td>
+          <td><span class="pill ${p.docState==='ok'?'pill--good':p.docState==='warn'?'pill--warn':'pill--crit'}">${p.docs}</span></td>
+          <td><span class="pill ${p.status==='Active'?'pill--cyp':'pill--crit'}">${p.status}</span></td>
+        </tr>`;}).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div class="ledgerfoot">
+    <span><b>Tiger Appliance is paused</b> — no W-9 on file, so no jobs route to them until it is. Cypress Roofing and Gonzales Paint both need renewed certificates within 30 days.</span>
+    <span class="label">8 of 8 vendors</span>
+  </div>`;
+}
+
+function opsLedger(){
+  const gmv = 14120, fees = 1412, collected = 1089;
+  return `
+  <div class="split">
+    <div class="sec">
+      <div class="sec__head"><h2>Recent network fees</h2></div>
+      <div class="tablewrap">
+        <table style="min-width:520px">
+          <thead><tr><th>Job</th><th>Contractor</th><th>Member invoiced</th><th>Fee 10%</th><th>Status</th></tr></thead>
+          <tbody>
+            ${LEDGER.map(l=>`<tr>
+              <td><div style="font-weight:600">${l.t}</div><div style="font-size:12px;color:var(--ink-3)" class="num">${l.id} · ${l.who}</div></td>
+              <td>${PROS[l.pro].n}</td>
+              <td class="n">${m0(l.amt)}</td>
+              <td class="n" style="font-weight:600">${m2(l.amt*0.1)}</td>
+              <td><span class="pill ${l.st==='paid'?'pill--good':'pill--warn'}">${l.st}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec__head"><h2>September to date</h2></div>
+      <div class="card">
+        <dl style="margin:0">
+          <div class="kv"><dt>Contractor GMV generated</dt><dd class="num">${m0(gmv)}</dd></div>
+          <div class="kv"><dt>Network fees earned (10%)</dt><dd class="num">${m0(fees)}</dd></div>
+          <div class="kv"><dt>Collected</dt><dd class="num">${m0(collected)}</dd></div>
+          <div class="kv"><dt>Outstanding</dt><dd class="num" style="color:var(--warn)">${m0(fees-collected)}</dd></div>
+          <div class="kv"><dt>Membership MRR</dt><dd class="num">$5,733</dd></div>
+          <div class="kv"><dt>Total revenue, September</dt><dd class="num" style="font-size:15px">${m0(5733+fees)}</dd></div>
+        </dl>
+      </div>
+      <div class="legal">
+        <span class="label">Structure note</span>
+        <p>GMV is <b>not</b> platform revenue. Homeowners contract with and pay the contractor; the platform invoices the contractor a marketing and network fee. That separation is what keeps this out of prime-contractor territory — have a Louisiana construction attorney confirm it against your actual agreements before the first paid job.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function opsView(){
+  const tabs = [['board','Dispatch board'],['bench','Contractor bench'],['ledger','Fees & revenue']];
+  return `<div class="console">
+    <div class="kpis">
+      ${KPI.map(k=>`<div class="kpi">
+        <span class="label">${k.k}</span>
+        <span class="kpi__v">${k.v}</span>
+        <span class="kpi__d" data-dir="${k.dir}">${k.d}</span>
+      </div>`).join('')}
+    </div>
+    <div class="opstabs">
+      ${tabs.map(([k,l])=>`<button data-act="opstab" data-arg="${k}" aria-pressed="${S.opsTab===k}">${l}</button>`).join('')}
+    </div>
+    ${S.opsTab==='board'?opsBoard():S.opsTab==='bench'?opsBench():opsLedger()}
+  </div>`;
+}
+
+/* ============================================================
+   CONTRACTOR APP
+   ============================================================ */
+const mmss = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+
+function proOffers(){
+  const accepted = S.offerState==='accepted';
+  return `
+  <div class="apphead">
+    <div><h1>Hebert Electric</h1><p>Serving 70808, 70809, 70810 · on the bench since Apr 2026</p></div>
+    <span class="pill pill--good">Active</span>
+  </div>
+
+  ${accepted ? `
+    <div class="card" style="border-color:var(--good)">
+      <div style="display:flex;align-items:center;gap:11px">
+        <span class="tick" style="width:26px;height:26px">${svg('check')}</span>
+        <div><div class="row__title">Job accepted</div><div class="row__meta">The member has been told you're on it. Details are in My jobs.</div></div>
+      </div>
+    </div>` : `
+    <div class="offer">
+      <div class="offer__top">
+        <span class="label" style="color:inherit">Offer expires in</span>
+        <span class="offer__clock" id="clock">${mmss(S.offerSecs)}</span>
+      </div>
+      <div class="offer__body">
+        <div>
+          <div class="row__title" style="font-size:16px">No power to half the kitchen</div>
+          <div class="row__meta">Outlets and under-cabinet lights are dead, breaker doesn't appear tripped.</div>
+        </div>
+        <dl style="margin:0">
+          <div class="kv"><dt>Where</dt><dd>3312 Kenilworth Pkwy · 6.2 mi</dd></div>
+          <div class="kv"><dt>Member</dt><dd>Since Mar 2026 · 4 prior jobs</dd></div>
+          <div class="kv"><dt>Wants</dt><dd>Today if possible</dd></div>
+          <div class="kv"><dt>Typical ticket, this type</dt><dd>$200 – $450</dd></div>
+          <div class="kv"><dt>Photos attached</dt><dd>3</dd></div>
+        </dl>
+        <div class="offer__acts">
+          <button class="btn btn--ghost" data-act="pass">Pass</button>
+          <button class="btn" data-act="accept">Accept this job</button>
+        </div>
+      </div>
+    </div>`}
+
+  <section class="sec">
+    <div class="sec__head"><h2>Why these come to you</h2></div>
+    <div class="card card--flat">
+      <dl style="margin:0">
+        <div class="kv"><dt>Your acceptance rate</dt><dd>81%</dd></div>
+        <div class="kv"><dt>Median reply time</dt><dd>14 min</dd></div>
+        <div class="kv"><dt>Member rating</dt><dd>★ 4.9 · 23 reviews</dd></div>
+      </dl>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:10px;line-height:1.55">
+        Faster replies see offers first. Under 75% acceptance and we stop sending until we talk.
+      </p>
+    </div>
+  </section>`;
+}
+
+function proJobs(){
+  const jobs = [
+    {t:'Panel breaker swap', who:'J. Landry', loc:'740 Church St, Zachary', when:'Today 3:00 PM', amt:265, st:'On the way'},
+    {t:'Two ceiling fans installed', who:'D. Fontenot', loc:'1247 Marquette Ave', when:'Jun 14', amt:285, st:'Paid'},
+    {t:'GFCI replacement, back porch', who:'C. Navarro', loc:'9 Drusilla Ln', when:'Sep 4', amt:180, st:'Paid'},
+    {t:'Attic fan rewire', who:'P. Moreau', loc:'615 Goodwood Blvd', when:'Aug 28', amt:340, st:'Paid'}
+  ];
+  return `
+  <div class="apphead"><div><h1>My jobs</h1><p>1 scheduled · 18 completed this month</p></div></div>
+  <div class="card" style="padding:4px 16px">
+    <ul class="rows">
+      ${jobs.map(j=>`<li class="row">
+        <div class="row__main">
+          <div class="row__title">${j.t}</div>
+          <div class="row__meta">${j.who} · ${j.loc}</div>
+          <div class="row__meta">${j.when}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="row__end num">${m0(j.amt)}</div>
+          <span class="pill ${j.st==='Paid'?'pill--good':'pill--cyp'}" style="margin-top:4px">${j.st}</span>
+        </div>
+      </li>`).join('')}
+    </ul>
+  </div>
+  <div class="card card--flat">
+    <span class="label">Closing a job</span>
+    <p style="font-size:13px;color:var(--ink-2);margin-top:7px;line-height:1.55">
+      Upload a before and after photo and your invoice total. The photos go into the member's home file, and the invoice total is what your 10% is calculated from.
+    </p>
+  </div>`;
+}
+
+function proEarn(){
+  const collected = 8450, fee = 845;
+  return `
+  <div class="apphead"><div><h1>September</h1><p>Jobs sourced through Home Concierge</p></div></div>
+
+  <div class="card" style="background:var(--cypress);border-color:var(--cypress);color:var(--on-primary)">
+    <span class="label" style="color:rgba(255,255,255,.65)">You collected from members</span>
+    <div style="font-family:var(--disp);font-size:34px;font-weight:700;letter-spacing:-.02em;margin:4px 0 2px" class="num">${m0(collected)}</div>
+    <p style="font-size:13px;opacity:.82">Across 19 jobs · avg ${m0(collected/19)}</p>
+  </div>
+
+  <section class="sec">
+    <div class="sec__head"><h2>What you owe the network</h2></div>
+    <div class="card">
+      <dl style="margin:0">
+        <div class="kv"><dt>Invoiced to members</dt><dd class="num">${m0(collected)}</dd></div>
+        <div class="kv"><dt>Network fee at 10%</dt><dd class="num">${m0(fee)}</dd></div>
+        <div class="kv"><dt>Due</dt><dd>Oct 10</dd></div>
+        <div class="kv"><dt>Your net</dt><dd class="num" style="font-size:15px">${m0(collected-fee)}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec__head"><h2>Versus what you were doing</h2></div>
+    <div class="card">
+      <dl style="margin:0">
+        <div class="kv"><dt>Spent on lead services</dt><dd class="num">$0</dd></div>
+        <div class="kv"><dt>Spent on ads</dt><dd class="num">$0</dd></div>
+        <div class="kv"><dt>Quotes given that went nowhere</dt><dd>2</dd></div>
+        <div class="kv"><dt>Jobs won per offer accepted</dt><dd>19 of 21</dd></div>
+      </dl>
+      <p style="font-size:12.5px;color:var(--ink-3);margin-top:11px;line-height:1.55">
+        Last year at this time you paid a lead service $1,240 a month for 34 leads and closed 7 of them.
+      </p>
+    </div>
+  </section>`;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const MEMBER_TABS = [{k:'home',l:'Home',i:'home'},{k:'requests',l:'Requests',i:'list'},{k:'house',l:'My home',i:'folder'},{k:'plan',l:'Membership',i:'card'}];
+const PRO_TABS = [{k:'offers',l:'Offers',i:'bell'},{k:'jobs',l:'My jobs',i:'list'},{k:'earn',l:'Earnings',i:'cash'}];
+
+function railKey(){
+  if(S.role==='ops') return 'ops:'+S.opsTab;
+  if(S.role==='pro') return 'pro:'+S.tab;
+  if(S.detail) return 'member:request';
+  return 'member:'+S.tab;
+}
+
+function renderRail(){
+  const r = RAIL[railKey()] || RAIL['member:home'];
+  const rail = document.getElementById('rail');
+  rail.innerHTML = `
+    <div class="rail__card">
+      <div class="rail__eyebrow"><i></i><span class="label">${r.e}</span></div>
+      <h3>${r.h}</h3>
+      <p>${r.p}</p>
+    </div>
+    ${r.mech?`<div class="rail__card rail__card--mech">
+      <div class="rail__eyebrow"><i></i><span class="label">${r.mech.t}</span></div>
+      <div class="rail__math">${r.mech.rows.map(([a,b])=>`<div><span>${b}</span><span>${a}</span></div>`).join('')}</div>
+      <p style="font-size:12.5px;margin-top:8px">${r.mech.n}</p>
+    </div>`:''}
+    <p class="rail__note">Switch roles at the top to see the same job from the <b>member</b>, the <b>concierge</b>, and the <b>contractor</b> side.</p>`;
+}
+
+function render(){
+  document.getElementById('role-member').setAttribute('aria-pressed', S.role==='member');
+  document.getElementById('role-ops').setAttribute('aria-pressed', S.role==='ops');
+  document.getElementById('role-pro').setAttribute('aria-pressed', S.role==='pro');
+  const stage = document.getElementById('stage');
+  const mount = document.getElementById('mount');
+  stage.dataset.wide = String(S.role==='ops');
+  stage.dataset.mode = S.role==='ops' ? 'console' : 'phone';
+
+  if(S.role==='ops'){
+    mount.className = '';
+    mount.innerHTML = opsView();
+  } else if(S.role==='pro'){
+    mount.className = 'devicewrap';
+    const body = S.tab==='offers'?proOffers():S.tab==='jobs'?proJobs():proEarn();
+    mount.innerHTML = phone(body, tabbar(PRO_TABS, S.tab));
+  } else {
+    mount.className = 'devicewrap';
+    const body = S.detail ? memberDetail()
+      : S.tab==='home' ? memberHome()
+      : S.tab==='requests' ? memberRequests()
+      : S.tab==='house' ? memberHouse() : memberPlan();
+    mount.innerHTML = phone(body, tabbar(MEMBER_TABS, S.tab));
+  }
+  renderRail();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function captureText(){
+  const t = document.getElementById('sheet-text') || document.getElementById('composer');
+  if(t) S.draft.text = t.value;
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if(!b) return;
+  const a = b.dataset.act, arg = b.dataset.arg;
+
+  if(a==='role'){ S.role = arg; S.detail=false; S.sheet=0; S.submitted=false;
+                  S.tab = arg==='pro' ? 'offers' : 'home'; render(); return; }
+  if(a==='tab'){ S.tab = arg; S.detail=false; render(); return; }
+  if(a==='opstab'){ S.opsTab = arg; render(); return; }
+  if(a==='detail'){ S.detail = true; render(); document.getElementById('screen').scrollTop=0; return; }
+  if(a==='back'){ S.detail = false; render(); return; }
+
+  if(a==='quick'){
+    S.draft.text = arg + ' — ';
+    S.draft.cat = /leak/i.test(arg)?'Plumbing':/AC/.test(arg)?'HVAC':/power/i.test(arg)?'Electrical':/Appliance/i.test(arg)?'Appliance':/Storm/i.test(arg)?'Roofing/Gutters':null;
+    S.sheet = 1; render(); document.getElementById('sheet-text')?.focus(); return;
+  }
+  if(a==='open-sheet'){
+    captureText();
+    if(!S.draft.text.trim()) S.draft.text = 'Water is pooling under the water heater in the garage. Not a lot, but it is definitely wet.';
+    if(!S.draft.cat) S.draft.cat = 'Plumbing';
+    S.sheet = 1; render(); return;
+  }
+  if(a==='close-sheet'){ S.sheet=0; S.matching=0; S.submitted=false; render(); return; }
+  if(a==='sheet-next'){ captureText(); S.sheet = Math.min(3, S.sheet+1); render(); return; }
+  if(a==='sheet-back'){ captureText(); S.sheet = Math.max(1, S.sheet-1); render(); return; }
+  if(a==='cat'){ captureText(); S.draft.cat = arg; render(); return; }
+  if(a==='urg'){ captureText(); S.draft.urg = arg; render(); return; }
+
+  if(a==='submit'){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    S.matching = 1; render();
+    const step = reduce ? 120 : 650;
+    [2,3,4].forEach((n,i)=> setTimeout(()=>{ if(S.matching){ S.matching=n; render(); } }, step*(i+1)));
+    setTimeout(()=>{ if(S.matching){ S.matching=0; S.submitted=true; render(); } }, step*4.4);
+    return;
+  }
+
+  if(a==='accept'){ S.offerState='accepted'; render(); return; }
+  if(a==='pass'){ S.offerState='accepted'; render(); return; }
+
+  if(a==='sort'){
+    if(S.sort.k===arg) S.sort.dir *= -1; else S.sort = {k:arg, dir:-1};
+    render(); return;
+  }
+});
+
+/* live clocks */
+setInterval(()=>{
+  if(S.role==='pro' && S.offerState==='open' && !document.hidden){
+    S.offerSecs = Math.max(0, S.offerSecs-1);
+    const c = document.getElementById('clock');
+    if(c) c.textContent = mmss(S.offerSecs);
+  }
+}, 1000);
+
+setInterval(()=>{
+  if(document.hidden) return;
+  S.tick += 1;
+  if(S.role==='ops' && S.opsTab==='board') render();
+}, 30000);
+
+render();
+</script>
