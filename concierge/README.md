@@ -16,6 +16,13 @@ fee on jobs sourced through the platform.
     contractor bench with compliance state, and the network-fee ledger.
   - **Contractor** — a job offer with a countdown, job list, and the monthly
     earnings view that shows the fee against zero ad spend.
+- **`ops/`** — the concierge dispatch console, built as a working application
+  with mutable in-session state. Triage an incoming text, send offers to
+  contractors on the bench, take a response, review the quote against real
+  comparables from the network, schedule it, close it out, and watch the 10%
+  fee accrue into the ledger. Pausing a contractor genuinely stops offers
+  routing to them. Nothing persists — reloading restores the starting state,
+  so every walkthrough begins the same way.
 - **`site/`** — the Phase 0 website, ready to deploy: a homeowner landing page
   wired to Stripe for membership payments, and a contractor recruiting page
   with an application form. Static HTML; all configuration lives in one file.

@@ -1,0 +1,1128 @@
+<title>Concierge Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#EDF0EC; --surface:#FFFFFF; --surface-2:#F5F8F4; --surface-3:#EBF0EA;
+  --line:#D4DCD4; --line-soft:#E4EAE3;
+  --ink:#14201A; --ink-2:#3F4F48; --ink-3:#6E7C76;
+  --cypress:#1F4D3D; --cypress-2:#2C6A54; --cypress-soft:#E2EDE7; --on-primary:#FFFFFF;
+  --brass:#A8761F; --brass-soft:#F5EBD6;
+  --good:#2E7D5B; --good-soft:#E1F0E8;
+  --warn:#A97615; --warn-soft:#F7EDD8;
+  --crit:#A8402F; --crit-soft:#F7E5E1;
+  --shadow-sm:0 1px 2px rgba(20,32,26,.07);
+  --shadow-md:0 6px 20px rgba(16,28,22,.10);
+  --shadow-lg:0 20px 50px rgba(16,28,22,.20);
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --disp:"Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --r:10px; --r-l:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1210; --surface:#151C18; --surface-2:#1B231E; --surface-3:#212B25;
+    --line:#293330; --line-soft:#212A25;
+    --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+    --cypress:#5FA98A; --cypress-2:#7CC0A3; --cypress-soft:#182C23; --on-primary:#0A120E;
+    --brass:#D7A448; --brass-soft:#2A2316;
+    --good:#59AE85; --good-soft:#162A21;
+    --warn:#D2A04A; --warn-soft:#2A2316;
+    --crit:#D4755F; --crit-soft:#2C1B17;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+    --shadow-md:0 6px 20px rgba(0,0,0,.45);
+    --shadow-lg:0 20px 50px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1210; --surface:#151C18; --surface-2:#1B231E; --surface-3:#212B25;
+  --line:#293330; --line-soft:#212A25;
+  --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+  --cypress:#5FA98A; --cypress-2:#7CC0A3; --cypress-soft:#182C23; --on-primary:#0A120E;
+  --brass:#D7A448; --brass-soft:#2A2316;
+  --good:#59AE85; --good-soft:#162A21;
+  --warn:#D2A04A; --warn-soft:#2A2316;
+  --crit:#D4755F; --crit-soft:#2C1B17;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+  --shadow-md:0 6px 20px rgba(0,0,0,.45);
+  --shadow-lg:0 20px 50px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{margin:0; background:var(--ground); color:var(--ink); font-family:var(--sans); font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased}
+button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
+input,select,textarea{font:inherit; color:inherit}
+h1,h2,h3,h4{margin:0; font-family:var(--disp); letter-spacing:-.015em; line-height:1.2}
+p{margin:0} ul{margin:0; padding:0; list-style:none}
+:focus-visible{outline:2px solid var(--brass); outline-offset:2px; border-radius:4px}
+.lbl{font-family:var(--mono); font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3)}
+.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ================= SHELL ================= */
+.app{display:grid; grid-template-columns:216px minmax(0,1fr); min-height:100vh}
+@media (max-width:900px){ .app{grid-template-columns:minmax(0,1fr)} }
+
+.rail{
+  background:var(--surface); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; gap:4px; padding:16px 12px; position:sticky; top:0; height:100vh;
+}
+@media (max-width:900px){
+  .rail{position:static; height:auto; flex-direction:row; flex-wrap:wrap; align-items:center; border-right:0; border-bottom:1px solid var(--line)}
+  .rail .brand{width:100%}
+}
+.brand{display:flex; align-items:center; gap:10px; padding:4px 6px 16px}
+.brand__m{width:32px; height:32px; border-radius:9px; background:var(--cypress); color:var(--on-primary); display:grid; place-items:center; font-family:var(--disp); font-weight:700; font-size:13px; flex:none}
+.brand__t{font-family:var(--disp); font-weight:700; font-size:14px; line-height:1.15}
+.brand__s{font-family:var(--mono); font-size:9.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
+.navb{
+  display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:var(--r);
+  font-size:13.5px; font-weight:600; color:var(--ink-2); text-align:left; width:100%;
+}
+@media (max-width:900px){ .navb{width:auto} }
+.navb:hover{background:var(--surface-2)}
+.navb[aria-current="true"]{background:var(--cypress-soft); color:var(--cypress)}
+.navb svg{width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex:none}
+.navb .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; padding:1px 7px; border-radius:999px; background:var(--surface-3); color:var(--ink-3)}
+.navb[aria-current="true"] .cnt{background:var(--cypress); color:var(--on-primary)}
+.rail__foot{margin-top:auto; display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px solid var(--line-soft)}
+@media (max-width:900px){ .rail__foot{margin-top:0; border-top:0; flex-direction:row; margin-left:auto} }
+
+.main{min-width:0; display:flex; flex-direction:column}
+.top{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:16px clamp(16px,2.4vw,26px) 0;
+}
+.top h1{font-size:21px; font-weight:700; margin-right:auto}
+.top h1 span{display:block; font-family:var(--sans); font-size:12.5px; font-weight:400; color:var(--ink-3); letter-spacing:0; margin-top:3px}
+.body{padding:18px clamp(16px,2.4vw,26px) 34px; display:flex; flex-direction:column; gap:18px; min-width:0}
+
+/* ================= CONTROLS ================= */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 14px; border-radius:var(--r); font-size:13.5px; font-weight:600; background:var(--cypress); color:var(--on-primary); white-space:nowrap}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4; cursor:not-allowed; filter:none}
+.btn--g{background:transparent; color:var(--ink); border:1px solid var(--line)}
+.btn--g:hover{background:var(--surface-2); filter:none}
+.btn--b{background:var(--brass)}
+.btn--d{background:transparent; color:var(--crit); border:1px solid var(--crit)}
+.btn--d:hover{background:var(--crit-soft); filter:none}
+.btn--s{padding:6px 11px; font-size:12.5px; border-radius:8px}
+.btn--full{width:100%}
+.btn svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+.pill{display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px; font-family:var(--mono); font-size:9.5px; font-weight:500; text-transform:uppercase; letter-spacing:.07em; background:var(--surface-3); color:var(--ink-2); white-space:nowrap}
+.pill--good{background:var(--good-soft); color:var(--good)}
+.pill--warn{background:var(--warn-soft); color:var(--warn)}
+.pill--crit{background:var(--crit-soft); color:var(--crit)}
+.pill--cyp{background:var(--cypress-soft); color:var(--cypress)}
+.pill--brass{background:var(--brass-soft); color:var(--brass)}
+
+.inp, select.inp, textarea.inp{
+  width:100%; padding:9px 11px; border-radius:var(--r); border:1px solid var(--line);
+  background:var(--surface); font-size:13.5px;
+}
+textarea.inp{resize:vertical; min-height:64px}
+.inp:focus{outline:2px solid var(--cypress); outline-offset:-1px; border-color:transparent}
+.fld{display:flex; flex-direction:column; gap:5px}
+.fld > .lbl{margin-bottom:1px}
+
+/* ================= DEMO BAR ================= */
+.demobar{
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  padding:9px clamp(16px,2.4vw,26px); background:var(--brass-soft); border-bottom:1px solid var(--line);
+}
+.demobar .lbl{color:var(--brass)}
+.demobar .btn--g{border-color:color-mix(in srgb, var(--brass) 40%, transparent); color:var(--brass)}
+.demobar .btn--g:hover{background:color-mix(in srgb, var(--brass) 12%, transparent)}
+
+/* ================= KPIS ================= */
+.kpis{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:var(--r-l); overflow:hidden}
+@media (max-width:1180px){ .kpis{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:620px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.kpi{background:var(--surface); padding:12px 14px; display:flex; flex-direction:column; gap:2px}
+.kpi__v{font-family:var(--disp); font-size:21px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.kpi__d{font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.kpi__d[data-t="good"]{color:var(--good)}
+.kpi__d[data-t="warn"]{color:var(--warn)}
+
+/* ================= BOARD ================= */
+.board{display:grid; grid-auto-flow:column; grid-auto-columns:minmax(252px,1fr); gap:12px; overflow-x:auto; padding-bottom:8px; align-items:start}
+.col{display:flex; flex-direction:column; gap:8px; min-width:0}
+.col__h{display:flex; align-items:center; gap:8px; padding:2px 2px 4px; position:sticky; top:0}
+.col__h .cnt{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.jc{
+  width:100%; text-align:left; background:var(--surface); border:1px solid var(--line-soft);
+  border-left:3px solid var(--line); border-radius:var(--r); padding:11px 12px;
+  display:flex; flex-direction:column; gap:7px; box-shadow:var(--shadow-sm);
+  transition:border-color .12s ease, transform .12s ease;
+}
+.jc:hover{border-color:var(--cypress); transform:translateY(-1px)}
+.jc[data-sel="1"]{border-color:var(--cypress); box-shadow:0 0 0 2px var(--cypress-soft), var(--shadow-sm)}
+.jc[data-sla="ok"]{border-left-color:var(--good)}
+.jc[data-sla="warn"]{border-left-color:var(--warn)}
+.jc[data-sla="late"]{border-left-color:var(--crit)}
+.jc[data-sla="none"]{border-left-color:var(--line)}
+.jc__r{display:flex; align-items:center; justify-content:space-between; gap:8px}
+.jc__id{font-family:var(--mono); font-size:10px; color:var(--ink-3); letter-spacing:.03em}
+.jc__t{font-size:13px; font-weight:600; line-height:1.35}
+.jc__m{font-size:11.5px; color:var(--ink-3); line-height:1.4}
+.jc__flag{font-size:11.5px; color:var(--warn)}
+.empty{padding:16px 10px; text-align:center; font-size:12px; color:var(--ink-3); border:1px dashed var(--line); border-radius:var(--r)}
+
+/* ================= TABLES ================= */
+.tw{overflow-x:auto; border:1px solid var(--line-soft); border-radius:var(--r-l); background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:760px; font-size:13px}
+th,td{padding:10px 13px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:nowrap}
+th{font-family:var(--mono); font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); background:var(--surface-2)}
+th button{display:flex; align-items:center; gap:4px; font:inherit; text-transform:inherit; letter-spacing:inherit; color:inherit}
+th button:hover{color:var(--ink)}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-family:var(--mono); font-variant-numeric:tabular-nums}
+.who{display:flex; align-items:center; gap:9px}
+.av{width:28px; height:28px; border-radius:8px; flex:none; display:grid; place-items:center; background:var(--cypress-soft); color:var(--cypress); font-family:var(--disp); font-weight:700; font-size:10.5px}
+.av--lg{width:38px; height:38px; border-radius:11px; font-size:13px}
+.bar{display:inline-block; width:54px; height:5px; border-radius:3px; background:var(--line); overflow:hidden; vertical-align:middle; margin-right:7px}
+.bar i{display:block; height:100%; background:var(--cypress); border-radius:3px}
+
+/* ================= CARDS ================= */
+.card{background:var(--surface); border:1px solid var(--line-soft); border-radius:var(--r-l); padding:15px}
+.card--flat{background:var(--surface-2); border-color:transparent}
+.card > h3{font-size:14.5px; font-weight:700; margin-bottom:9px}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; align-items:start}
+.kv{display:flex; justify-content:space-between; gap:12px; padding:7px 0; border-bottom:1px solid var(--line-soft); font-size:13px}
+.kv:last-child{border-bottom:0}
+.kv dt{color:var(--ink-3)} .kv dd{margin:0; font-weight:600; text-align:right}
+
+/* ================= DRAWER ================= */
+.scrim{position:fixed; inset:0; background:rgba(10,18,14,.42); z-index:60; animation:fade .18s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.drawer{
+  position:fixed; top:0; right:0; bottom:0; width:min(560px,100vw); z-index:61;
+  background:var(--ground); border-left:1px solid var(--line); box-shadow:var(--shadow-lg);
+  display:flex; flex-direction:column; animation:slide .24s cubic-bezier(.22,1,.36,1);
+}
+@keyframes slide{from{transform:translateX(28px); opacity:.4} to{transform:none; opacity:1}}
+@media (prefers-reduced-motion:reduce){ .drawer,.scrim{animation:none} }
+.dr__h{flex:none; padding:15px 18px 13px; border-bottom:1px solid var(--line); background:var(--surface); display:flex; gap:12px; align-items:flex-start}
+.dr__h h2{font-size:16.5px; font-weight:700; line-height:1.3}
+.dr__h .jc__id{margin-bottom:4px; display:block}
+.dr__b{flex:1; overflow-y:auto; padding:16px 18px 28px; display:flex; flex-direction:column; gap:14px}
+.dr__b > *{flex:none}
+.stage__b > *{flex:none}
+.icb{width:30px; height:30px; border-radius:8px; display:grid; place-items:center; color:var(--ink-2); flex:none}
+.icb:hover{background:var(--surface-2)}
+.icb svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+
+/* stage panel — the current action */
+.stage{background:var(--surface); border:1px solid var(--cypress); border-radius:var(--r-l); overflow:hidden; box-shadow:var(--shadow-sm)}
+.stage__h{display:flex; align-items:center; gap:9px; padding:10px 14px; background:var(--cypress); color:var(--on-primary)}
+.stage__h .lbl{color:color-mix(in srgb, var(--on-primary) 72%, transparent)}
+.stage__h b{font-size:13.5px; font-family:var(--disp)}
+.stage__b{padding:14px; display:flex; flex-direction:column; gap:12px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.acts{display:flex; gap:9px; flex-wrap:wrap}
+
+/* contractor pick list */
+.picks{display:flex; flex-direction:column; gap:7px; max-height:270px; overflow-y:auto; flex:none}
+.picks > *{flex:none}
+.pick{display:flex; align-items:center; gap:10px; padding:9px 11px; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); text-align:left; width:100%}
+.pick:hover{border-color:var(--cypress)}
+.pick[aria-pressed="true"]{border-color:var(--cypress); background:var(--cypress-soft)}
+.pick__m{flex:1; min-width:0}
+.pick__n{font-size:13px; font-weight:600}
+.pick__d{font-size:11.5px; color:var(--ink-3)}
+.pick__e{text-align:right; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+.pick[data-blocked="1"]{opacity:.5}
+
+/* message thread */
+.thread{display:flex; flex-direction:column; gap:8px}
+.m{max-width:86%; padding:9px 12px; border-radius:14px; font-size:13px; line-height:1.45}
+.m--in{background:var(--surface-3); align-self:flex-start; border-bottom-left-radius:4px}
+.m--out{background:var(--cypress); color:var(--on-primary); align-self:flex-end; border-bottom-right-radius:4px}
+.m--note{background:var(--brass-soft); color:var(--brass); align-self:stretch; max-width:100%; border-radius:var(--r); font-size:12.5px; border-left:2px solid var(--brass)}
+.m time{display:block; font-family:var(--mono); font-size:9.5px; opacity:.62; margin-top:4px}
+.composer{display:flex; gap:8px; margin-top:4px}
+.composer .inp{flex:1}
+
+/* timeline */
+.tl{display:flex; flex-direction:column}
+.tli{display:grid; grid-template-columns:16px 1fr; gap:11px; position:relative; padding-bottom:12px}
+.tli:last-child{padding-bottom:0}
+.tli::before{content:""; position:absolute; left:7px; top:15px; bottom:0; width:2px; background:var(--line)}
+.tli:last-child::before{display:none}
+.tld{width:16px; height:16px; border-radius:50%; background:var(--cypress); display:grid; place-items:center; z-index:1; margin-top:1px}
+.tld svg{width:8px; height:8px; stroke:var(--on-primary); fill:none; stroke-width:3.4; stroke-linecap:round; stroke-linejoin:round}
+.tlt{font-size:12.5px; font-weight:600; line-height:1.4}
+.tlm{font-family:var(--mono); font-size:10px; color:var(--ink-3)}
+
+.cmp{display:flex; gap:8px; flex-wrap:wrap}
+.cmp span{padding:5px 9px; border-radius:7px; background:var(--surface-2); font-family:var(--mono); font-size:11.5px}
+.verdict{padding:10px 12px; border-radius:var(--r); font-size:12.5px; line-height:1.5}
+.verdict--ok{background:var(--good-soft); color:var(--good)}
+.verdict--warn{background:var(--warn-soft); color:var(--warn)}
+
+.toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%); z-index:80;
+  background:var(--ink); color:var(--ground); padding:11px 18px; border-radius:999px;
+  font-size:13px; font-weight:600; box-shadow:var(--shadow-lg); animation:pop .2s ease;
+}
+@keyframes pop{from{opacity:0; transform:translate(-50%,8px)} to{opacity:1; transform:translate(-50%,0)}}
+</style>
+
+<div class="app">
+  <nav class="rail">
+    <div class="brand">
+      <span class="brand__m">BR</span>
+      <span>
+        <span class="brand__t">Concierge Ops</span>
+        <span class="brand__s">Baton Rouge</span>
+      </span>
+    </div>
+    <div id="nav"></div>
+    <div class="rail__foot">
+      <button class="btn btn--g btn--s btn--full" data-a="reset">Reset demo data</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="demobar">
+      <span class="lbl">Prototype</span>
+      <button class="btn btn--g btn--s" data-a="sim-inbound">Simulate inbound text</button>
+      <button class="btn btn--g btn--s" data-a="sim-accept">Contractor responds</button>
+      <span class="lbl" style="margin-left:auto">Nothing here is saved — reloading restores the starting state</span>
+    </div>
+    <div class="top" id="top"></div>
+    <div class="body" id="body"></div>
+  </div>
+</div>
+<div id="drawer"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   ICONS
+   ============================================================ */
+var IC = {
+  board:'M4 5h5v14H4zM10.5 5h4v9h-4zM16 5h4v6h-4z',
+  users:'M8.5 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM2.5 20c0-3.3 2.7-5.4 6-5.4s6 2.1 6 5.4M16.5 11.2a2.8 2.8 0 1 0 0-5.6M18 14.9c2 .5 3.5 2.2 3.5 4.4',
+  home:'M3 10.6 12 3.2l9 7.4V20a1 1 0 0 1-1 1h-4.8v-6H8.8v6H4a1 1 0 0 1-1-1z',
+  cash:'M12 3.2v17.6M16.2 7.6c0-1.9-1.9-2.6-4.2-2.6s-4.2.9-4.2 2.9c0 4.1 8.4 1.7 8.4 5.6 0 2-1.9 2.9-4.2 2.9s-4.2-.7-4.2-2.6',
+  x:'M6 6l12 12M18 6L6 18',
+  check:'M4 12.5l5 5L20 6.5',
+  send:'M21.5 2.5 11 13M21.5 2.5l-6.8 19-3.7-8.5L2.5 10z',
+  plus:'M12 5v14M5 12h14'
+};
+function sv(k,s){ return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="'+IC[k]+'"'+(s||'')+'/></svg>'; }
+function m0(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+function m2(n){ return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function clock(min){
+  if (min < 60) return min + 'm';
+  var h = Math.floor(min/60);
+  return h < 24 ? h + 'h ' + (min%60) + 'm' : Math.floor(h/24) + 'd';
+}
+function nowLabel(offsetMin){
+  var d = new Date(Date.now() - (offsetMin||0)*60000);
+  return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+
+/* ============================================================
+   SEED DATA  (fabricated — Greater Baton Rouge)
+   ============================================================ */
+var TRADES = ['Plumbing','Electrical','HVAC','Handyman','Paint/Drywall','Roofing','Exterior','Appliance','Flooring','Locksmith'];
+
+function seed(){
+ return {
+  contractors:[
+    {id:'broussard', n:'Broussard Plumbing & Drain', i:'BP', trade:'Plumbing',     lic:'LA Master Plumber #8842',  rating:4.9, accept:92, resp:6,  jobs:9,  fees:412, docExpiry:'04/12/27', docState:'ok',   docNote:'COI good thru 04/12/27', status:'Active', zips:'70808 70809 70810'},
+    {id:'bayou',     n:'Bayou State Plumbing',       i:'BS', trade:'Plumbing',     lic:'LA Master Plumber #9107',  rating:4.6, accept:79, resp:19, jobs:4,  fees:151, docExpiry:'11/02/26', docState:'ok',   docNote:'COI good thru 11/02/26', status:'Active', zips:'70806 70808 70815'},
+    {id:'delta',     n:'Delta Bayou Mechanical',     i:'DB', trade:'HVAC',         lic:'LA Mechanical #C-4471',    rating:4.8, accept:88, resp:9,  jobs:7,  fees:503, docExpiry:'01/30/27', docState:'ok',   docNote:'COI good thru 01/30/27', status:'Active', zips:'70808 70817 70737'},
+    {id:'capital',   n:'Capital Air & Heat',         i:'CA', trade:'HVAC',         lic:'LA Mechanical #C-5218',    rating:4.5, accept:71, resp:26, jobs:3,  fees:188, docExpiry:'03/14/27', docState:'ok',   docNote:'COI good thru 03/14/27', status:'Active', zips:'70809 70816'},
+    {id:'hebert',    n:'Hebert Electric',            i:'HE', trade:'Electrical',   lic:'LA Electrical #EC-5590',   rating:4.9, accept:81, resp:14, jobs:6,  fees:288, docExpiry:'08/03/27', docState:'ok',   docNote:'COI good thru 08/03/27', status:'Active', zips:'70808 70809 70810'},
+    {id:'landry',    n:'Landry Electrical Services', i:'LE', trade:'Electrical',   lic:'LA Electrical #EC-6014',   rating:4.7, accept:86, resp:11, jobs:5,  fees:233, docExpiry:'05/20/27', docState:'ok',   docNote:'COI good thru 05/20/27', status:'Active', zips:'70791 70714 70811'},
+    {id:'perkins',   n:'Perkins Handyman Co.',       i:'PH', trade:'Handyman',     lic:'Home Improv. Reg. #21107', rating:4.7, accept:95, resp:4,  jobs:11, fees:361, docExpiry:'06/22/27', docState:'ok',   docNote:'COI good thru 06/22/27', status:'Active', zips:'70808 70806 70809'},
+    {id:'ascension', n:'Ascension Home Repair',      i:'AH', trade:'Handyman',     lic:'Home Improv. Reg. #22580', rating:4.6, accept:88, resp:8,  jobs:6,  fees:207, docExpiry:'09/08/27', docState:'ok',   docNote:'COI good thru 09/08/27', status:'Active', zips:'70737 70769'},
+    {id:'cypress',   n:'Cypress Roofing & Gutters',  i:'CR', trade:'Roofing',      lic:'LA Residential #58210',    rating:4.6, accept:73, resp:22, jobs:3,  fees:268, docExpiry:'10/02/26', docState:'warn', docNote:'COI expires in 21 days', status:'Active', zips:'70791 70714 70808'},
+    {id:'amite',     n:'Amite Pressure Washing',     i:'AP', trade:'Exterior',     lic:'Occupational lic. only',   rating:4.8, accept:90, resp:8,  jobs:5,  fees:196, docExpiry:'02/18/27', docState:'ok',   docNote:'COI good thru 02/18/27', status:'Active', zips:'70808 70810 70820'},
+    {id:'tiger',     n:'Tiger Appliance Repair',     i:'TA', trade:'Appliance',    lic:'Factory authorized',       rating:4.5, accept:77, resp:17, jobs:2,  fees:74,  docExpiry:'',         docState:'crit', docNote:'W-9 not on file',        status:'Paused', zips:'70806 70809'},
+    {id:'gonzales',  n:'Gonzales Paint & Drywall',   i:'GP', trade:'Paint/Drywall',lic:'Home Improv. Reg. #19884', rating:4.7, accept:84, resp:12, jobs:4,  fees:310, docExpiry:'09/29/26', docState:'warn', docNote:'COI expires in 18 days', status:'Active', zips:'70737 70769 70817'},
+    {id:'magnolia',  n:'Magnolia Flooring',          i:'MF', trade:'Flooring',     lic:'Home Improv. Reg. #20441', rating:4.8, accept:82, resp:15, jobs:3,  fees:412, docExpiry:'07/11/27', docState:'ok',   docNote:'COI good thru 07/11/27', status:'Active', zips:'70808 70809'},
+    {id:'redstick',  n:'Red Stick Lock & Key',       i:'RL', trade:'Locksmith',    lic:'LA Locksmith #LS-2204',    rating:4.9, accept:97, resp:3,  jobs:2,  fees:48,  docExpiry:'12/05/26', docState:'ok',   docNote:'COI good thru 12/05/26', status:'Active', zips:'70808 70806 70815'}
+  ],
+
+  members:[
+    {id:'fontenot',  n:'Dana Fontenot',   addr:'1247 Marquette Ave',   city:'Baton Rouge',  zip:'70808', since:'Mar 2025', plan:'Founding annual', jobs:6, notes:'Gate code 4412. Friendly dog in back yard.'},
+    {id:'guidry',    n:'Marcus Guidry',   addr:'2201 Ferndale Ave',    city:'Baton Rouge',  zip:'70808', since:'Apr 2025', plan:'Annual',          jobs:5, notes:'Prefers texts over calls. Works from home.'},
+    {id:'thibodeaux',n:'Renee Thibodeaux',addr:'18 Stanford Ct',       city:'Prairieville', zip:'70769', since:'Jun 2025', plan:'Monthly',         jobs:3, notes:'Two-story, upstairs unit is the problem child.'},
+    {id:'ellison',   n:'Kara Ellison',    addr:'3312 Kenilworth Pkwy', city:'Baton Rouge',  zip:'70808', since:'Mar 2026', plan:'Monthly',         jobs:4, notes:'Lockbox on front hose bib, code 2019.'},
+    {id:'navarro',   n:'Chris Navarro',   addr:'9 Drusilla Ln',        city:'Baton Rouge',  zip:'70809', since:'Jan 2026', plan:'Annual',          jobs:2, notes:''},
+    {id:'landryj',   n:'Jules Landry',    addr:'740 Church St',        city:'Zachary',      zip:'70791', since:'Feb 2026', plan:'Annual',          jobs:3, notes:'Detached garage, gate on the left.'},
+    {id:'moreau',    n:'Paul Moreau',     addr:'615 Goodwood Blvd',    city:'Baton Rouge',  zip:'70806', since:'May 2026', plan:'Monthly',         jobs:1, notes:''},
+    {id:'boudreaux', n:'Anne Boudreaux',  addr:'44 Lee Dr',            city:'Baton Rouge',  zip:'70808', since:'Jul 2025', plan:'Annual',          jobs:4, notes:'Do not ring bell before 9am — night shift.'}
+  ],
+
+  requests:[
+    {id:'BR-2431', member:'ellison', trade:'Electrical', title:'No power to half the kitchen', status:'inbox', urgency:'today', openMin:4, quote:null, pro:null, offers:[], win:null, invoice:null,
+     msgs:[{d:'in', t:'Outlets and the under-cabinet lights on the sink side are all dead. Breaker doesn\'t look tripped. Coffee maker works on the other wall.', m:4}],
+     tl:[{t:'Request received by text', m:4}]},
+
+    {id:'BR-2430', member:'thibodeaux', trade:'HVAC', title:'Upstairs not cooling', status:'inbox', urgency:'today', openMin:12, quote:null, pro:null, offers:[], win:null, invoice:null,
+     msgs:[{d:'in', t:'Upstairs is sitting at 81 and the downstairs is fine. Outside unit is running.', m:12}],
+     tl:[{t:'Request received by text', m:12}]},
+
+    {id:'BR-2429', member:'landryj', trade:'Roofing', title:'Shingles off after Tuesday storm', status:'dispatching', urgency:'week', openMin:38, quote:null, pro:null, win:null, invoice:null,
+     offers:[{pro:'cypress', state:'pending', m:9}],
+     msgs:[{d:'in', t:'Found three shingles in the yard after the storm Tuesday. No leak that I can see but I\'d rather have it looked at.', m:38},
+           {d:'out', t:'Sending this to our roofer now — we\'ll have someone out before the next system comes through.', m:31}],
+     tl:[{t:'Request received by text', m:38},{t:'Triaged to Roofing', m:33},{t:'Offer sent to Cypress Roofing & Gutters', m:9}]},
+
+    {id:'BR-2428', member:'navarro', trade:'Handyman', title:'Front door lock sticking', status:'dispatching', urgency:'when', openMin:21, quote:null, pro:null, win:null, invoice:null,
+     offers:[{pro:'perkins', state:'pending', m:6}],
+     msgs:[{d:'in', t:'Front door deadbolt catches. Have to lift the door to lock it.', m:21}],
+     tl:[{t:'Request received by text', m:21},{t:'Triaged to Handyman', m:14},{t:'Offer sent to Perkins Handyman Co.', m:6}]},
+
+    {id:'BR-2427', member:'guidry', trade:'Plumbing', title:'Slow drain, both bathrooms', status:'quoted', urgency:'week', openMin:0, pro:'broussard', offers:[{pro:'broussard', state:'accepted', m:280}], win:null, invoice:null,
+     quote:{amt:385, note:'Main line cable-out from the cleanout, includes camera pass.', state:'pending'},
+     msgs:[{d:'in', t:'Both bathrooms draining slow. Plunger isn\'t doing it.', m:320},
+           {d:'out', t:'That pattern usually means the main, not the fixtures. Sending Broussard.', m:315}],
+     tl:[{t:'Request received by text', m:320},{t:'Triaged to Plumbing', m:316},{t:'Broussard Plumbing & Drain accepted', m:280},{t:'Quote received — $385', m:44}]},
+
+    {id:'BR-2425', member:'moreau', trade:'Appliance', title:'Ice maker not filling', status:'quoted', urgency:'when', openMin:0, pro:'tiger', offers:[{pro:'tiger', state:'accepted', m:1400}], win:null, invoice:null,
+     quote:{amt:240, note:'Inlet valve replacement, parts and labor.', state:'pending'},
+     flag:'Member asked for a second opinion',
+     msgs:[{d:'in', t:'Ice maker stopped filling. Water through the door still works.', m:1500},
+           {d:'note', t:'Member called after the quote came in and asked whether $240 is fair for a valve. Worth a comparable check before we push this.', m:60}],
+     tl:[{t:'Request received by text', m:1500},{t:'Tiger Appliance Repair accepted', m:1400},{t:'Quote received — $240', m:120}]},
+
+    {id:'BR-2422', member:'boudreaux', trade:'Exterior', title:'Pressure wash siding & walk', status:'scheduled', urgency:'when', openMin:0, pro:'amite', offers:[{pro:'amite', state:'accepted', m:2800}], invoice:null,
+     quote:{amt:330, note:'House, driveway and front walk. Soft wash on the siding.', state:'approved'},
+     win:'Thursday 8:00 AM',
+     msgs:[{d:'in', t:'Siding is getting green on the north side again.', m:3000}],
+     tl:[{t:'Request received by text', m:3000},{t:'Amite Pressure Washing accepted', m:2800},{t:'Quote approved — $330', m:2600},{t:'Scheduled Thursday 8:00 AM', m:2590}]},
+
+    {id:'BR-2418', member:'fontenot', trade:'Plumbing', title:'Water heater weeping at the base', status:'scheduled', urgency:'today', openMin:0, pro:'broussard', offers:[{pro:'broussard', state:'accepted', m:3100}], invoice:null,
+     quote:{amt:385, note:'T&P valve replacement plus thermal expansion tank.', state:'approved'},
+     win:'Thursday 1:00–3:00 PM',
+     msgs:[{d:'in', t:'Water is pooling under the water heater in the garage. Not a lot but it\'s definitely wet.', m:3200},
+           {d:'note', t:'Photo shows corrosion at the T&P discharge, not the tank seam. Routed as a repair, not a replacement.', m:3198},
+           {d:'out', t:'Good news — that\'s the discharge line, not the tank. Broussard can be there Thursday 1–3.', m:3100}],
+     tl:[{t:'Request received by text', m:3200},{t:'Triaged to Plumbing', m:3198},{t:'Broussard Plumbing & Drain accepted', m:3100},{t:'Quote approved — $385', m:2900},{t:'Scheduled Thursday 1:00–3:00 PM', m:2880}]},
+
+    {id:'BR-2414', member:'landryj', trade:'Roofing', title:'Gutter clean, full house', status:'complete', urgency:'when', openMin:0, pro:'cypress', offers:[{pro:'cypress', state:'accepted', m:9000}],
+     quote:{amt:310, note:'Full gutter clear and downspout flush.', state:'approved'}, win:'Last Tuesday 9:00 AM', invoice:310,
+     msgs:[{d:'in', t:'Gutters are overflowing at the front corner.', m:9200}],
+     tl:[{t:'Request received by text', m:9200},{t:'Cypress Roofing & Gutters accepted', m:9000},{t:'Quote approved — $310', m:8800},{t:'Work completed — invoiced $310', m:2000}]},
+
+    {id:'BR-2411', member:'guidry', trade:'Paint/Drywall', title:'Drywall patch & repaint hall', status:'complete', urgency:'when', openMin:0, pro:'gonzales', offers:[{pro:'gonzales', state:'accepted', m:14000}],
+     quote:{amt:640, note:'Two patches, texture match, repaint the full hallway.', state:'approved'}, win:'Last Thursday', invoice:640,
+     msgs:[{d:'in', t:'Two holes in the hallway from moving a dresser.', m:14200}],
+     tl:[{t:'Request received by text', m:14200},{t:'Gonzales Paint & Drywall accepted', m:14000},{t:'Quote approved — $640', m:13800},{t:'Work completed — invoiced $640', m:5000}]}
+  ],
+
+  fees:[
+    {id:'BR-2414', pro:'cypress',  amt:310, state:'paid'},
+    {id:'BR-2411', pro:'gonzales', amt:640, state:'invoiced'},
+    {id:'BR-2409', pro:'perkins',  amt:295, state:'paid'},
+    {id:'BR-2406', pro:'delta',    amt:480, state:'paid'},
+    {id:'BR-2402', pro:'hebert',   amt:265, state:'invoiced'},
+    {id:'BR-2398', pro:'broussard',amt:210, state:'paid'}
+  ],
+
+  /* Closed jobs behind the month-to-date figures, so the KPI strip is not a
+     magic number — it is derived from fees plus whatever you close on screen. */
+  priorGmv: 12855,
+  members_active: 147,
+  nextId: 2432
+ };
+}
+
+var INBOUND = [
+  {trade:'Plumbing',   title:'Kitchen faucet dripping constantly', msg:'The kitchen faucet has started dripping and I can\'t get it to stop. It\'s the pull-down kind.', member:'navarro', urgency:'week'},
+  {trade:'Electrical', title:'Breaker keeps tripping on the garage', msg:'The garage breaker trips every time we run the deep freezer and the compressor together.', member:'boudreaux', urgency:'week'},
+  {trade:'HVAC',       title:'AC making a grinding noise', msg:'Outside unit started making a grinding sound this morning. Still cooling but it sounds awful.', member:'guidry', urgency:'today'},
+  {trade:'Appliance',  title:'Dryer runs but won\'t heat', msg:'Dryer tumbles fine but the clothes come out cold and damp. Vent is clear as far as I can see.', member:'moreau', urgency:'week'},
+  {trade:'Handyman',   title:'Back gate sagging, won\'t latch', msg:'Back gate has dropped and won\'t latch anymore. Dog got out yesterday.', member:'fontenot', urgency:'today'},
+  {trade:'Roofing',    title:'Water stain on the ceiling', msg:'There\'s a brown ring on the ceiling in the back bedroom that wasn\'t there last week.', member:'thibodeaux', urgency:'today'},
+  {trade:'Locksmith',  title:'Locked out, key snapped in the deadbolt', msg:'Key broke off in the front deadbolt. I\'m outside on the porch right now.', member:'ellison', urgency:'today'},
+  {trade:'Flooring',   title:'Tile cracked in the entry', msg:'Two entry tiles cracked, I think something heavy got dropped. Would like them replaced.', member:'landryj', urgency:'when'}
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var DB = seed();
+var UI = { view:'board', open:null, picks:[], sort:{k:'jobs', d:-1}, drawerTab:'work', tick:0 };
+
+function pro(id){ for (var i=0;i<DB.contractors.length;i++) if (DB.contractors[i].id===id) return DB.contractors[i]; return null; }
+function mem(id){ for (var i=0;i<DB.members.length;i++) if (DB.members[i].id===id) return DB.members[i]; return null; }
+function req(id){ for (var i=0;i<DB.requests.length;i++) if (DB.requests[i].id===id) return DB.requests[i]; return null; }
+
+var COLS = [
+  {k:'inbox',       l:'Inbox'},
+  {k:'dispatching', l:'Dispatching'},
+  {k:'quoted',      l:'Quote review'},
+  {k:'scheduled',   l:'Scheduled'},
+  {k:'complete',    l:'Completed'}
+];
+
+function sla(r){
+  if (r.status !== 'inbox' && r.status !== 'dispatching') return 'none';
+  var m = r.openMin + UI.tick;
+  return m < 15 ? 'ok' : m < 30 ? 'warn' : 'late';
+}
+function openFor(r){ return r.openMin + UI.tick; }
+
+/* --- derived numbers: everything on the KPI strip comes from state --- */
+function stats(){
+  var gmv = DB.priorGmv, fees = 0, collected = 0, jobs = 0;
+  DB.fees.forEach(function(f){
+    fees += f.amt * 0.10;
+    if (f.state === 'paid') collected += f.amt * 0.10;
+  });
+  DB.fees.forEach(function(){ jobs++; });
+  DB.requests.forEach(function(r){
+    if (r.status === 'complete' && r.invoice && !DB.fees.some(function(f){ return f.id === r.id; })) {
+      gmv += r.invoice; fees += r.invoice * 0.10; jobs++;
+    }
+  });
+  gmv += DB.fees.reduce(function(a,f){ return a + f.amt; }, 0);
+
+  var open = DB.requests.filter(function(r){ return r.status==='inbox' || r.status==='dispatching'; });
+  var late = open.filter(function(r){ return sla(r) === 'late'; }).length;
+  var filled = DB.requests.filter(function(r){ return r.pro; }).length;
+  var fill = DB.requests.length ? Math.round(filled / DB.requests.length * 100) : 100;
+
+  return { gmv:gmv, fees:fees, collected:collected, jobs:jobs, open:open.length, late:late, fill:fill,
+           mrr: DB.members_active * 39 };
+}
+
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.innerHTML = '<div class="toast">' + esc(msg) + '</div>';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(function(){ t.innerHTML = ''; }, 2600);
+}
+function log(r, text){ r.tl.push({ t:text, m:0 }); }
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+var ACT = {
+  triage: function(r, trade, urgency){
+    r.trade = trade; r.urgency = urgency;
+    log(r, 'Triaged to ' + trade);
+    toast('Triaged to ' + trade);
+  },
+  note: function(r, text){
+    r.msgs.push({ d:'note', t:text, m:0 });
+    toast('Internal note added');
+  },
+  reply: function(r, text){
+    r.msgs.push({ d:'out', t:text, m:0 });
+    toast('Reply sent to member');
+  },
+  sendOffers: function(r, ids){
+    ids.forEach(function(id){ r.offers.push({ pro:id, state:'pending', m:0 }); });
+    r.status = 'dispatching';
+    log(r, 'Offer sent to ' + ids.map(function(i){ return pro(i).n; }).join(', '));
+    toast(ids.length + (ids.length === 1 ? ' offer sent' : ' offers sent'));
+  },
+  accept: function(r, id){
+    r.offers.forEach(function(o){ o.state = o.pro === id ? 'accepted' : 'passed'; });
+    r.pro = id;
+    if (r.status === 'dispatching') r.status = 'quoted';
+    log(r, pro(id).n + ' accepted');
+    toast(pro(id).n + ' accepted — waiting on their quote');
+  },
+  quote: function(r, amt, note){
+    r.quote = { amt:amt, note:note, state:'pending' };
+    r.status = 'quoted';
+    log(r, 'Quote received — ' + m0(amt));
+    toast('Quote logged for review');
+  },
+  approveQuote: function(r){
+    r.quote.state = 'approved';
+    log(r, 'Quote approved — ' + m0(r.quote.amt));
+    toast('Quote approved and sent to the member');
+  },
+  sendBack: function(r, why){
+    r.quote.state = 'sent_back';
+    r.msgs.push({ d:'note', t:'Quote sent back to ' + pro(r.pro).n + ': ' + why, m:0 });
+    log(r, 'Quote sent back for revision');
+    toast('Sent back to the contractor');
+  },
+  schedule: function(r, win){
+    r.win = win; r.status = 'scheduled';
+    log(r, 'Scheduled ' + win);
+    toast('Scheduled — member notified');
+  },
+  complete: function(r, invoice){
+    r.invoice = invoice; r.status = 'complete';
+    DB.fees.push({ id:r.id, pro:r.pro, amt:invoice, state:'accrued' });
+    log(r, 'Work completed — invoiced ' + m0(invoice));
+    toast('Closed out. ' + m2(invoice * 0.10) + ' fee accrued.');
+  },
+  feeState: function(id, state){
+    DB.fees.forEach(function(f){ if (f.id === id) f.state = state; });
+    toast('Fee marked ' + state);
+  },
+  proStatus: function(id, status){
+    var p = pro(id);
+    p.status = status;
+    toast(p.n + ' ' + (status === 'Active' ? 'activated' : 'paused — no new offers will route'));
+  },
+  inbound: function(){
+    var s = INBOUND[(DB.nextId - 2432) % INBOUND.length];
+    var r = {
+      id:'BR-' + DB.nextId, member:s.member, trade:null, title:s.title, status:'inbox',
+      urgency:s.urgency, openMin:0, quote:null, pro:null, offers:[], win:null, invoice:null,
+      msgs:[{ d:'in', t:s.msg, m:0 }], tl:[{ t:'Request received by text', m:0 }]
+    };
+    DB.nextId++;
+    DB.requests.unshift(r);
+    UI.view = 'board'; UI.open = r.id; UI.picks = [];
+    toast('New text from ' + mem(s.member).n);
+  },
+  respond: function(){
+    var pending = DB.requests.filter(function(r){
+      return r.offers.some(function(o){ return o.state === 'pending'; });
+    });
+    if (!pending.length) { toast('No offers are waiting on a contractor'); return; }
+    var r = pending[0];
+    var o = r.offers.filter(function(x){ return x.state === 'pending'; })[0];
+    ACT.accept(r, o.pro);
+  }
+};
+
+/* ============================================================
+   VIEWS — BOARD
+   ============================================================ */
+function jobCard(r){
+  var m = mem(r.member), p = r.pro ? pro(r.pro) : null;
+  var s = sla(r), open = openFor(r);
+  var right = '';
+  if (s !== 'none') right = '<span class="pill pill--' + (s==='ok'?'good':s==='warn'?'warn':'crit') + '">' + clock(open) + ' open</span>';
+  else if (r.status === 'scheduled') right = '<span class="pill pill--cyp">' + esc(r.win) + '</span>';
+  else if (r.status === 'quoted') right = r.quote
+      ? '<span class="pill pill--brass">' + m0(r.quote.amt) + '</span>'
+      : '<span class="pill">awaiting quote</span>';
+  else if (r.status === 'complete') right = '<span class="pill pill--good">' + m2(r.invoice * 0.10) + ' fee</span>';
+
+  var pend = r.offers.filter(function(o){ return o.state === 'pending'; }).length;
+
+  return '<button class="jc" data-a="open" data-id="' + r.id + '" data-sla="' + s + '"' +
+         (UI.open === r.id ? ' data-sel="1"' : '') + '>' +
+    '<div class="jc__r"><span class="jc__id">' + r.id + '</span>' + right + '</div>' +
+    '<div class="jc__t">' + esc(r.title) + '</div>' +
+    '<div class="jc__m">' + esc(m.n) + ' · ' + esc(m.addr) + '</div>' +
+    '<div class="jc__r">' +
+      '<span class="pill">' + (r.trade ? esc(r.trade) : '<span style="color:var(--warn)">needs triage</span>') + '</span>' +
+      (p ? '<span class="jc__m">' + esc(p.n) + '</span>'
+         : pend ? '<span class="jc__m">' + pend + ' awaiting reply</span>' : '') +
+    '</div>' +
+    (r.flag ? '<div class="jc__flag">⚠ ' + esc(r.flag) + '</div>' : '') +
+  '</button>';
+}
+
+function viewBoard(){
+  return '<div class="board">' + COLS.map(function(c){
+    var items = DB.requests.filter(function(r){ return r.status === c.k; });
+    return '<div class="col">' +
+      '<div class="col__h"><span class="lbl">' + c.l + '</span><span class="cnt">' + items.length + '</span></div>' +
+      (items.length ? items.map(jobCard).join('') : '<div class="empty">Clear</div>') +
+    '</div>';
+  }).join('') + '</div>';
+}
+
+/* ============================================================
+   VIEWS — CONTRACTORS
+   ============================================================ */
+function viewPros(){
+  var list = DB.contractors.slice().sort(function(a,b){
+    var k = UI.sort.k, va = a[k], vb = b[k];
+    return (typeof va === 'string' ? va.localeCompare(vb) : va - vb) * UI.sort.d;
+  });
+  function th(k,l){ return '<th><button data-a="sort" data-k="' + k + '">' + l + (UI.sort.k===k ? (UI.sort.d<0?' ↓':' ↑') : '') + '</button></th>'; }
+  return '<div class="tw"><table><thead><tr>' +
+    th('n','Contractor') + th('trade','Trade') + th('accept','Accept') + th('resp','Reply') +
+    th('rating','Rating') + th('jobs','Jobs MTD') + th('fees','Fees MTD') +
+    '<th>Compliance</th><th>Status</th><th></th></tr></thead><tbody>' +
+  list.map(function(p){
+    return '<tr>' +
+      '<td><div class="who"><span class="av">' + p.i + '</span><div><div style="font-weight:600">' + esc(p.n) + '</div>' +
+        '<div style="font-size:11.5px;color:var(--ink-3)">' + esc(p.lic) + '</div></div></div></td>' +
+      '<td>' + esc(p.trade) + '</td>' +
+      '<td class="num"><span class="bar"><i style="width:' + p.accept + '%"></i></span>' + p.accept + '%</td>' +
+      '<td class="num">' + p.resp + 'm</td>' +
+      '<td class="num">★ ' + p.rating + '</td>' +
+      '<td class="num">' + p.jobs + '</td>' +
+      '<td class="num">' + m0(p.fees) + '</td>' +
+      '<td><span class="pill pill--' + (p.docState==='ok'?'good':p.docState==='warn'?'warn':'crit') + '">' + esc(p.docNote) + '</span></td>' +
+      '<td><span class="pill pill--' + (p.status==='Active'?'cyp':'crit') + '">' + p.status + '</span></td>' +
+      '<td><button class="btn ' + (p.status==='Active'?'btn--g':'btn') + ' btn--s" data-a="pro-toggle" data-id="' + p.id + '">' +
+        (p.status === 'Active' ? 'Pause' : 'Activate') + '</button></td>' +
+    '</tr>';
+  }).join('') + '</tbody></table></div>' +
+  '<div class="card card--flat"><h3>Why two vendors per trade</h3>' +
+  '<p style="font-size:13px;color:var(--ink-2);line-height:1.6">Pausing a contractor here stops offers routing to them immediately — try it on Broussard and then open a plumbing request. Because there is a second plumber on the bench, the job still fills. That is the whole reason to carry a spare in every trade.</p></div>';
+}
+
+/* ============================================================
+   VIEWS — MEMBERS
+   ============================================================ */
+function viewMembers(){
+  return '<div class="tw"><table><thead><tr>' +
+    '<th>Member</th><th>Property</th><th>Plan</th><th>Member since</th><th>Requests</th><th>Open now</th><th>Access notes</th>' +
+    '</tr></thead><tbody>' +
+  DB.members.map(function(m){
+    var open = DB.requests.filter(function(r){ return r.member === m.id && r.status !== 'complete'; });
+    return '<tr>' +
+      '<td><div class="who"><span class="av">' + esc(m.n.split(' ').map(function(w){return w[0];}).join('')) + '</span>' +
+        '<div style="font-weight:600">' + esc(m.n) + '</div></div></td>' +
+      '<td>' + esc(m.addr) + '<div style="font-size:11.5px;color:var(--ink-3)">' + esc(m.city) + ' ' + m.zip + '</div></td>' +
+      '<td>' + esc(m.plan) + '</td>' +
+      '<td class="num">' + esc(m.since) + '</td>' +
+      '<td class="num">' + m.jobs + '</td>' +
+      '<td>' + (open.length ? open.map(function(r){ return '<span class="pill pill--cyp">' + r.id + '</span>'; }).join(' ') : '<span style="color:var(--ink-3)">—</span>') + '</td>' +
+      '<td style="white-space:normal;max-width:280px;color:var(--ink-3);font-size:12.5px">' + (esc(m.notes) || '—') + '</td>' +
+    '</tr>';
+  }).join('') + '</tbody></table></div>';
+}
+
+/* ============================================================
+   VIEWS — FEES
+   ============================================================ */
+function viewFees(){
+  var s = stats();
+  var rows = DB.fees.slice().reverse();
+  return '<div class="grid2">' +
+    '<div style="display:flex;flex-direction:column;gap:12px;min-width:0">' +
+      '<div class="tw"><table style="min-width:520px"><thead><tr>' +
+      '<th>Job</th><th>Contractor</th><th>Invoiced</th><th>Fee 10%</th><th>Status</th><th></th>' +
+      '</tr></thead><tbody>' +
+      rows.map(function(f){
+        var p = pro(f.pro);
+        var next = f.state === 'accrued' ? 'invoiced' : f.state === 'invoiced' ? 'paid' : null;
+        return '<tr>' +
+          '<td class="num">' + f.id + '</td>' +
+          '<td>' + (p ? esc(p.n) : '—') + '</td>' +
+          '<td class="num">' + m0(f.amt) + '</td>' +
+          '<td class="num" style="font-weight:600">' + m2(f.amt * 0.10) + '</td>' +
+          '<td><span class="pill pill--' + (f.state==='paid'?'good':f.state==='invoiced'?'warn':'brass') + '">' + f.state + '</span></td>' +
+          '<td>' + (next ? '<button class="btn btn--g btn--s" data-a="fee" data-id="' + f.id + '" data-s="' + next + '">Mark ' + next + '</button>' : '') + '</td>' +
+        '</tr>';
+      }).join('') + '</tbody></table></div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+      '<div class="card"><h3>September to date</h3><dl style="margin:0">' +
+        '<div class="kv"><dt>Contractor GMV generated</dt><dd class="n">' + m0(s.gmv) + '</dd></div>' +
+        '<div class="kv"><dt>Network fees earned (10%)</dt><dd class="n">' + m0(s.fees) + '</dd></div>' +
+        '<div class="kv"><dt>Collected</dt><dd class="n">' + m0(s.collected) + '</dd></div>' +
+        '<div class="kv"><dt>Outstanding</dt><dd class="n" style="color:var(--warn)">' + m0(s.fees - s.collected) + '</dd></div>' +
+        '<div class="kv"><dt>Membership MRR</dt><dd class="n">' + m0(s.mrr) + '</dd></div>' +
+        '<div class="kv"><dt>Total revenue, September</dt><dd class="n" style="font-size:15px">' + m0(s.mrr + s.fees) + '</dd></div>' +
+      '</dl></div>' +
+      '<div class="card card--flat"><h3>GMV is not revenue</h3>' +
+      '<p style="font-size:12.5px;color:var(--ink-2);line-height:1.6">Members contract with and pay the contractor. Only the fee column is income. Close a job out on the board and watch which of these two numbers moves — that difference is the whole reason the membership matters more than the fee.</p></div>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ============================================================
+   DRAWER — the operator's actual workflow
+   ============================================================ */
+function comparables(r){
+  /* Real comparables: same trade, already quoted or closed, this data set. */
+  var out = [];
+  DB.requests.forEach(function(o){
+    if (o.id !== r.id && o.trade === r.trade && o.quote) out.push(o.quote.amt);
+  });
+  DB.fees.forEach(function(f){
+    var p = pro(f.pro);
+    if (p && p.trade === r.trade && out.indexOf(f.amt) === -1) out.push(f.amt);
+  });
+  return out.sort(function(a,b){ return a-b; }).slice(0,4);
+}
+
+function stagePanel(r){
+  var head = function(label, title){
+    return '<div class="stage__h"><span class="lbl">' + label + '</span><b>' + title + '</b></div>';
+  };
+
+  /* ---- 1. TRIAGE ---- */
+  if (r.status === 'inbox') {
+    return '<div class="stage">' + head('Step 1', 'Triage and dispatch') + '<div class="stage__b">' +
+      '<div class="row2">' +
+        '<div class="fld"><span class="lbl">Trade</span><select class="inp" id="f-trade">' +
+          '<option value="">Choose…</option>' +
+          TRADES.map(function(t){ return '<option' + (r.trade===t?' selected':'') + '>' + t + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="fld"><span class="lbl">Urgency</span><select class="inp" id="f-urg">' +
+          [['today','Today if possible'],['week','This week'],['when','Whenever it fits']].map(function(o){
+            return '<option value="' + o[0] + '"' + (r.urgency===o[0]?' selected':'') + '>' + o[1] + '</option>';
+          }).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div class="fld"><span class="lbl">Internal note (optional)</span>' +
+        '<textarea class="inp" id="f-note" placeholder="What you noticed in the photo, what to tell the contractor, what not to promise the member…"></textarea></div>' +
+      '<div class="acts"><button class="btn" data-a="triage" data-id="' + r.id + '">Triage &amp; find contractors</button></div>' +
+    '</div></div>';
+  }
+
+  /* ---- 2. DISPATCH ---- */
+  if (r.status === 'dispatching') {
+    var pending = r.offers.filter(function(o){ return o.state === 'pending'; });
+    var eligible = DB.contractors.filter(function(p){ return p.trade === r.trade; });
+    var already = r.offers.map(function(o){ return o.pro; });
+
+    var body = '';
+    if (pending.length) {
+      body += '<div class="fld"><span class="lbl">Waiting on</span>' +
+        pending.map(function(o){
+          var p = pro(o.pro);
+          return '<div class="pick" style="cursor:default">' +
+            '<span class="av">' + p.i + '</span>' +
+            '<div class="pick__m"><div class="pick__n">' + esc(p.n) + '</div>' +
+              '<div class="pick__d">Offer sent ' + clock(o.m + UI.tick) + ' ago · usually replies in ' + p.resp + 'm</div></div>' +
+            '<button class="btn btn--g btn--s" data-a="accept" data-id="' + r.id + '" data-p="' + p.id + '">Mark accepted</button>' +
+          '</div>';
+        }).join('') + '</div>';
+    }
+
+    var open = eligible.filter(function(p){ return already.indexOf(p.id) === -1; });
+    body += '<div class="fld"><span class="lbl">' + esc(r.trade) + ' on the bench</span><div class="picks">' +
+      (open.length ? open.map(function(p){
+        var blocked = p.status !== 'Active';
+        return '<button class="pick" data-a="pick" data-p="' + p.id + '"' +
+          (blocked ? ' data-blocked="1" disabled' : '') +
+          ' aria-pressed="' + (UI.picks.indexOf(p.id) > -1) + '">' +
+          '<span class="av">' + p.i + '</span>' +
+          '<div class="pick__m"><div class="pick__n">' + esc(p.n) + '</div>' +
+            '<div class="pick__d">' + (blocked ? p.docNote + ' — paused' : p.accept + '% accept · replies in ' + p.resp + 'm · ★ ' + p.rating) + '</div></div>' +
+          '<span class="pick__e">' + p.jobs + ' MTD</span>' +
+        '</button>';
+      }).join('') : '<div class="empty">No other ' + esc(r.trade).toLowerCase() + ' vendors on the bench</div>') +
+    '</div></div>';
+
+    body += '<div class="acts">' +
+      '<button class="btn" data-a="send-offers" data-id="' + r.id + '"' + (UI.picks.length ? '' : ' disabled') + '>' +
+        'Send ' + (UI.picks.length || '') + ' offer' + (UI.picks.length === 1 ? '' : 's') + '</button>' +
+    '</div>';
+
+    return '<div class="stage">' + head('Step 2', 'Dispatch') + '<div class="stage__b">' + body + '</div></div>';
+  }
+
+  /* ---- 3. QUOTE REVIEW ---- */
+  if (r.status === 'quoted' || (r.pro && !r.quote)) {
+    if (!r.quote) {
+      return '<div class="stage">' + head('Step 3', 'Log the contractor\'s quote') + '<div class="stage__b">' +
+        '<div class="row2">' +
+          '<div class="fld"><span class="lbl">Amount</span><input class="inp" id="f-amt" type="number" min="0" step="5" placeholder="385"></div>' +
+          '<div class="fld"><span class="lbl">From</span><input class="inp" value="' + esc(pro(r.pro).n) + '" disabled></div>' +
+        '</div>' +
+        '<div class="fld"><span class="lbl">Scope</span><input class="inp" id="f-qnote" placeholder="What the price covers"></div>' +
+        '<div class="acts"><button class="btn" data-a="log-quote" data-id="' + r.id + '">Log quote</button></div>' +
+      '</div></div>';
+    }
+
+    var c = comparables(r), q = r.quote.amt;
+    var avg = c.length ? c.reduce(function(a,b){ return a+b; },0) / c.length : q;
+    var high = c.length && q > avg * 1.25;
+    var verdict = !c.length
+      ? '<div class="verdict verdict--warn">No comparable ' + esc(r.trade).toLowerCase() + ' jobs in the network yet. Approve on judgment and this becomes the first comparable.</div>'
+      : high
+        ? '<div class="verdict verdict--warn">' + m0(q) + ' is ' + Math.round((q/avg-1)*100) + '% above the ' + m0(avg) + ' average of ' + c.length + ' comparable job' + (c.length===1?'':'s') + '. Worth a question before it reaches the member.</div>'
+        : '<div class="verdict verdict--ok">' + m0(q) + ' sits in range against ' + c.length + ' comparable job' + (c.length===1?'':'s') + ' averaging ' + m0(avg) + '. Fine to send.</div>';
+
+    var st = r.quote.state;
+    return '<div class="stage">' + head('Step 3', 'Review the quote before the member sees it') + '<div class="stage__b">' +
+      '<div class="card card--flat" style="padding:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">' +
+          '<span style="font-family:var(--disp);font-size:24px;font-weight:700">' + m0(q) + '</span>' +
+          '<span class="pill pill--' + (st==='approved'?'good':st==='sent_back'?'crit':'brass') + '">' + st.replace('_',' ') + '</span>' +
+        '</div>' +
+        '<p style="font-size:12.5px;color:var(--ink-2);margin-top:6px">' + esc(r.quote.note) + '</p>' +
+      '</div>' +
+      (c.length ? '<div class="fld"><span class="lbl">Comparable ' + esc(r.trade).toLowerCase() + ' jobs</span>' +
+        '<div class="cmp">' + c.map(function(v){ return '<span>' + m0(v) + '</span>'; }).join('') + '</div></div>' : '') +
+      verdict +
+      (st === 'pending'
+        ? '<div class="acts"><button class="btn" data-a="approve" data-id="' + r.id + '">Approve &amp; send to member</button>' +
+          '<button class="btn btn--d" data-a="send-back" data-id="' + r.id + '">Send back</button></div>'
+        : st === 'sent_back'
+          ? '<div class="acts"><button class="btn btn--g" data-a="reopen-quote" data-id="' + r.id + '">Log a revised quote</button></div>'
+          : '<div class="fld"><span class="lbl">Schedule it</span><div class="row2">' +
+            '<input class="inp" id="f-win" placeholder="Thursday 1:00–3:00 PM">' +
+            '<button class="btn" data-a="schedule" data-id="' + r.id + '">Confirm window</button>' +
+          '</div></div>') +
+    '</div></div>';
+  }
+
+  /* ---- 4. SCHEDULED → CLOSE OUT ---- */
+  if (r.status === 'scheduled') {
+    return '<div class="stage">' + head('Step 4', 'Close it out') + '<div class="stage__b">' +
+      '<dl style="margin:0">' +
+        '<div class="kv"><dt>Contractor</dt><dd>' + esc(pro(r.pro).n) + '</dd></div>' +
+        '<div class="kv"><dt>Window</dt><dd>' + esc(r.win) + '</dd></div>' +
+        '<div class="kv"><dt>Approved quote</dt><dd class="n">' + m0(r.quote.amt) + '</dd></div>' +
+      '</dl>' +
+      '<div class="fld"><span class="lbl">What the contractor actually invoiced</span>' +
+        '<input class="inp" id="f-inv" type="number" min="0" step="5" value="' + r.quote.amt + '"></div>' +
+      '<p style="font-size:12px;color:var(--ink-3);line-height:1.55">The fee is 10% of what they collect, not what they quoted. If the job ran short or long, enter the real number.</p>' +
+      '<div class="acts"><button class="btn" data-a="complete" data-id="' + r.id + '">Mark complete &amp; accrue fee</button></div>' +
+    '</div></div>';
+  }
+
+  /* ---- 5. DONE ---- */
+  var fee = DB.fees.filter(function(f){ return f.id === r.id; })[0];
+  return '<div class="stage">' + head('Closed', 'Done') + '<div class="stage__b">' +
+    '<dl style="margin:0">' +
+      '<div class="kv"><dt>Contractor invoiced the member</dt><dd class="n">' + m0(r.invoice) + '</dd></div>' +
+      '<div class="kv"><dt>Network fee at 10%</dt><dd class="n" style="font-weight:700">' + m2(r.invoice * 0.10) + '</dd></div>' +
+      '<div class="kv"><dt>Fee status</dt><dd>' + (fee ? fee.state : 'accrued') + '</dd></div>' +
+      '<div class="kv"><dt>What the member paid us</dt><dd>$0</dd></div>' +
+    '</dl>' +
+    '<p style="font-size:12px;color:var(--ink-3);line-height:1.55">The member paid the contractor directly. We invoice the contractor separately — see the Fees tab.</p>' +
+  '</div></div>';
+}
+
+function drawer(){
+  if (!UI.open) return '';
+  var r = req(UI.open);
+  if (!r) return '';
+  var m = mem(r.member), p = r.pro ? pro(r.pro) : null;
+  var s = sla(r);
+
+  var msgs = r.msgs.map(function(x){
+    var cls = x.d === 'in' ? 'm m--in' : x.d === 'out' ? 'm m--out' : 'm m--note';
+    var who = x.d === 'note' ? 'Internal note' : x.d === 'in' ? m.n.split(' ')[0] : 'You';
+    return '<div class="' + cls + '">' + esc(x.t) + '<time>' + who + ' · ' + nowLabel(x.m) + '</time></div>';
+  }).join('');
+
+  return '<div class="scrim" data-a="close"></div><aside class="drawer" role="dialog" aria-label="Request detail">' +
+    '<div class="dr__h">' +
+      '<div style="flex:1;min-width:0">' +
+        '<span class="jc__id">' + r.id + ' · ' + esc(m.n) + '</span>' +
+        '<h2>' + esc(r.title) + '</h2>' +
+        '<div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">' +
+          '<span class="pill">' + (r.trade ? esc(r.trade) : 'untriaged') + '</span>' +
+          (s !== 'none' ? '<span class="pill pill--' + (s==='ok'?'good':s==='warn'?'warn':'crit') + '">' + clock(openFor(r)) + ' open</span>' : '') +
+          (p ? '<span class="pill pill--cyp">' + esc(p.n) + '</span>' : '') +
+        '</div>' +
+      '</div>' +
+      '<button class="icb" data-a="close" aria-label="Close">' + sv('x') + '</button>' +
+    '</div>' +
+
+    '<div class="dr__b">' +
+      stagePanel(r) +
+
+      '<div class="card"><h3>' + esc(m.n) + '</h3>' +
+        '<dl style="margin:0">' +
+          '<div class="kv"><dt>Property</dt><dd>' + esc(m.addr) + '</dd></div>' +
+          '<div class="kv"><dt>Area</dt><dd>' + esc(m.city) + ' ' + m.zip + '</dd></div>' +
+          '<div class="kv"><dt>Plan</dt><dd>' + esc(m.plan) + '</dd></div>' +
+          '<div class="kv"><dt>Member since</dt><dd>' + esc(m.since) + '</dd></div>' +
+          '<div class="kv"><dt>Prior requests</dt><dd>' + m.jobs + '</dd></div>' +
+        '</dl>' +
+        (m.notes ? '<p style="font-size:12.5px;color:var(--brass);background:var(--brass-soft);padding:9px 11px;border-radius:9px;margin-top:10px">' + esc(m.notes) + '</p>' : '') +
+      '</div>' +
+
+      '<div class="card"><h3>Conversation</h3>' +
+        '<div class="thread">' + msgs + '</div>' +
+        '<div class="composer">' +
+          '<input class="inp" id="f-reply" placeholder="Reply to ' + esc(m.n.split(' ')[0]) + '…">' +
+          '<button class="btn" data-a="reply" data-id="' + r.id + '" aria-label="Send reply">' + sv('send') + '</button>' +
+        '</div>' +
+        '<div class="composer">' +
+          '<input class="inp" id="f-inote" placeholder="Internal note — the member never sees this">' +
+          '<button class="btn btn--g" data-a="inote" data-id="' + r.id + '">Note</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="card"><h3>History</h3><div class="tl">' +
+        r.tl.map(function(e){
+          return '<div class="tli"><span class="tld">' + sv('check') + '</span>' +
+            '<div><div class="tlt">' + esc(e.t) + '</div><div class="tlm">' + nowLabel(e.m) + '</div></div></div>';
+        }).join('') +
+      '</div></div>' +
+    '</div>' +
+  '</aside>';
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+var NAV = [
+  {k:'board',   l:'Dispatch',    i:'board'},
+  {k:'pros',    l:'Contractors', i:'users'},
+  {k:'members', l:'Members',     i:'home'},
+  {k:'fees',    l:'Fees',        i:'cash'}
+];
+
+var TITLES = {
+  board:   ['Dispatch board', 'Every request in the system, left to right. The colored edge is the response clock.'],
+  pros:    ['Contractor bench', 'Who you can route to right now, and who is blocked from receiving work.'],
+  members: ['Members', 'Who is paying, what they own, and what we need to know before a contractor pulls up.'],
+  fees:    ['Fees &amp; revenue', 'What the network earned, what has been invoiced, and what is still owed.']
+};
+
+function render(){
+  var s = stats();
+
+  document.getElementById('nav').innerHTML = NAV.map(function(n){
+    var cnt = n.k === 'board' ? s.open
+            : n.k === 'pros' ? DB.contractors.filter(function(p){ return p.status === 'Active'; }).length
+            : n.k === 'members' ? DB.members.length
+            : DB.fees.filter(function(f){ return f.state !== 'paid'; }).length;
+    return '<button class="navb" data-a="nav" data-v="' + n.k + '" aria-current="' + (UI.view === n.k) + '">' +
+      sv(n.i) + '<span>' + n.l + '</span><span class="cnt">' + cnt + '</span></button>';
+  }).join('');
+
+  var t = TITLES[UI.view];
+  document.getElementById('top').innerHTML =
+    '<h1>' + t[0] + '<span>' + t[1] + '</span></h1>' +
+    (UI.view === 'board' && s.late
+      ? '<span class="pill pill--crit">' + s.late + ' past 30 min</span>' : '');
+
+  var kpis = [
+    {l:'Open requests',   v:String(s.open),   d:s.late ? s.late + ' past 30 min' : 'all inside SLA', t:s.late ? 'warn' : 'good'},
+    {l:'Active members',  v:String(DB.members_active), d:'+18 this month', t:'good'},
+    {l:'Membership MRR',  v:m0(s.mrr),        d:DB.members_active + ' × $39', t:''},
+    {l:'Jobs closed MTD', v:String(s.jobs),   d:'GMV ' + m0(s.gmv), t:''},
+    {l:'Network fees MTD',v:m0(s.fees),       d:m0(s.collected) + ' collected', t:''},
+    {l:'Fill rate',       v:s.fill + '%',     d:'target > 90%', t:s.fill >= 90 ? 'good' : 'warn'}
+  ];
+
+  document.getElementById('body').innerHTML =
+    '<div class="kpis">' + kpis.map(function(k){
+      return '<div class="kpi"><span class="lbl">' + k.l + '</span>' +
+        '<span class="kpi__v">' + k.v + '</span>' +
+        '<span class="kpi__d"' + (k.t ? ' data-t="' + k.t + '"' : '') + '>' + k.d + '</span></div>';
+    }).join('') + '</div>' +
+    (UI.view === 'board' ? viewBoard()
+     : UI.view === 'pros' ? viewPros()
+     : UI.view === 'members' ? viewMembers() : viewFees());
+
+  document.getElementById('drawer').innerHTML = drawer();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-a]');
+  if (!b || b.disabled) return;
+  var a = b.dataset.a, id = b.dataset.id, r = id ? req(id) : null;
+
+  if (a === 'nav')   { UI.view = b.dataset.v; UI.open = null; return render(); }
+  if (a === 'open')  { UI.open = id; UI.picks = []; return render(); }
+  if (a === 'close') { UI.open = null; UI.picks = []; return render(); }
+
+  if (a === 'sort')  {
+    var k = b.dataset.k;
+    if (UI.sort.k === k) UI.sort.d *= -1; else UI.sort = { k:k, d:-1 };
+    return render();
+  }
+
+  if (a === 'sim-inbound') { ACT.inbound(); return render(); }
+  if (a === 'sim-accept')  { ACT.respond(); return render(); }
+  if (a === 'reset') {
+    DB = seed(); UI.view = 'board'; UI.open = null; UI.picks = []; UI.tick = 0;
+    toast('Demo data reset');
+    return render();
+  }
+
+  if (a === 'pro-toggle') {
+    var p = pro(id);
+    ACT.proStatus(id, p.status === 'Active' ? 'Paused' : 'Active');
+    return render();
+  }
+  if (a === 'fee') { ACT.feeState(id, b.dataset.s); return render(); }
+
+  if (a === 'triage') {
+    var trade = val('f-trade');
+    if (!trade) { toast('Pick a trade first'); return; }
+    ACT.triage(r, trade, val('f-urg'));
+    var note = val('f-note');
+    if (note) ACT.note(r, note);
+    r.status = 'dispatching';
+    UI.picks = [];
+    return render();
+  }
+
+  if (a === 'pick') {
+    var pid = b.dataset.p, i = UI.picks.indexOf(pid);
+    if (i > -1) UI.picks.splice(i, 1); else UI.picks.push(pid);
+    return render();
+  }
+  if (a === 'send-offers') {
+    if (!UI.picks.length) return;
+    ACT.sendOffers(r, UI.picks.slice());
+    UI.picks = [];
+    return render();
+  }
+  if (a === 'accept') { ACT.accept(r, b.dataset.p); return render(); }
+
+  if (a === 'log-quote') {
+    var amt = parseFloat(val('f-amt'));
+    if (!amt || amt <= 0) { toast('Enter the quoted amount'); return; }
+    ACT.quote(r, amt, val('f-qnote') || 'No scope noted.');
+    return render();
+  }
+  if (a === 'approve')  { ACT.approveQuote(r); return render(); }
+  if (a === 'send-back'){
+    ACT.sendBack(r, 'asked for a breakdown against comparable jobs');
+    return render();
+  }
+  if (a === 'reopen-quote') { r.quote = null; return render(); }
+
+  if (a === 'schedule') {
+    var win = val('f-win');
+    if (!win) { toast('Enter a window — the member needs to know when'); return; }
+    ACT.schedule(r, win);
+    return render();
+  }
+  if (a === 'complete') {
+    var inv = parseFloat(val('f-inv'));
+    if (!inv || inv <= 0) { toast('Enter what the contractor invoiced'); return; }
+    ACT.complete(r, inv);
+    return render();
+  }
+
+  if (a === 'reply') {
+    var txt = val('f-reply');
+    if (!txt) return;
+    ACT.reply(r, txt);
+    return render();
+  }
+  if (a === 'inote') {
+    var nt = val('f-inote');
+    if (!nt) return;
+    ACT.note(r, nt);
+    return render();
+  }
+});
+
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape' && UI.open) { UI.open = null; UI.picks = []; render(); }
+  if (e.key === 'Enter' && document.activeElement) {
+    var el = document.activeElement;
+    if (el.id === 'f-reply') { document.querySelector('[data-a="reply"]').click(); }
+    if (el.id === 'f-inote') { document.querySelector('[data-a="inote"]').click(); }
+    if (el.id === 'f-win')   { document.querySelector('[data-a="schedule"]').click(); }
+  }
+});
+
+/* SLA clocks advance so the board is never frozen. */
+setInterval(function(){
+  if (document.hidden) return;
+  UI.tick += 1;
+  if (UI.view === 'board' || UI.open) render();
+}, 60000);
+
+render();
+</script>
