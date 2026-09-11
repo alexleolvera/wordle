@@ -44,10 +44,13 @@ window.BRHC = {
   ],
 
   /* --- trades covered ----------------------------------------- */
+  /* Only list what your bench actually covers. The page promises two vetted
+     providers in every major trade — do not advertise a trade you cannot fill.
+     These match the ten launch categories in CONTRACTOR-NETWORK.md. Add more
+     as you sign vendors for them. */
   trades: [
-    'Plumbing', 'Electrical', 'HVAC', 'Handyman & carpentry', 'Painting',
-    'Drywall repair', 'Roofing & gutters', 'Gutter cleaning', 'Pressure washing',
-    'Appliance repair', 'Locksmith', 'Flooring & tile', 'Fencing',
-    'Garage doors', 'Junk hauling', 'Pest control referral'
+    'Plumbing', 'Electrical', 'HVAC', 'Handyman & carpentry',
+    'Painting & drywall', 'Roofing & gutters', 'Gutter cleaning',
+    'Pressure washing', 'Appliance repair', 'Locksmith', 'Flooring & tile'
   ]
 };

@@ -492,7 +492,7 @@ const PROS = {
 const MEMBER = {
   first:'Dana', last:'Fontenot', num:'017',
   address:'1247 Marquette Ave', city:'Baton Rouge, LA 70808',
-  joined:'March 12, 2026', plan:'Founding Member', annual:299, standard:39, renews:'March 12, 2027',
+  joined:'March 12, 2025', plan:'Founding Member', annual:299, standard:39, renews:'March 12, 2027',
   systems:[
     {n:'HVAC',          d:'Trane XR14, 3-ton',       yr:2014, life:'12–15 yr typical', flag:'warn'},
     {n:'Roof',          d:'Architectural shingle',   yr:2016, life:'20–25 yr typical', flag:'ok'},
@@ -500,7 +500,7 @@ const MEMBER = {
     {n:'Foundation',    d:'Post-tension slab',       yr:1998, life:'Original to build',flag:'ok'}
   ],
   reminders:[
-    {t:'HVAC fall service is overdue', s:'Last serviced March 2026. Unit is 12 years old — we watch these closely.', tone:'warn'},
+    {t:'HVAC fall service is overdue', s:'Last serviced April 2025. Unit is 12 years old — we watch these closely.', tone:'warn'},
     {t:'Gutters before the next storm', s:'Peak Gulf storm season runs through October. Last cleaned March 2026.', tone:'ok'},
     {t:'Dryer vent has never been cleaned', s:'Nothing on record since you joined. Typical job runs $90–$140.', tone:'ok'}
   ]
@@ -525,9 +525,9 @@ const ACTIVE = {
 const HISTORY = [
   {id:'BR-2301', t:'Pressure washed house, drive & patio', pro:'amite',    date:'Aug 22, 2026', amt:410},
   {id:'BR-2260', t:'Two ceiling fans installed',           pro:'hebert',   date:'Jun 14, 2026', amt:285},
-  {id:'BR-2188', t:'Garbage disposal replaced',            pro:'broussard',date:'May 3, 2026',  amt:265},
-  {id:'BR-2104', t:'Back fence gate rebuilt',              pro:'perkins',  date:'Apr 9, 2026',  amt:520},
-  {id:'BR-2041', t:'HVAC spring service',                  pro:'delta',    date:'Mar 18, 2026', amt:180}
+  {id:'BR-2188', t:'Garbage disposal replaced',            pro:'broussard',date:'Feb 3, 2026',  amt:265},
+  {id:'BR-2104', t:'Back fence gate rebuilt',              pro:'perkins',  date:'Sep 9, 2025',  amt:520},
+  {id:'BR-2041', t:'HVAC spring service',                  pro:'delta',    date:'Apr 18, 2025', amt:180}
 ];
 
 const BOARD = [
@@ -585,7 +585,7 @@ const RAIL = {
   },
   'member:plan':{
     e:'Pricing', h:'Launch with one plan, not three',
-    p:'Three tiers at launch means three things to explain and no clean read on what people will actually pay for. Ship one $39 plan, add Priority at $79 in year two once you know which requests members wish they could jump the line on.',
+    p:'Three tiers at launch means three things to explain and no clean read on what people will actually pay for. Ship one $39 plan, add Priority at $69–79 in year two once you know which requests members wish they could jump the line on.',
     mech:{t:'Founding offer', rows:[['$299','first-year annual'],['$399','standard annual'],['$468','12 × $39 monthly']],
           n:'Annual plans front-load cash and cut churn. Cap the $299 rate at the first 50 members so it stays a reason to sign now.'}
   },
@@ -923,12 +923,13 @@ function memberPlan(){
     <div class="card" style="border-color:var(--brass)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
         <h3 style="font-size:16px">Priority Concierge</h3>
-        <span class="pill pill--brass">$79 / mo</span>
+        <span class="pill pill--brass">$69–79 / mo</span>
       </div>
       <ul class="rows" style="margin-top:6px">
         <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">Same-week scheduling, ahead of standard members</div></div></li>
         <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">Two walkthroughs a year, spring and storm season</div></div></li>
         <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">After-hours emergency coordination</div></div></li>
+        <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">A year-round maintenance calendar for your house</div></div></li>
         <li class="row" style="padding:7px 0"><div class="row__main"><div class="row__meta" style="color:var(--ink-2)">House checks while you travel</div></div></li>
       </ul>
       <button class="btn btn--ghost btn--full" style="margin-top:10px">Join the waitlist</button>

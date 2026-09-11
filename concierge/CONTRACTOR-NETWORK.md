@@ -99,6 +99,10 @@ These are the entire reason the dates are structured fields:
   on a member over paperwork, but nothing new goes out.
 - **Background screening** — re-run every 24 months, same escalation.
 
+Screening runs roughly **$30 per report** (Checkr's basic tier), charged per
+person entering homes. At 15 launch vendors that is a few hundred dollars, and
+it is the single cheapest line item standing between you and a bad outcome.
+
 The prototype's contractor bench screen shows this working: Tiger Appliance is
 paused for a missing W-9, Cypress Roofing shows amber at 21 days to expiry.
 
@@ -300,6 +304,15 @@ Decide these now, so you say the same thing to vendor one and vendor fifteen:
   round-robin inside the trade so everyone gets enough volume to judge, then
   switch to performance-weighted once you have 20+ jobs per vendor.
 - **Tail period.** 12 months is defensible and easy to explain.
+- **Member discounts.** The business plan floats "preferred contractor
+  pricing" as a Priority-tier benefit in year two. It is left out of the
+  product, because it contradicts what you are telling contractors here —
+  that they set their own prices and you never negotiate their rate down for
+  a member. Pick one. Discounted labor is how networks lose their best
+  vendors; time-based perks (priority scheduling, walkthroughs) buy the same
+  perceived value without touching anyone's rate. If you do want the
+  discount, strike the "we never negotiate your rate" line from the
+  contractor page before you recruit vendor one — not after.
 - **Who eats a bad job.** If a member disputes work and the contractor will not
   fix it, does the membership refund come out of your pocket? Budget for it —
   the financial model calls it a customer recovery reserve. Decide the rule

@@ -160,4 +160,11 @@ applicant to email you.
 | Stripe | 2.9% + $0.30 per charge, no monthly fee |
 | Formspree | $0 |
 
-Under **$20 a month** to be open for business.
+Under **$20 a month** to have a website that takes payments.
+
+That figure covers this site and the phone number only — it is not what it
+costs to *run* the business. The full Phase 0 operating stack adds Jobber for
+dispatch (~$29/mo), QuickBooks, Google Workspace (~$7/user/mo), and Checkr
+background screening (~$30 per report, charged per contractor you onboard).
+Budget **$150–$300 a month** for all of it before advertising and card
+processing, which is the number in the business plan.

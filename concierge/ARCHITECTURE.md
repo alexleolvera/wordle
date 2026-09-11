@@ -217,8 +217,16 @@ and it is mostly a permissions layer over what already exists.
 | 3 | Member app (iOS/iPad/Android/web) | $35–55k | 12 weeks |
 
 Phases 1–3 together land near **$80–130k** at agency rates, or roughly
-$55–75k with one strong senior contractor working with AI tooling. Phase 0 is
-what you should actually be paying for in the next 90 days.
+$55–75k with one strong senior contractor working with AI tooling.
+
+Do not read that against the $35–50k launch budget in the business plan and
+conclude the software is unaffordable. That budget funds Phase 0 — entity,
+legal, insurance, branding, the marketing site, and working capital — where
+software is a rounding error. Phases 1–3 are a year-two and year-three
+decision, funded out of membership revenue once it exists. On the plan's own
+model, year two throws off roughly $183k of EBITDA, which is what pays for the
+ops console and the contractor app. **Phase 0 is what you should actually be
+paying for in the next 90 days.**
 
 ---
 
