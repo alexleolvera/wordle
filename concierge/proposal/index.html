@@ -1,0 +1,391 @@
+<title>Concierge Launch Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#FBFCFA; --card:#FFFFFF; --tint:#F1F5F0;
+  --line:#DCE3DB; --line-soft:#E9EEE8;
+  --ink:#14201A; --ink-2:#3E4E47; --ink-3:#6D7B75;
+  --cypress:#1F4D3D; --cypress-soft:#E2EDE7; --on-primary:#FFFFFF;
+  --brass:#A8761F; --brass-soft:#F6ECD8;
+  --good:#2E7D5B; --good-soft:#E1F0E8;
+  --shadow-sm:0 1px 2px rgba(20,32,26,.06);
+  --shadow-md:0 8px 26px rgba(16,28,22,.09);
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --disp:"Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --gut:clamp(20px,5vw,40px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+    --line:#2A342E; --line-soft:#222B26;
+    --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+    --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+    --brass:#D7A448; --brass-soft:#2A2316;
+    --good:#59AE85; --good-soft:#162A21;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45); --shadow-md:0 8px 26px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+  --line:#2A342E; --line-soft:#222B26;
+  --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+  --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+  --brass:#D7A448; --brass-soft:#2A2316;
+  --good:#59AE85; --good-soft:#162A21;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45); --shadow-md:0 8px 26px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0; font-family:var(--disp); letter-spacing:-.022em; text-wrap:balance; line-height:1.15}
+p{margin:0} ul{margin:0; padding:0; list-style:none}
+a{color:var(--cypress)}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:4px}
+.wrap{max-width:760px; margin:0 auto; padding-inline:var(--gut)}
+.lbl{font-family:var(--mono); font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3)}
+.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* masthead */
+.mast{border-bottom:1px solid var(--line); padding-block:clamp(30px,5vw,52px) clamp(26px,4vw,40px)}
+.mast__eyebrow{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:26px}
+.mast h1{font-size:clamp(32px,5.4vw,50px); font-weight:700}
+.mast__sub{font-size:clamp(17px,2.2vw,19px); color:var(--ink-2); margin-top:16px; max-width:56ch}
+.by{display:flex; gap:10px; align-items:center; margin-top:28px; padding-top:22px; border-top:1px solid var(--line-soft)}
+.by__m{width:38px; height:38px; border-radius:10px; background:var(--cypress); color:var(--on-primary); display:grid; place-items:center; font-family:var(--disp); font-weight:700; font-size:13px; flex:none}
+.by__n{font-size:14.5px; font-weight:600; line-height:1.3}
+.by__r{font-size:13px; color:var(--ink-3)}
+
+/* sections */
+section{padding-block:clamp(34px,5vw,50px); border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.head{display:flex; gap:14px; align-items:baseline; margin-bottom:20px}
+.head__n{font-family:var(--mono); font-size:12px; color:var(--brass); flex:none; padding-top:4px}
+.head h2{font-size:clamp(23px,3.2vw,29px); font-weight:700}
+.lede{font-size:17.5px; color:var(--ink-2); max-width:62ch}
+.lede + .lede{margin-top:14px}
+.body-copy{max-width:64ch; display:flex; flex-direction:column; gap:14px; margin-top:16px; color:var(--ink-2)}
+.body-copy strong{color:var(--ink); font-weight:600}
+
+/* stat row */
+.stats{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:14px; overflow:hidden; margin-top:24px}
+@media (max-width:620px){ .stats{grid-template-columns:minmax(0,1fr)} }
+.stat{background:var(--card); padding:16px 18px}
+.stat__v{font-family:var(--disp); font-size:27px; font-weight:700; letter-spacing:-.025em; display:block}
+.stat__l{font-size:13.5px; color:var(--ink-3); margin-top:4px; display:block; line-height:1.45}
+
+/* prototype cards */
+.protos{display:flex; flex-direction:column; gap:12px; margin-top:22px}
+.proto{
+  display:flex; gap:15px; align-items:flex-start; padding:17px 18px; border-radius:14px;
+  background:var(--card); border:1px solid var(--line); text-decoration:none; color:inherit;
+  box-shadow:var(--shadow-sm); transition:border-color .14s ease, transform .14s ease;
+}
+.proto:hover{border-color:var(--cypress); transform:translateY(-1px); box-shadow:var(--shadow-md)}
+.proto__ic{width:42px; height:42px; border-radius:11px; flex:none; display:grid; place-items:center; background:var(--cypress-soft); font-size:19px}
+.proto__t{font-family:var(--disp); font-size:17px; font-weight:700}
+.proto__d{font-size:14.5px; color:var(--ink-2); margin-top:4px; line-height:1.5}
+.proto__go{font-family:var(--mono); font-size:11.5px; color:var(--cypress); margin-top:8px; display:block; text-transform:uppercase; letter-spacing:.08em}
+
+/* the counsel block */
+.counsel{border-left:3px solid var(--brass); background:var(--brass-soft); padding:20px 22px; border-radius:0 14px 14px 0; margin-top:22px}
+.counsel h3{font-size:19px; font-weight:700; color:var(--ink); margin-bottom:10px}
+.counsel p{font-size:15.5px; color:var(--ink-2); line-height:1.6}
+.counsel p + p{margin-top:12px}
+
+/* phases */
+.phase{display:grid; grid-template-columns:118px minmax(0,1fr); gap:20px; padding-block:18px; border-bottom:1px solid var(--line-soft)}
+.phase:last-child{border-bottom:0}
+@media (max-width:620px){ .phase{grid-template-columns:minmax(0,1fr); gap:6px} }
+.phase__w{font-family:var(--mono); font-size:12.5px; color:var(--brass); padding-top:3px}
+.phase h3{font-size:18px; font-weight:700; margin-bottom:7px}
+.phase p{font-size:15px; color:var(--ink-2); line-height:1.6}
+.phase ul{margin-top:9px; display:flex; flex-direction:column; gap:5px}
+.phase li{font-size:14.5px; color:var(--ink-2); padding-left:17px; position:relative}
+.phase li::before{content:"–"; position:absolute; left:0; color:var(--brass)}
+
+/* pricing */
+.opts{display:flex; flex-direction:column; gap:14px; margin-top:22px}
+.opt{border:1px solid var(--line); border-radius:16px; padding:22px; background:var(--card)}
+.opt--lead{border-color:var(--cypress); border-width:2px; box-shadow:var(--shadow-md)}
+.opt__top{display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap}
+.opt h3{font-size:20px; font-weight:700}
+.opt__p{font-family:var(--disp); font-size:26px; font-weight:700; letter-spacing:-.025em; white-space:nowrap}
+.opt__p small{font-family:var(--sans); font-size:13.5px; font-weight:400; color:var(--ink-3); letter-spacing:0}
+.opt__d{font-size:15px; color:var(--ink-2); margin-top:9px; line-height:1.6}
+.opt ul{margin-top:14px; display:flex; flex-direction:column; gap:7px}
+.opt li{font-size:14.5px; color:var(--ink-2); padding-left:24px; position:relative; line-height:1.5}
+.opt li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
+.tag{display:inline-block; padding:4px 10px; border-radius:999px; background:var(--cypress); color:var(--on-primary); font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:11px}
+.note{font-size:14px; color:var(--ink-3); margin-top:18px; line-height:1.6; max-width:62ch}
+
+/* next */
+.next{background:var(--cypress); color:var(--on-primary); border-radius:18px; padding:clamp(24px,4vw,34px); margin-top:8px}
+.next h2{font-size:clamp(22px,3vw,27px); font-weight:700; margin-bottom:12px}
+.next p{font-size:16px; opacity:.88; max-width:54ch; line-height:1.6}
+.next ol{margin:20px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px; counter-reset:s}
+.next li{counter-increment:s; padding-left:34px; position:relative; font-size:15.5px; opacity:.94; line-height:1.55}
+.next li::before{
+  content:counter(s); position:absolute; left:0; top:1px; width:23px; height:23px; border-radius:7px;
+  background:rgba(255,255,255,.17); display:grid; place-items:center; font-family:var(--mono); font-size:11.5px; opacity:1;
+}
+
+/* footnotes */
+.foot{padding-block:28px 44px; font-size:13px; color:var(--ink-3); line-height:1.65}
+.foot h3{font-size:12px; font-family:var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); margin-bottom:11px; font-weight:500}
+.foot p + p{margin-top:9px}
+.foot strong{color:var(--ink-2); font-weight:600}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="mast__eyebrow">
+      <span class="lbl">Launch proposal</span>
+      <span class="lbl">Greater Baton Rouge</span>
+    </div>
+    <h1>One number for your house.</h1>
+    <p class="mast__sub">
+      A membership home-services business for Baton Rouge homeowners — and a plan to get it
+      taking money inside thirty days, without building software first.
+    </p>
+    <div class="by">
+      <span class="by__m">LC</span>
+      <span>
+        <span class="by__n">Prepared by Leolvera Consulting</span>
+        <span class="by__r">Strategy, product and launch</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">01</span><h2>Why this works here</h2></div>
+    <p class="lede">
+      Every homeowner has the same unsolved problem: something breaks, and they have no idea
+      who to call. They ask a neighbor, they search Google, they get three voicemails and one
+      guy who never shows.
+    </p>
+    <div class="body-copy">
+      <p>
+        The business sells them a way out of that. One number to text. We find the plumber,
+        verify he is licensed and insured, read his quote before the homeowner does, and stay
+        on it until the work is done. <strong>The homeowner pays the contractor directly.</strong>
+        The membership buys coordination, not labor — which is why it can cost $39 a month
+        instead of $200.
+      </p>
+      <p>
+        The model is already proven nationally at much higher prices, because those companies
+        bundle labor. Honey Homes charges $2,000–$4,750 a year. Latitude runs $210 a month
+        including a monthly handyman visit. <strong>This version is asset-light</strong> — no
+        trucks, no technicians, no payroll against the work — so it can be priced where a
+        Baton Rouge homeowner will actually say yes.
+      </p>
+    </div>
+    <div class="stats">
+      <div class="stat"><span class="stat__v">~42,000</span><span class="stat__l">Owner-occupied households in Baton Rouge proper, before Prairieville, Gonzales, Zachary or Denham Springs</span></div>
+      <div class="stat"><span class="stat__v">$39<small style="font-size:16px;font-weight:400">/mo</small></span><span class="stat__l">One plan. Labor and materials billed by the contractor, never marked up</span></div>
+      <div class="stat"><span class="stat__v">10%</span><span class="stat__l">Network fee contractors pay on work we send them, only after they are paid</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">02</span><h2>It already exists. Open it.</h2></div>
+    <p class="lede">
+      You are not being asked to imagine this. Three working prototypes are live right now —
+      open them on your phone during this conversation.
+    </p>
+    <div class="protos">
+      <a class="proto" href="https://claude.ai/code/artifact/d419450d-e6b0-42c6-82a9-ad296b669c84" target="_blank" rel="noopener">
+        <span class="proto__ic">🏠</span>
+        <span>
+          <span class="proto__t">The website</span>
+          <span class="proto__d">The homeowner landing page and the contractor recruiting page, built to deploy. Pricing, FAQ, service areas, and a vendor application form. This one is finished code — it needs your Stripe account, not more work.</span>
+          <span class="proto__go">Open the site →</span>
+        </span>
+      </a>
+      <a class="proto" href="https://claude.ai/code/artifact/4f8ff4f4-d161-4632-859b-d2aadab216c9" target="_blank" rel="noopener">
+        <span class="proto__ic">🛎️</span>
+        <span>
+          <span class="proto__t">The member experience</span>
+          <span class="proto__d">What the homeowner sees: one text box, a job timeline showing where the membership earns its keep, and the home file that tracks the age of their roof and HVAC. Switch roles at the top to see all three sides.</span>
+          <span class="proto__go">Open the demo →</span>
+        </span>
+      </a>
+      <a class="proto" href="https://claude.ai/code/artifact/5e73815a-efff-4283-beb8-4ec08d4976c2" target="_blank" rel="noopener">
+        <span class="proto__ic">🗂️</span>
+        <span>
+          <span class="proto__t">The dispatch console</span>
+          <span class="proto__d">The operator's tool, and it genuinely works. Triage a request, send offers to contractors, review the quote against real comparables, schedule it, close it out, and watch the 10% fee land in the ledger.</span>
+          <span class="proto__go">Run a job through it →</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">03</span><h2>What I am telling you not to buy</h2></div>
+    <div class="counsel">
+      <h3>Do not build the mobile app yet.</h3>
+      <p>
+        A polished iPhone and Android app for this runs <strong>$25,000–$45,000</strong> and takes
+        three to four months. I could quote you that today. You should not pay it today.
+      </p>
+      <p>
+        Your first hundred members do not need an app. They need a phone number that a person
+        answers and a plumber who shows up Thursday. If we spend four months building software
+        for a business with zero members, we find out whether anyone wanted this in month five
+        instead of month one — and we spend $40,000 to learn it.
+      </p>
+      <p>
+        The app becomes worth building somewhere around <strong>250 members</strong>, when push
+        notifications and the home file are worth more than the build cost. By then you will
+        know exactly what it needs to do, because you will have run the business by hand and
+        watched where the time goes. That is a far better spec than anything I could write now.
+      </p>
+    </div>
+    <div class="body-copy">
+      <p>
+        The prototypes above exist to prove the concept and to be the blueprint when that day
+        comes — not to be shipped this quarter. <strong>Launch on a phone number and a website.</strong>
+        Software comes out of revenue, later, when it is buying back hours you can actually count.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">04</span><h2>The plan</h2></div>
+    <div class="phase">
+      <span class="phase__w">Days 1–30</span>
+      <div>
+        <h3>Open for business</h3>
+        <p>Everything required to take the first membership payment, with no custom software.</p>
+        <ul>
+          <li>Website live and taking payments through Stripe</li>
+          <li>One Baton Rouge number that rings on your phone and takes texts</li>
+          <li>15 vetted contractors signed, at least two in every major trade</li>
+          <li>Vendor agreements, insurance and W-9 collection, compliance tracking</li>
+          <li>Founding-member offer to the first 50 at $299 for the year</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <span class="phase__w">Days 31–90</span>
+      <div>
+        <h3>Prove people stay</h3>
+        <p>Run real jobs through the network and measure the things that decide whether this scales.</p>
+        <ul>
+          <li>Target 100–150 members and 40–75 completed jobs</li>
+          <li>Track match time, fill rate, rework, and how many jobs each member actually uses</li>
+          <li>Referral engine, Google Business Profile, realtor and inspector relationships</li>
+          <li>Decide on the 10% fee: holding at 10%, or testing higher with new vendors</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <span class="phase__w">Month 6+</span>
+      <div>
+        <h3>Then, and only then, build software</h3>
+        <p>With real usage data in hand, build the dispatch console first — it is where your hours go.</p>
+        <ul>
+          <li>Operator console, so you are not the person answering texts at 8:30 Tuesday</li>
+          <li>Contractor app for job offers and close-out</li>
+          <li>Member app last, once notifications are worth the build</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">05</span><h2>Working together</h2></div>
+    <div class="opts">
+      <div class="opt opt--lead">
+        <span class="tag">Recommended</span>
+        <div class="opt__top">
+          <h3>Launch Package</h3>
+          <span class="opt__p">$6,000 <small>fixed</small></span>
+        </div>
+        <p class="opt__d">Thirty days from signature to your first paying member. Fixed fee, no hourly billing, no change orders.</p>
+        <ul>
+          <li>Website deployed on your domain, taking Stripe payments</li>
+          <li>Business phone and text number configured</li>
+          <li>Contractor recruiting kit, vendor agreement requirements, and the compliance system</li>
+          <li>Everything you have already seen above, handed over as yours</li>
+          <li>The operating playbook — pricing, scripts, SLA targets, the KPIs to watch</li>
+          <li>Two weeks of support after launch</li>
+        </ul>
+      </div>
+      <div class="opt">
+        <div class="opt__top">
+          <h3>Launch &amp; Operate</h3>
+          <span class="opt__p">+ $2,000 <small>/ month</small></span>
+        </div>
+        <p class="opt__d">The Launch Package, then I run the coordination with you through the first 90 days — taking member texts, dispatching, chasing contractors, and building the vendor bench while you focus on selling memberships. Cancel any month.</p>
+      </div>
+      <div class="opt">
+        <div class="opt__top">
+          <h3>Software build</h3>
+          <span class="opt__p">$25k–45k <small>deferred</small></span>
+        </div>
+        <p class="opt__d">Revisited at roughly 150 members, scoped against what the business has actually learned by then. Not part of this engagement and not something I would take your money for today.</p>
+      </div>
+    </div>
+    <p class="note">
+      Separately, budget roughly <strong>$35,000–$50,000</strong> of your own launch capital for
+      entity formation, legal, insurance, branding, initial marketing and working capital. That is
+      your money, not mine — the figure is in the plan so nobody is surprised by it in week three.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="next">
+      <h2>What happens next</h2>
+      <p>If this is right, the first thirty days start the week you say go.</p>
+      <ol>
+        <li>A one-hour working session to lock the offer, the service area, and the founding-member terms</li>
+        <li>You meet a Louisiana construction attorney to confirm the contractor structure before the first paid job — I will brief them, and this is non-negotiable</li>
+        <li>I stand up the site, the phone number and the Stripe account in week one</li>
+        <li>We recruit contractors in weeks two and three, and you personally meet every one</li>
+        <li>First founding members sign in week four</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <h3>Notes on this document</h3>
+    <p>
+      <strong>The prototypes use sample data.</strong> Every member, contractor, address, price and
+      rating in them is fabricated for illustration. They demonstrate how the product works, not
+      results anyone has achieved.
+    </p>
+    <p>
+      <strong>Financial figures are planning assumptions, not predictions.</strong> Member counts,
+      job frequency and average ticket are modelling inputs from the business plan. No revenue is
+      forecast or guaranteed.
+    </p>
+    <p>
+      <strong>The legal structure requires counsel.</strong> This business depends on homeowners
+      contracting with and paying contractors directly, with the platform never performing,
+      supervising or contracting for construction work. A Louisiana construction attorney must
+      confirm that structure against the actual agreements before the first paid job. Nothing here
+      is legal advice.
+    </p>
+    <p style="margin-top:20px">
+      Prepared by Leolvera Consulting · <a href="mailto:alex@leolveraconsulting.com">alex@leolveraconsulting.com</a>
+    </p>
+  </div>
+</footer>

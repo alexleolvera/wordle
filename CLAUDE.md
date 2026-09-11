@@ -17,6 +17,7 @@ no dependencies**:
 | `concierge/demo/` | Three-role narrative prototype | Pitch asset |
 | `concierge/ops/` | Dispatch console, working job lifecycle | Pitch asset |
 | `concierge/site/` | Landing page + contractor recruiting | **Deployable** |
+| `concierge/proposal/` | Client-facing launch proposal | Sales asset |
 | `concierge/*.md` | Build plan, contractor requirements | Reference |
 
 **Before editing anything under `concierge/`, load the `concierge` skill**
@@ -29,8 +30,14 @@ Published previews (private to the owner's account):
 - Demo — https://claude.ai/code/artifact/4f8ff4f4-d161-4632-859b-d2aadab216c9
 - Dispatch console — https://claude.ai/code/artifact/5e73815a-efff-4283-beb8-4ec08d4976c2
 - Site — https://claude.ai/code/artifact/d419450d-e6b0-42c6-82a9-ad296b669c84
+- Proposal — https://claude.ai/code/artifact/c1fa816f-c08c-4568-be67-013d9e157f16
 
 Republishing keeps those URLs. See the skill for how.
+
+`proposal/` is Leolvera Consulting's pitch to the prospective owner, not part
+of the product. It links the three prototypes, recommends explicitly against
+building the mobile app yet, and prices the engagement. Pricing and the
+consulting identity live in that file — update them there.
 
 ### Open work
 
