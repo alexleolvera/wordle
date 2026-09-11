@@ -27,9 +27,12 @@ window.BRHC = {
   price: { monthly: 39, annual: 399, founding: 299 },
 
   /* --- founding member counter -------------------------------- */
-  /* Keep this honest. It is a real cap, not a fake scarcity widget:
-     the $299 rate is only viable on a limited cohort. */
-  founding: { total: 50, claimed: 19 },
+  /* This is a real cap, not a scarcity widget — the $299 rate is only viable
+     on a limited cohort. It ships at zero claimed because that is the true
+     number before you launch, and a counter you forgot to update is a lie on
+     your own website. Raise it as members actually sign up. At zero the page
+     says "All 50 founding spots are open" and hides the progress bar. */
+  founding: { total: 50, claimed: 0 },
 
   /* --- contractor application form ---------------------------- */
   /* Paste a Formspree (https://formspree.io) or Tally endpoint here.

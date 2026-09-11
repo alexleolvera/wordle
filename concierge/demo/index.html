@@ -439,7 +439,7 @@ td.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
     <button id="role-ops" data-act="role" data-arg="ops"><span class="dot"></span>Concierge Ops</button>
     <button id="role-pro" data-act="role" data-arg="pro"><span class="dot"></span>Contractor</button>
   </div>
-  <span class="protochip">Prototype · sample data</span>
+  <span class="protochip" title="Sample data modelled on the day-90 target in the business plan: 100-150 members.">Prototype · day-90 sample data</span>
 </header>
 
 <main class="stage" id="stage">
@@ -501,7 +501,7 @@ const MEMBER = {
   ],
   reminders:[
     {t:'HVAC fall service is overdue', s:'Last serviced April 2025. Unit is 12 years old — we watch these closely.', tone:'warn'},
-    {t:'Gutters before the next storm', s:'Peak Gulf storm season runs through October. Last cleaned March 2026.', tone:'ok'},
+    {t:'Gutters before the next storm', s:'Peak Gulf storm season runs through October, and nothing on this house has been cleared since you joined.', tone:'ok'},
     {t:'Dryer vent has never been cleaned', s:'Nothing on record since you joined. Typical job runs $90–$140.', tone:'ok'}
   ]
 };
@@ -592,6 +592,7 @@ const RAIL = {
   'ops:board':{
     e:'The real product', h:'This board is the business',
     p:'The member app is a text box; the console is where margin lives. Every minute a request sits in the first column is a minute of the promise you sold. The colored edge is the SLA clock — under 15 minutes green, past 30 red.',
+    extra:'These are day-90 numbers, not launch day. The plan targets 100–150 members by the end of the first quarter; 147 at $39 is the $5,850 MRR figure it works out. The website sells the first of those members; this console is what the ninetieth day looks like.',
     mech:{t:'Staffing trigger', rows:[['147','members today'],['~150','hire a coordinator'],['38','jobs / month now']],
           n:'Past roughly 150 members the founder should be recruiting contractors, not answering texts at 8:30 on a Tuesday.'}
   },
@@ -1359,6 +1360,7 @@ function renderRail(){
       <div class="rail__eyebrow"><i></i><span class="label">${r.e}</span></div>
       <h3>${r.h}</h3>
       <p>${r.p}</p>
+      ${r.extra?`<p style="font-size:12.5px;color:var(--ink-3);border-left:2px solid var(--brass);padding-left:11px">${r.extra}</p>`:''}
     </div>
     ${r.mech?`<div class="rail__card rail__card--mech">
       <div class="rail__eyebrow"><i></i><span class="label">${r.mech.t}</span></div>

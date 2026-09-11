@@ -17,6 +17,12 @@
     else if (key === 'founding') v = '$' + C.price.founding;
     else if (key === 'foundingLeft') v = String(C.founding.total - C.founding.claimed);
     else if (key === 'foundingTotal') v = String(C.founding.total);
+    else if (key === 'foundingPhrase') {
+      var left = C.founding.total - C.founding.claimed;
+      v = C.founding.claimed === 0
+        ? 'All ' + C.founding.total + ' founding spots are open.'
+        : left + ' of ' + C.founding.total + ' founding spots left.';
+    }
     else if (key === 'year') v = String(new Date().getFullYear());
     if (v != null) el.textContent = v;
   });
@@ -33,8 +39,15 @@
   /* ---------- founding counter ---------- */
   var meter = document.getElementById('meter');
   if (meter && C.founding) {
-    var pct = Math.min(100, Math.round((C.founding.claimed / C.founding.total) * 100));
-    meter.style.width = pct + '%';
+    if (C.founding.claimed === 0) {
+      // An empty progress bar reads as broken. Before anyone has signed up
+      // the phrase alone carries it.
+      var track = meter.parentNode;
+      if (track) track.hidden = true;
+    } else {
+      var pct = Math.min(100, Math.round((C.founding.claimed / C.founding.total) * 100));
+      meter.style.width = pct + '%';
+    }
   }
 
   /* ---------- checkout buttons ---------- */
