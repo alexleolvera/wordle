@@ -17,10 +17,17 @@ jobs sourced through the platform.
 | `concierge/demo/index.html` | Three-role narrative prototype (member, ops, contractor) | Pitch asset |
 | `concierge/ops/index.html` | Dispatch console with a working job lifecycle | Pitch asset, mutable state |
 | `concierge/site/` | Homeowner landing page + contractor recruiting page | **Deployable** |
+| `concierge/proposal/` | Client-facing launch proposal | Sales asset |
+| `concierge/kickoff/` | Shared client requirements checklist (`db`) | Sales asset |
 | `concierge/ARCHITECTURE.md` | Build plan for iOS/iPadOS/Android/web | Reference |
 | `concierge/CONTRACTOR-NETWORK.md` | Vendor data and operating requirements | Reference |
 
 ## Hard rules
+
+**Architecture is web plus SMS — no native apps, no app stores.** Contractors
+receive job offers by text, not in an app; members text in. The App Store
+route survives only as an appendix in `ARCHITECTURE.md`, gated on 500+
+members. Do not reintroduce native app work without being asked.
 
 **No build step, no dependencies, anywhere.** Every file is hand-written HTML,
 CSS and vanilla JS that runs by opening it. No npm, no framework, no bundler,
@@ -122,9 +129,15 @@ source.
 Republishing keeps the existing URL. Do not pass a new `favicon` on a
 redeploy.
 
+## Capabilities
+
+`kickoff/` is the one page that declares a runtime capability — `db`, so the
+client and the consultant tick the same shared checklist. Republishing it
+**must** pass `capabilities: {db: {}}` again; omitting it on a redeploy keeps
+the stored declaration, but passing a different non-empty set revokes it.
+Every other surface is static.
+
 ## Not built yet
 
-The contractor mobile app exists only as three static screens inside
-`demo/`. Making it a working prototype — offer with countdown, accept/pass,
-close-out with photos and invoice total — is the open piece that would connect
-both sides of the marketplace.
+Nothing is blocked. The contractor screens in `demo/` illustrate the pitch but
+are not a roadmap item now that contractors are served by SMS.

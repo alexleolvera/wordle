@@ -9,7 +9,7 @@ Rouge: homeowners pay a recurring fee for one number to text when something
 breaks; vetted contractors do the work, invoice the homeowner directly, and
 pay a 10% network fee on jobs sourced through the platform.
 
-Four surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
+Six surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
 no dependencies**:
 
 | Path | What | Status |
@@ -18,6 +18,7 @@ no dependencies**:
 | `concierge/ops/` | Dispatch console, working job lifecycle | Pitch asset |
 | `concierge/site/` | Landing page + contractor recruiting | **Deployable** |
 | `concierge/proposal/` | Client-facing launch proposal | Sales asset |
+| `concierge/kickoff/` | Shared client requirements checklist | Sales asset, `db` |
 | `concierge/*.md` | Build plan, contractor requirements | Reference |
 
 **Before editing anything under `concierge/`, load the `concierge` skill**
@@ -31,8 +32,13 @@ Published previews (private to the owner's account):
 - Dispatch console — https://claude.ai/code/artifact/5e73815a-efff-4283-beb8-4ec08d4976c2
 - Site — https://claude.ai/code/artifact/d419450d-e6b0-42c6-82a9-ad296b669c84
 - Proposal — https://claude.ai/code/artifact/c1fa816f-c08c-4568-be67-013d9e157f16
+- Kickoff checklist — https://claude.ai/code/artifact/d2566ef2-2c60-4a89-aba4-2ceb44a7983a
 
 Republishing keeps those URLs. See the skill for how.
+
+`kickoff/` is the only page that declares a runtime capability (`db`), so the
+client and the consultant tick the same shared list. Republish it with
+`capabilities: {db: {}}` or the stored declaration is revoked.
 
 `proposal/` is Le’Olvera Consulting's pitch to the prospective owner, not part
 of the product. It links the three prototypes, recommends explicitly against
@@ -41,10 +47,11 @@ consulting identity live in that file — update them there.
 
 ### Open work
 
-The contractor mobile app exists only as three static screens inside
-`demo/`. Making it a working prototype — offer with countdown, accept/pass,
-close-out with photos and invoice total — is the next piece, and the one that
-connects both sides of the marketplace.
+`ARCHITECTURE.md` now recommends **web plus SMS, no native apps**. Contractors
+take job offers by text rather than in an app, which means the contractor
+mobile screens in `demo/` are a pitch illustration, not a roadmap item. If a
+working contractor prototype is ever wanted, build it as an SMS thread
+simulator rather than an app.
 
 The site is finished on the code side. What remains is account setup the
 owner has to do: hosting, an OpenPhone number, and Stripe products plus

@@ -1,232 +1,257 @@
 # Baton Rouge Home Concierge — build plan
 
-How to ship one product to iPhone, iPad, Android, and the web without building
-it three times.
+How to build this without an app store, and how far you can get before you
+build anything at all.
 
 ---
 
 ## 1. The recommendation
 
-**Expo (React Native + React Native Web), TypeScript, one repository.**
+**The web, plus SMS. No native apps, no app stores.**
 
-One codebase compiles to a native iOS app, a native iPadOS app, a native
-Android app, and a real website. Not a wrapper around a web page — genuine
-native views on the app stores, and a separately-rendered web build for
-`brhomeconcierge.com`.
+Everything a person touches is either a web page or a text message:
 
-| Surface | How it ships |
-| --- | --- |
-| iPhone / iPad | Expo → native build → App Store (one universal binary) |
-| Android | Expo → native build → Play Store |
-| Website | `expo export --platform web` → static site on Vercel |
-| Ops console | Same repo, but a **separate web-only app** (see §3) |
+| Who | What they use | Built as |
+| --- | --- | --- |
+| Prospective member | Marketing site, Stripe checkout | Static site |
+| Member, day to day | **Texts a phone number** | Twilio / OpenPhone |
+| Member, occasionally | Their home file and job history | Logged-in web page |
+| Member, billing | Stripe Customer Portal | Off the shelf |
+| **Contractor** | **Texts** — job offers, accept/pass, close-out | Twilio |
+| Concierge / dispatcher | Dispatch console | Web app, desktop |
 
-### Why not the alternatives
+No App Store review. No Play Store. No universal binary. No two codebases.
+One deploy, everyone sees it immediately.
 
-**Flutter.** Excellent, genuinely fast. Wrong call here because the hiring pool
-in Baton Rouge and remote-contract pool for React/React Native is an order of
-magnitude deeper than for Dart, and because the rest of this stack (Stripe,
-the marketing site, the ops console) is JavaScript either way. Don't run two
-languages in a company this size.
+### Why SMS is the right channel, not a fallback
 
-**Native iOS + native Android separately.** Two codebases, two engineers, two
-release cycles, for an app whose hardest problem is scheduling logic rather
-than graphics. Roughly doubles cost to launch for no user-visible gain.
+This is the decision that makes everything else simpler, and it is worth being
+clear that it is not a budget compromise.
 
-**Web-only PWA, no app stores.** Cheapest, and honestly defensible for year
-one — but push notifications are the product. "Your pro is 30 minutes out,"
-"your quote is ready," "your HVAC service is due" are the messages that keep a
-$39/month membership from feeling invisible. iOS web push exists now but is
-fragile and requires the user to add the site to their home screen first. And
-a member who cannot find an icon on their phone forgets they are paying you.
+**Contractors will not open an app.** A plumber is in a truck, hands dirty,
+three jobs behind. An app he has to install, remember, and unlock is friction
+he will route around by calling you instead — which puts the work back on your
+dispatcher. A text he answers at a red light:
 
-**No-code (Glide, Bubble, FlutterFlow).** Legitimate for the pilot, and worth
-considering if the goal is 25 founding members by day 30 rather than a
-sellable asset. But the dispatch board is the real product, it will get
-weird and specific fast, and you cannot sell a company whose core system you
-cannot export.
+```
+BR-2431 · Electrical · No power to half the kitchen
+3312 Kenilworth Pkwy · 6.2 mi · wants it today
+Est. $200–450 · 3 photos: <link>
+Reply Y to accept, N to pass. Expires 4:15p.
+```
 
-### What to actually do first
+Zero install, works on every phone he has ever owned, answered in forty
+seconds. The countdown-offer screen in the prototype is a prettier version of
+something SMS already does better in the field.
 
-Do not build the app first. **The first 100 members do not need one.**
+**Members in a panic will not hunt for an icon.** Water is coming out from
+under the water heater. They want to tell somebody. The thing they already
+have open is their messages app. "Text us" has no learning curve and no
+install step, and it is the entire product promise.
 
-- **Days 1–30:** marketing site + Stripe Checkout + a shared phone number
-  (OpenPhone) + Jobber for dispatch. No custom software at all.
-- **Days 31–90:** keep running on that. Log every request in a spreadsheet
-  shaped like the eventual database. You are buying product requirements.
-- **Around 100–150 members:** build the ops console first — it is where your
-  time goes and where margin leaks.
-- **Around 250–350 members:** build the member app, when notifications and the
-  home file are worth more than the build cost.
+**Notifications are the one thing a plain website genuinely cannot do.** Web
+push on iOS requires the user to add the site to their home screen first and
+remains fragile. But every notification this business needs — "your pro is 30
+minutes out", "your quote is ready", "your HVAC service is due" — is a text
+message, delivered by the same channel the member already uses to reach you.
+The notification budget is Twilio, not an app build.
 
-The demo in `demo/` exists to sell the vision to a customer today. Shipping it
-is a separate decision from making it.
+### When to revisit native
+
+One trigger, and it is further out than it feels: **when the member experience
+becomes the product.** Browsing the home file, tapping through maintenance
+history, an icon on the home screen that keeps the membership visible on a day
+nothing is broken. That is a retention play at roughly **500+ members**, and
+by then you will know exactly what it needs to do.
+
+Until then, a native app buys you an icon and costs you App Store review, a
+subscription-billing fight with Apple (see the appendix), two release cycles,
+and roughly double the build. Do not pay that for an icon.
+
+### Why not the other options
+
+**Expo / React Native.** This was the earlier recommendation here, made against
+the brief "ship to iPhone, iPad, Android and web." It is the right answer to
+that brief. The brief was the problem — this business does not need the app
+stores, and dropping them removes more cost and risk than any framework choice
+could.
+
+**No-code (Glide, Bubble, Softr).** Genuinely viable for the ops console at
+small scale, and worth pricing if the goal is 25 founding members rather than
+a sellable asset. The dispatch board will get weird and specific fast, though,
+and you cannot sell a company whose core system you cannot export.
+
+**Nothing at all.** The correct answer for the first six months. See §2.
 
 ---
 
-## 2. Stack
+## 2. Build nothing first
+
+The first hundred members do not need custom software, and building it before
+them is the most expensive mistake available here.
+
+- **Days 1–30.** Marketing site (already built, in `site/`) + Stripe Payment
+  Links + one business number on OpenPhone + Jobber for dispatch + a
+  spreadsheet for the contractor bench. **Roughly $150–300/month, no custom
+  code.**
+- **Days 31–90.** Stay on it. Log every request in a spreadsheet shaped like
+  the schema in §5. You are not being lazy, you are buying product
+  requirements at the lowest price they will ever be available.
+- **Around 100–150 members.** Build the dispatch console. This is where the
+  operator's hours go and where the 10% fee leaks.
+- **Around 250–350 members.** Add the member portal — home file, job history,
+  quote approval.
+- **500+ members.** Consider native, if and only if retention data says the
+  member experience needs to live on a home screen.
+
+---
+
+## 3. Stack
 
 ```
 apps/
-  mobile/      Expo (React Native + RN Web) — member app + contractor app
-  web/         Next.js — marketing site, signup, Stripe checkout, member portal
-  ops/         Next.js — concierge dispatch console (desktop, internal)
+  site/        Static marketing site + signup            (already built)
+  ops/         Next.js — dispatch console (desktop web)
+  portal/      Next.js — member home file & history      (later)
 packages/
-  api/         tRPC routers — one typed contract for all three clients
   db/          Prisma schema + migrations
-  ui/          shared tokens, primitives
+  sms/         Message templates, inbound parser, consent handling
 ```
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| Client | Expo SDK, TypeScript | iOS/iPadOS/Android/web from one source |
-| Web | Next.js on Vercel | SEO matters — "handyman baton rouge" is a real query |
-| API | tRPC on the same Next.js deploy | End-to-end types, no separate backend to run |
-| Database | Postgres (Neon or Supabase) + Prisma | Relational from day one; this is a scheduling app |
-| Auth | Clerk | Phone-number sign-in, which is how this audience thinks |
-| Payments | Stripe Billing + Customer Portal | Subscriptions, dunning, and cancellation you don't write |
-| Messaging | Twilio (or OpenPhone API) | One BR number; inbound SMS becomes a request row |
-| Push | Expo Notifications | One API across APNs and FCM |
-| Files | Cloudflare R2 or S3 | Job photos, COIs, inspection reports |
-| Background jobs | Inngest or Trigger.dev | Maintenance reminders, SLA escalation, fee invoicing |
+| Marketing site | Static HTML on Cloudflare Pages | Already built, $0, fast, SEO-friendly |
+| Ops console | Next.js on Vercel | Dense desktop tables; server components keep it simple |
+| Member portal | Next.js, same deploy | Shares auth and the database |
+| Database | Postgres (Neon or Supabase) | Relational from day one; this is a scheduling app |
+| Auth | Clerk, phone-number sign-in | This audience thinks in phone numbers, not passwords |
+| Payments | Stripe Billing + Customer Portal | Subscriptions, dunning, self-serve cancellation |
+| **Messaging** | **Twilio** | Two-way SMS, MMS for job photos, delivery receipts |
+| Files | Cloudflare R2 or S3 | Job photos, certificates of insurance, inspection reports |
+| Background jobs | Inngest or Trigger.dev | Maintenance reminders, SLA escalation, fee invoicing, COI expiry |
 | Error tracking | Sentry | |
-| Analytics | PostHog | Funnel from signup → first request is the number that matters |
+| Analytics | PostHog | Signup → first request is the funnel that matters |
 
-### Cost at ~350 members
+### Running cost at ~350 members
 
-Roughly **$250–$450/month** all-in for infrastructure, plus Stripe's
-2.9% + $0.30 and Twilio per-message. The only line that scales meaningfully
-with members is Twilio.
-
----
-
-## 3. Three clients, not one
-
-This is the most important architectural decision in the document.
-
-**Member app** — phone-first. Expo. Ships to both app stores and to the web.
-
-**Contractor app** — phone-first, and it is *not* a mode of the member app.
-Different login, different data, different notification behavior (a job offer
-must ring through Do Not Disturb; a maintenance reminder must not). Same Expo
-project, separate entry point and separate store listing. Two apps on the
-stores, one codebase.
-
-**Ops console** — desktop web only. Do not build this in React Native.
-Dispatchers live in a keyboard-driven, dense, multi-column, many-tabs-open
-interface. React Native Web fights you on every one of those. Plain Next.js +
-TanStack Table.
+Roughly **$250–$400/month** of infrastructure, plus Stripe's 2.9% + $0.30 and
+Twilio per message. SMS is the only line that scales meaningfully with member
+count, and it is cents per message.
 
 ---
 
-## 4. Data model, in brief
+## 4. SMS is infrastructure, treat it that way
+
+The channel carrying your entire product deserves more thought than "we'll
+send texts."
+
+### Register before you launch
+
+US carriers require **A2P 10DLC registration** — a brand and a campaign — for
+application-to-person messaging on a normal 10-digit number. Unregistered
+traffic gets filtered or blocked, quietly, which looks exactly like your
+business not working. Fees are modest; the delay is the issue, so budget a
+couple of weeks and start it early. A toll-free number is a separate
+verification path with different tradeoffs. Your messaging provider walks you
+through both.
+
+### Consent and compliance, in the product not the policy
+
+- Collect explicit SMS consent at signup. The Stripe checkout already collects
+  a phone number — add the consent language there and store the timestamp.
+- Handle `STOP`, `UNSUBSCRIBE` and `HELP`. Twilio does this automatically; do
+  not defeat it.
+- Contractors consent separately, in the vendor agreement.
+- Respect quiet hours for anything not a genuine emergency.
+- **Store consent as a row, not a checkbox in someone's memory.** See §5.
+
+### Message design
+
+Two-way SMS means parsing replies. Keep the vocabulary tiny and forgiving:
+
+| Inbound | Means |
+| --- | --- |
+| `Y`, `YES`, `1`, `accept` | Contractor accepts the offer |
+| `N`, `NO`, `2`, `pass` | Contractor passes |
+| `DONE 385` | Job complete, invoiced $385 — accrues the fee |
+| anything else | Route to a human in the console |
+
+That last row is the important one. **Never make a person guess the magic
+word.** Anything unparsed becomes a message in the dispatch console for the
+coordinator to read, which is the same place member texts already land.
+
+### Offers expire, and expiry is a state change
+
+An offer that times out re-routes to the next contractor on the bench
+automatically. This is the single biggest operational win over calling
+around, and it is a background job plus a status field — cheap to build,
+large effect on fill rate.
+
+---
+
+## 5. Data model
 
 ```
 Member ──< Property ──< Asset          (HVAC, roof, water heater — the moat)
                     └──< ServiceRequest ──< Quote ──< Job ──< NetworkFee
 Contractor ──< ContractorDoc           (COI, W-9, license — with expiry dates)
             └──< Offer                 (sent, accepted, passed, expired)
-Membership (Stripe subscription mirror)
+Message                                (every inbound and outbound SMS)
+ConsentRecord                          (who agreed to be texted, and when)
+Membership                             (Stripe subscription mirror)
 ```
 
-Two things to get right on day one, because retrofitting them is painful:
+Five things to get right on day one, because retrofitting them hurts:
 
-1. **`Asset` is a first-class table, not a JSON blob on Property.** Every
-   asset carries install year, expected life, and last service date. The
-   maintenance reminder engine is a nightly job over this table, and those
-   reminders are how you get from 3 jobs per member per year to 4.
+1. **`Asset` is a first-class table, not JSON on Property.** Every asset
+   carries install year, expected life, last service date. The maintenance
+   reminder engine is a nightly job over this table, and those reminders are
+   how you get from 3 jobs per member per year to 4.
 
-2. **`NetworkFee` is its own row with its own lifecycle** (accrued → invoiced
-   → paid → written off). A 10% fee you cannot age and chase is a 0% fee.
-   Ties to `Job.invoiceTotal`, which the contractor reports at close-out.
+2. **`NetworkFee` has its own lifecycle** (accrued → invoiced → paid → written
+   off) and records **collected** separately from **invoiced**. A fee you
+   cannot age and chase is a 0% fee, and a fee charged on money the contractor
+   never received is how you lose a good vendor over $40.
 
-Also: `ContractorDoc.expiresAt` drives an automatic suspension. A contractor
-whose certificate of insurance lapses should stop receiving offers without
-anyone remembering to check.
+3. **`ContractorDoc.expiresAt` is a date column** that drives automatic
+   suspension. A vendor whose certificate of insurance lapses stops receiving
+   offers without anyone remembering to check.
 
----
+4. **`Message` stores every text, both directions, linked to the request.**
+   This is your audit trail, your dispute evidence, and the thread the
+   coordinator reads in the console. It is also what makes the member portal
+   possible later without re-architecting.
 
-## 5. App Store review — the two things that will bite you
-
-**Apple 3.1.1 (in-app purchase).** Apple takes 15–30% of digital subscriptions
-sold inside an iOS app. A $39/month membership sold through Stripe in the app
-will be rejected.
-
-The way out: this membership is largely a **service consumed outside the app**
-(a human coordinates a physical repair at a physical house), which is
-"physical goods and services" under 3.1.3(e) and exempt. Two-step approach:
-
-1. Sell the membership **on the website only.** The app signs existing members
-   in and does not mention pricing, upgrades, or a purchase path anywhere.
-   This is the Netflix/Spotify pattern and reviewers accept it readily.
-2. Once you have volume, apply for the **External Purchase Link** entitlement,
-   or argue the physical-services exemption directly with a reviewer note.
-
-Budget for one rejection. It is routine, and the fix is usually removing a
-single "Upgrade" button from a settings screen.
-
-**Guideline 4.2 (minimum functionality).** An app that is mostly a contact
-form gets rejected as "not enough to be an app." The home file, the job
-timeline, and push notifications are what clear this bar — which is another
-reason not to ship the app until those are real.
-
-Also plan for: a **demo account** in App Store Connect review notes (reviewers
-cannot get past a phone-OTP login without one), an ATT-free privacy manifest,
-and a real privacy policy URL.
-
-### iPad specifically
-
-Ship it as a **universal app** — same binary, adaptive layout. On iPad the
-member app should use a split view (request list on the left, detail on the
-right), which in Expo means React Navigation's two-pane layout behind a width
-breakpoint. It is a day of work, not a separate app, and it makes the app
-usable for the landlord/property-manager segment, who will be on iPads.
+5. **`ConsentRecord` is a row with a timestamp and the exact language shown.**
+   Carrier complaints and TCPA questions are answered with records, not
+   recollections.
 
 ---
 
-## 6. Build sequence
-
-**Phase 0 — no code (weeks 1–12).** Squarespace or Framer site, Stripe
-Payment Link, OpenPhone number, Jobber for dispatch, Google Sheet for the
-contractor bench. Validate that people stay subscribed. Roughly $200/month.
-
-**Phase 1 — ops console (weeks 13–20).** Next.js, Postgres, the data model
-above. Twilio inbound SMS creates a request row. Replaces the spreadsheet and
-half of Jobber. This is where the operator's hours come back.
-
-**Phase 2 — contractor app (weeks 21–28).** Push-notified job offers with a
-countdown, accept/pass, close-out with photos and invoice total. Ship it
-before the member app: it is what makes the fee collectible and the response
-times fast, and contractors tolerate a rougher v1 than homeowners do.
-
-**Phase 3 — member app (weeks 29–40).** Request composer, job timeline, home
-file, membership management. Both stores, plus the web build at
-`app.brhomeconcierge.com`.
-
-**Phase 4 — property manager portal.** Multi-property, tenant-initiated
-requests, per-property billing. This is the $99–$149/property/month product
-and it is mostly a permissions layer over what already exists.
-
-### Rough cost to build
+## 6. Build sequence and cost
 
 | Phase | Scope | Contract build | Timeline |
 | --- | --- | --- | --- |
-| 0 | No-code stack | $3–6k | 2 weeks |
-| 1 | Ops console | $25–40k | 8 weeks |
-| 2 | Contractor app | $20–35k | 8 weeks |
-| 3 | Member app (iOS/iPad/Android/web) | $35–55k | 12 weeks |
+| 0 | No custom software — site, phone, Jobber, spreadsheet | $3–6k | 2 weeks |
+| 1 | Dispatch console + SMS pipeline + contractor bench | $25–40k | 8–10 weeks |
+| 2 | Member portal — home file, history, quote approval | $10–18k | 4–6 weeks |
+| 3 | Property-manager accounts — multi-property, per-property billing | $12–20k | 5–6 weeks |
 
-Phases 1–3 together land near **$80–130k** at agency rates, or roughly
-$55–75k with one strong senior contractor working with AI tooling.
+Phases 1–2 together land near **$35–58k** at agency rates, or roughly
+**$25–40k** with one strong senior contractor working with AI tooling.
 
-Do not read that against the $35–50k launch budget in the business plan and
-conclude the software is unaffordable. That budget funds Phase 0 — entity,
-legal, insurance, branding, the marketing site, and working capital — where
-software is a rounding error. Phases 1–3 are a year-two and year-three
-decision, funded out of membership revenue once it exists. On the plan's own
-model, year two throws off roughly $183k of EBITDA, which is what pays for the
-ops console and the contractor app. **Phase 0 is what you should actually be
-paying for in the next 90 days.**
+That is **roughly half** what the native route in this document's earlier
+version would have cost, and the difference is almost entirely app-store
+overhead that bought nothing this business needs.
+
+Do not read those figures against the $35–50k launch budget in the business
+plan and conclude the software is unaffordable. That budget funds Phase 0 —
+entity, legal, insurance, branding, the marketing site, working capital —
+where software is a rounding error. Phase 1 is a year-two decision funded out
+of membership revenue. On the plan's own model year two throws off roughly
+$183k of EBITDA, which is what pays for the console.
+
+**Phase 0 is what you should actually be paying for in the next 90 days.**
 
 ---
 
@@ -234,12 +259,47 @@ paying for in the next 90 days.**
 
 - **The legal structure is a product requirement, not a footnote.** The
   homeowner contracts with and pays the contractor; the platform invoices the
-  contractor a network fee. Build it that way in the schema — a `Quote` belongs
-  to a Contractor and is addressed to a Member; the platform never appears as
-  a party. If the app ever lets the platform quote work, the licensing exposure
-  described in the business plan becomes real. Have a Louisiana construction
-  attorney read the actual agreements before the first paid job.
-- **Do not put the membership price in the mobile app.** See §5.
-- **Nothing here should block texting.** SMS is the interface; the app is a
-  nicer surface over the same inbox. If the app ever becomes the only way in,
-  the product got worse.
+  contractor a network fee. Build it that way in the schema — a `Quote`
+  belongs to a Contractor and is addressed to a Member; the platform is never
+  a party. If the software ever lets the platform quote work, the licensing
+  exposure described in the business plan becomes real. Have a Louisiana
+  construction attorney read the actual agreements before the first paid job.
+- **Nothing should ever block texting.** SMS is the interface. Every web
+  surface is a nicer window onto the same conversation. If the portal ever
+  becomes the only way to reach you, the product got worse.
+- **Own your own accounts.** Domain, Stripe, Twilio, database, repository —
+  in the client's name, with the developer invited. A vendor holding the keys
+  is the most common way these projects go wrong.
+
+---
+
+## Appendix — if you ever do go native
+
+Keep this filed. It stops being theoretical only if §1's 500-member trigger
+fires.
+
+**The route** would be Expo (React Native + React Native Web), TypeScript, one
+repository, shipping iPhone/iPad/Android from one codebase while the web build
+serves the same code. The ops console stays a separate desktop web app
+regardless; React Native Web fights dense keyboard-driven tables.
+
+**Apple guideline 3.1.1** is the problem to plan for. Apple takes 15–30% of
+digital subscriptions sold inside an iOS app, and a $39/month membership sold
+through Stripe in-app will be rejected. The way through: sell membership on
+the website only, and let the app sign existing members in without mentioning
+price, upgrades, or a purchase path anywhere — the Netflix/Spotify pattern.
+This membership also has a real argument for the physical-services exemption
+under 3.1.3(e), since a human coordinates a physical repair at a physical
+house. Budget for one rejection regardless; the fix is usually deleting one
+"Upgrade" button.
+
+**Guideline 4.2** — an app that is mostly a contact form gets rejected as not
+enough to be an app. The home file, the job timeline and notifications are
+what clear that bar, which is another reason this only makes sense once the
+member experience is substantial.
+
+Also plan for a demo account in App Store Connect review notes (reviewers
+cannot get past phone-OTP login without one), a privacy manifest, and a real
+privacy policy URL. On iPad, ship a universal binary with a split view —
+request list left, detail right — behind a width breakpoint. That is a day of
+work, not a second app, and it matters for the landlord segment.
