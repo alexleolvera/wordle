@@ -49,6 +49,14 @@ and names the genuine reasons to choose the apps anyway. Do not reduce it back
 to a single recommendation; the client makes that call, not us. Pricing and
 the consulting identity live in that file.
 
+**Scope boundary, stated because it is easy to blur:** the client recruits the
+contractor bench — their market, their relationships, their vendors. The
+engagement supplies the recruiting *kit* (outreach scripts, vendor agreement
+requirements, screening checklist, compliance tracker), not the phone calls.
+Running the outreach is a separate paid add-on, never bundled into the launch
+package. Contractor calls fall to the consultant only under the operate
+retainer, and that is dispatching against a bench the client already built.
+
 `costs/` itemises the console build as 60 working days and shows that the
 price range is driven by who builds it, not what gets built. **The day counts
 and the dollar figures there are the source of truth** — the proposal quotes

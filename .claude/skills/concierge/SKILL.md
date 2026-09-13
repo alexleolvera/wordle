@@ -30,6 +30,12 @@ route survives as an appendix in `ARCHITECTURE.md` and as a priced second
 option in the proposal, gated on 500+ members. Do not reintroduce native app
 work without being asked.
 
+**The client recruits the contractor bench; the engagement supplies the kit.**
+Scripts, agreement requirements, screening checklist and compliance tracker —
+not the calls. The client has the local relationships and the vendors end up
+being theirs. Running the outreach is a separately priced add-on. Do not let
+the launch package drift into doing it.
+
 **Present options, do not decide for the client.** The proposal's section 03
 prices both paths side by side and names the honest reasons to pick the apps
 anyway. Recommendations are stated as recommendations; the choice stays with
