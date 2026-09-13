@@ -119,6 +119,19 @@ section:last-of-type{border-bottom:0}
 .opt li{font-size:14.5px; color:var(--ink-2); padding-left:24px; position:relative; line-height:1.5}
 .opt li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
 .tag{display:inline-block; padding:4px 10px; border-radius:999px; background:var(--cypress); color:var(--on-primary); font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:11px}
+.cmp{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--card); margin-top:22px}
+.cmp table{border-collapse:collapse; width:100%; min-width:600px; font-size:14.5px}
+.cmp th, .cmp td{padding:12px 15px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.5}
+.cmp thead th{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3); background:var(--tint)}
+.cmp thead th.pick{color:var(--cypress)}
+.cmp tbody tr:last-child td{border-bottom:0}
+.cmp td:first-child{color:var(--ink-3); font-size:13.5px; white-space:nowrap}
+.cmp td.pick{background:var(--cypress-soft); font-weight:600}
+.cmp .rec{display:inline-block; margin-left:7px; padding:2px 7px; border-radius:999px; background:var(--cypress); color:var(--on-primary); font-size:9px; letter-spacing:.08em}
+.yours{border:2px solid var(--brass); border-radius:14px; padding:19px 21px; margin-top:24px; background:var(--card)}
+.yours h3{font-size:18px; font-weight:700; margin-bottom:9px}
+.yours p{font-size:15px; color:var(--ink-2); line-height:1.6}
+.yours p + p{margin-top:11px}
 .note{font-size:14px; color:var(--ink-3); margin-top:18px; line-height:1.6; max-width:62ch}
 
 /* next */
@@ -230,52 +243,89 @@ section:last-of-type{border-bottom:0}
 
 <section>
   <div class="wrap">
-    <div class="head"><span class="head__n">03</span><h2>What I am telling you not to buy</h2></div>
+    <div class="head"><span class="head__n">03</span><h2>Two ways to build this</h2></div>
+    <p class="lede">
+      There is a real decision here and it is yours, not mine. I have priced both honestly,
+      and I will build either one well.
+    </p>
+
+    <div class="cmp">
+      <table>
+        <thead><tr>
+          <th></th>
+          <th class="pick">Web &amp; text messages<span class="rec">MY PICK</span></th>
+          <th>Apps on the App Store &amp; Play Store</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Build cost</td><td class="pick">$25k–40k for the dispatch console, $10k–18k for a member portal later</td><td>$80k–130k across the three pieces it takes</td></tr>
+          <tr><td>Time to first version</td><td class="pick">8–10 weeks</td><td>3–4 months, then again per surface</td></tr>
+          <tr><td>What a contractor does</td><td class="pick">Answers a text at a red light</td><td>Installs an app, makes an account, enables notifications, remembers to open it</td></tr>
+          <tr><td>What a member does</td><td class="pick">Texts one number</td><td>Installs an app — or texts you anyway</td></tr>
+          <tr><td>Shipping a change</td><td class="pick">One deploy, live for everyone in minutes</td><td>App Store review, then users have to update</td></tr>
+          <tr><td>Membership billing</td><td class="pick">Stripe. You keep all of it</td><td>Apple takes 15–30% of anything sold in-app, so you sell on the web anyway</td></tr>
+          <tr><td>Yearly overhead</td><td class="pick">Hosting and texting</td><td>Same, plus developer program fees and store compliance</td></tr>
+          <tr><td>The real risk</td><td class="pick">Members never get an icon on their home screen</td><td>Your contractors never install it, and you are back to phoning around</td></tr>
+        </tbody>
+      </table>
+    </div>
+
     <div class="counsel">
-      <h3>You almost certainly never need a mobile app.</h3>
-      <p>
-        Building this for the iPhone and Android app stores runs <strong>$80,000–$130,000</strong>
-        across the three pieces it would take, plus App Store review, a subscription-billing
-        fight with Apple, and two release cycles every time you change a word. I could quote
-        you that. You should not buy it.
-      </p>
+      <h3>Why I would go with web and text.</h3>
       <p>
         <strong>Your contractors will not open an app.</strong> A plumber is in a truck, hands
-        dirty, three jobs behind. He will answer a text at a red light in forty seconds — trade,
-        address, distance, likely ticket, reply Y or N — and he will never once install
-        something to do it. That is not a compromise. It is the better product.
+        dirty, three jobs behind. He will answer a text in forty seconds — trade, address,
+        distance, likely ticket, reply Y or N — and he will never once install something to do
+        it. That is not a workaround. For this side of the business it is the better product.
       </p>
       <p>
         <strong>And your members will not hunt for an icon.</strong> Water is coming out from
         under the water heater. The app they already have open is Messages. "Text us" has no
         install step and no learning curve, and it is the entire promise you are selling.
       </p>
+    </div>
+
+    <div class="yours">
+      <h3>When the apps are the right call anyway</h3>
       <p>
-        Everything else lives in a browser. No app store, no review queue, no second codebase,
-        and one deploy that everybody sees immediately.
+        There are honest reasons to choose them, and if any of these is true you should — I
+        will build it and I will not sulk about it.
+      </p>
+      <p>
+        <strong>You intend to raise outside money</strong> and expect investors to want an app
+        as evidence the thing is real. That is a fundraising argument rather than an operating
+        one, but it is not a stupid argument.
+      </p>
+      <p>
+        <strong>You want the member experience to be the product</strong> — browsing the home
+        file, maintenance history, a nudge every few weeks on a day nothing is broken. That is a
+        genuine retention play, and it is what an app is actually good at.
+      </p>
+      <p>
+        <strong>You want the icon on the home screen as a brand asset</strong> and accept what
+        it costs. Being on someone's phone is worth something. It just is not worth it yet.
       </p>
     </div>
 
-    <div class="counsel" style="margin-top:16px">
-      <h3>And do not build the web software yet either.</h3>
+    <div class="counsel" style="margin-top:20px">
+      <h3>Whichever you pick — do not build it first.</h3>
       <p>
         Your first hundred members need a phone number that a person answers and a plumber who
-        shows up Thursday. If we spend four months building a dispatch console for a business
-        with zero members, we learn whether anyone wanted this in month five instead of month
-        one — and pay $30,000 for the privilege.
+        shows up Thursday. If we spend four months building software for a business with zero
+        members, we learn whether anyone wanted this in month five instead of month one.
       </p>
       <p>
-        The console earns its place around <strong>150 members</strong>, when tracking jobs by
-        hand starts costing you real hours. By then you will know exactly what it needs to do,
-        because you will have run the business yourself and watched where the time goes. That is
-        a far better specification than anything I could write today.
+        Software earns its place around <strong>150 members</strong>, when tracking jobs by hand
+        starts costing you real hours. By then you will know exactly what it needs to do, because
+        you will have run the business yourself and watched where the time goes. That is a far
+        better specification than anything either of us could write today.
       </p>
     </div>
     <div class="body-copy">
       <p>
-        The prototypes above exist to prove the concept and to be the blueprint when that day
-        comes — not to be shipped this quarter. <strong>Launch on a phone number and a website.</strong>
-        Software comes out of revenue, later, when it is buying back hours you can actually count.
+        The prototypes above are the blueprint for whichever path you pick — every one of them
+        is a web page today, which is also how you can open them on your phone right now without
+        installing anything. <strong>Launch on a phone number and a website.</strong>
+        Software comes out of revenue, later, when it is buying back hours you can count.
       </p>
     </div>
   </div>
@@ -355,10 +405,10 @@ section:last-of-type{border-bottom:0}
       </div>
       <div class="opt">
         <div class="opt__top">
-          <h3>Dispatch console</h3>
+          <h3>Software, later</h3>
           <span class="opt__p">$25k–40k <small>deferred</small></span>
         </div>
-        <p class="opt__d">Revisited at roughly 150 members, scoped against what the business has actually learned by then. A member portal follows later at $10k–18k. Both are web, both are deferred, and neither is something I would take your money for today.</p>
+        <p class="opt__d">The dispatch console at roughly 150 members, scoped against what the business has learned by then, with a member portal following at $10k–18k. If you choose the app route instead, budget $80k–130k and a longer runway. Either way it is deferred, and neither is something I would take your money for today.</p>
       </div>
     </div>
     <p class="note">

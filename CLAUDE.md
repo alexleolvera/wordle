@@ -41,9 +41,11 @@ client and the consultant tick the same shared list. Republish it with
 `capabilities: {db: {}}` or the stored declaration is revoked.
 
 `proposal/` is Le’Olvera Consulting's pitch to the prospective owner, not part
-of the product. It links the three prototypes, recommends explicitly against
-building the mobile app yet, and prices the engagement. Pricing and the
-consulting identity live in that file — update them there.
+of the product. Section 03 presents **both** build paths — web and text
+(recommended) against native apps — with honest costs and tradeoffs on each,
+and names the genuine reasons to choose the apps anyway. Do not reduce it back
+to a single recommendation; the client makes that call, not us. Pricing and
+the consulting identity live in that file.
 
 ### Open work
 

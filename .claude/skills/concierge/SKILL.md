@@ -26,8 +26,14 @@ jobs sourced through the platform.
 
 **Architecture is web plus SMS — no native apps, no app stores.** Contractors
 receive job offers by text, not in an app; members text in. The App Store
-route survives only as an appendix in `ARCHITECTURE.md`, gated on 500+
-members. Do not reintroduce native app work without being asked.
+route survives as an appendix in `ARCHITECTURE.md` and as a priced second
+option in the proposal, gated on 500+ members. Do not reintroduce native app
+work without being asked.
+
+**Present options, do not decide for the client.** The proposal's section 03
+prices both paths side by side and names the honest reasons to pick the apps
+anyway. Recommendations are stated as recommendations; the choice stays with
+the person whose money it is.
 
 **No build step, no dependencies, anywhere.** Every file is hand-written HTML,
 CSS and vanilla JS that runs by opening it. No npm, no framework, no bundler,
