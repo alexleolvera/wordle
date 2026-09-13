@@ -66,9 +66,9 @@ operational, never salesy. Its thresholds (quote limit, hours, response
 targets) are defaults the owner overrides on day one.
 
 Proposal section 05 offers **two ways to run it after launch**: Option A, the
-client operates and the engagement advises at $1,200/month for 8 hours
-(recommended); Option B, the consultant operates for 90 days at $2,000/month
-for 25 hours. Both start with the same $6,000 Launch Package and both lead to
+client operates and the engagement advises at $750/month for 5 hours for the
+first 90 days, then $1,200 for 8 hours (recommended); Option B, the consultant
+operates for 90 days at $2,000/month for 25 hours. Both start with the same $6,000 Launch Package and both lead to
 the coordinator hire. Do not collapse this back to one option.
 
 **Every retainer states its hours, its overage rate, and what it does not

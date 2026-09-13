@@ -40,8 +40,9 @@ the launch package drift into doing it.
 
 **The client operates the business; the engagement advises.** Their own plan
 has the founder answering texts until 100-150 members, then hiring a
-coordinator. Proposal section 05 offers that as Option A ($1,200/mo advisory,
-8 hours, recommended) against Option B (consultant operates 90 days,
+coordinator. Proposal section 05 offers that as Option A (founding rate
+$750/mo for 5 hours through the first 90 days, then $1,200/mo for 8 hours;
+recommended) against Option B (consultant operates 90 days,
 $2,000/mo, 25 hours). Both lead to the client's own coordinator, trained from
 `playbook/`. Every retainer states hours, overage rate and exclusions —
 advisory is priced at $150/hr against the Launch Package's effective $167/hr,

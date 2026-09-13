@@ -133,6 +133,8 @@ section:last-of-type{border-bottom:0}
 .path ul{margin-top:13px; display:flex; flex-direction:column; gap:7px}
 .path li{font-size:13.5px; color:var(--ink-2); padding-left:20px; position:relative; line-height:1.5}
 .path li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
+.path__step{font-family:var(--mono); font-size:12px; color:var(--brass); margin-top:2px; letter-spacing:.01em}
+.path__badge{display:inline-block; padding:3px 9px; border-radius:999px; background:var(--brass); color:var(--on-primary); font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:.1em; margin-left:7px; vertical-align:2px}
 .path__hrs{margin-top:13px; padding:11px 13px; background:var(--tint); border-radius:10px; font-size:13px; color:var(--ink-2); line-height:1.55}
 .path__hrs b{color:var(--ink); font-family:var(--mono); font-size:12.5px}
 .fence{margin-top:14px; padding:14px 17px; border-left:3px solid var(--brass); background:var(--brass-soft); border-radius:0 12px 12px 0; font-size:14px; color:var(--ink-2); line-height:1.6}
@@ -425,7 +427,8 @@ section:last-of-type{border-bottom:0}
       <div class="path path--lead">
         <span class="path__k">Option A · recommended</span>
         <h3>You run it, I advise</h3>
-        <div class="path__p">$1,200 <small>/ month</small></div>
+        <div class="path__p">$750 <small>/ month</small><span class="path__badge">Founding rate</span></div>
+        <div class="path__step">for your first 90 days, then $1,200</div>
         <p class="path__d">
           You take the member texts and dispatch to your own bench. I stay on for the judgment
           calls — not the day-to-day.
@@ -438,14 +441,17 @@ section:last-of-type{border-bottom:0}
           <li>Cancel any month, no notice</li>
         </ul>
         <p class="path__hrs">
-          <b>8 hours a month.</b> That covers the weekly review, the bench sweep and the numbers
-          pack with room left for the calls in between. Unused hours roll into the next month.
-          Anything beyond is $150/hour, agreed before it is spent.
+          <b>5 hours a month at the founding rate, 8 after.</b> There is genuinely less to review
+          at twenty-five members than at a hundred and fifty, so the rate steps with the work
+          rather than the calendar. Either way it covers the weekly review, the bench sweep and
+          the numbers pack. Unused hours roll into the next month; anything beyond is $150/hour,
+          agreed before it is spent.
         </p>
         <p class="path__who">
           <b>Pick this if this business is your main focus.</b> Answering the first few hundred
           texts yourself is how you learn what your coordinator will need to know — and it keeps
-          roughly $1,100 a month in the business.
+          $1,250 a month in the business through the quarter you can least afford to
+          spend it.
         </p>
       </div>
 
