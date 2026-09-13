@@ -66,10 +66,17 @@ operational, never salesy. Its thresholds (quote limit, hours, response
 targets) are defaults the owner overrides on day one.
 
 Proposal section 05 offers **two ways to run it after launch**: Option A, the
-client operates and the engagement advises at $900/month (recommended);
-Option B, the consultant operates for 90 days at $2,000/month. Both start
-with the same $6,000 Launch Package and both lead to the coordinator hire.
-Do not collapse this back to one option.
+client operates and the engagement advises at $1,200/month for 8 hours
+(recommended); Option B, the consultant operates for 90 days at $2,000/month
+for 25 hours. Both start with the same $6,000 Launch Package and both lead to
+the coordinator hire. Do not collapse this back to one option.
+
+**Every retainer states its hours, its overage rate, and what it does not
+cover.** Option A is priced at $150/hour against the Launch Package's
+effective $167/hour, because advisory should not cost less than delivery. An
+unbounded "on call" line is how a retainer becomes a full-time job, so the
+scope fence under the options — no recruiting, no selling memberships, no
+software — stays in.
 
 `costs/` itemises the console build as 60 working days and shows that the
 price range is driven by who builds it, not what gets built. **The day counts

@@ -133,6 +133,10 @@ section:last-of-type{border-bottom:0}
 .path ul{margin-top:13px; display:flex; flex-direction:column; gap:7px}
 .path li{font-size:13.5px; color:var(--ink-2); padding-left:20px; position:relative; line-height:1.5}
 .path li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
+.path__hrs{margin-top:13px; padding:11px 13px; background:var(--tint); border-radius:10px; font-size:13px; color:var(--ink-2); line-height:1.55}
+.path__hrs b{color:var(--ink); font-family:var(--mono); font-size:12.5px}
+.fence{margin-top:14px; padding:14px 17px; border-left:3px solid var(--brass); background:var(--brass-soft); border-radius:0 12px 12px 0; font-size:14px; color:var(--ink-2); line-height:1.6}
+.fence b{color:var(--ink)}
 .path__who{margin-top:auto; padding-top:14px; font-size:13px; color:var(--ink-3); line-height:1.55; border-top:1px solid var(--line-soft)}
 .path__who b{color:var(--ink)}
 .arrow{text-align:center; font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); padding:16px 0 4px}
@@ -411,7 +415,7 @@ section:last-of-type{border-bottom:0}
         <li>Contractor recruiting kit — outreach scripts, vendor agreement requirements, screening checklist and the compliance tracker. <strong>You make the calls; we supply the system</strong>, because these end up being your vendors and your relationships</li>
         <li>Everything you have already seen above, handed over as yours</li>
         <li>The operating playbook — pricing, scripts, SLA targets, the KPIs to watch</li>
-        <li>Two weeks of support after launch</li>
+        <li>Two weeks of support after launch, up to 10 hours</li>
       </ul>
     </div>
 
@@ -421,7 +425,7 @@ section:last-of-type{border-bottom:0}
       <div class="path path--lead">
         <span class="path__k">Option A · recommended</span>
         <h3>You run it, I advise</h3>
-        <div class="path__p">$900 <small>/ month</small></div>
+        <div class="path__p">$1,200 <small>/ month</small></div>
         <p class="path__d">
           You take the member texts and dispatch to your own bench. I stay on for the judgment
           calls — not the day-to-day.
@@ -433,6 +437,11 @@ section:last-of-type{border-bottom:0}
           <li>On call for decisions — pricing, a difficult member, a vendor dispute</li>
           <li>Cancel any month, no notice</li>
         </ul>
+        <p class="path__hrs">
+          <b>8 hours a month.</b> That covers the weekly review, the bench sweep and the numbers
+          pack with room left for the calls in between. Unused hours roll into the next month.
+          Anything beyond is $150/hour, agreed before it is spent.
+        </p>
         <p class="path__who">
           <b>Pick this if this business is your main focus.</b> Answering the first few hundred
           texts yourself is how you learn what your coordinator will need to know — and it keeps
@@ -455,6 +464,11 @@ section:last-of-type{border-bottom:0}
           <li>The same weekly review and monthly numbers pack</li>
           <li>Steps down to Option A at 90 days, or whenever you are ready</li>
         </ul>
+        <p class="path__hrs">
+          <b>25 hours a month.</b> Roughly six hours a week, which is what the first quarter's
+          volume actually takes. Includes everything in Option A. Beyond 25 hours it is $95/hour,
+          and if we are regularly going over, that is the signal to hire your coordinator.
+        </p>
         <p class="path__who">
           <b>Pick this if you still have a day job</b>, or if your first quarter is better spent
           in front of realtors and contractors than in a text thread. It buys back roughly
@@ -462,6 +476,12 @@ section:last-of-type{border-bottom:0}
         </p>
       </div>
     </div>
+
+    <p class="fence">
+      <b>Neither retainer covers</b> recruiting your contractor bench, selling memberships, or
+      building software. Those are separately scoped and separately priced — said here so we
+      never have the awkward version of this conversation in month two.
+    </p>
 
     <div class="opt" style="margin-top:14px">
       <div class="opt__top">
