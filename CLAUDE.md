@@ -9,7 +9,7 @@ Rouge: homeowners pay a recurring fee for one number to text when something
 breaks; vetted contractors do the work, invoice the homeowner directly, and
 pay a 10% network fee on jobs sourced through the platform.
 
-Seven surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
+Eight surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
 no dependencies**:
 
 | Path | What | Status |
@@ -20,6 +20,7 @@ no dependencies**:
 | `concierge/proposal/` | Client-facing launch proposal | Sales asset |
 | `concierge/kickoff/` | Shared client requirements checklist | Sales asset, `db` |
 | `concierge/costs/` | Line-by-line build estimate breakdown | Sales asset |
+| `concierge/playbook/` | Coordinator operating manual | Deliverable |
 | `concierge/*.md` | Build plan, contractor requirements | Reference |
 
 **Before editing anything under `concierge/`, load the `concierge` skill**
@@ -35,6 +36,7 @@ Published previews (private to the owner's account):
 - Proposal — https://claude.ai/code/artifact/c1fa816f-c08c-4568-be67-013d9e157f16
 - Kickoff checklist — https://claude.ai/code/artifact/d2566ef2-2c60-4a89-aba4-2ceb44a7983a
 - Cost breakdown — https://claude.ai/code/artifact/0c3a6e3f-4d6d-40f8-a214-7e59623bc691
+- Coordinator playbook — https://claude.ai/code/artifact/9b9b12fa-1e42-4482-bbe0-5aef291e3353
 
 Republishing keeps those URLs. See the skill for how.
 
@@ -56,6 +58,18 @@ requirements, screening checklist, compliance tracker), not the phone calls.
 Running the outreach is a separate paid add-on, never bundled into the launch
 package. Contractor calls fall to the consultant only under the operate
 retainer, and that is dispatching against a bench the client already built.
+
+`playbook/` is the coordinator's daily operating manual and the asset sold
+with "Coordinator hire & train" ($2,500). It is written for whoever answers
+the texts — the client at first, a hire later — so keep its voice plain and
+operational, never salesy. Its thresholds (quote limit, hours, response
+targets) are defaults the owner overrides on day one.
+
+Proposal section 05 offers **two ways to run it after launch**: Option A, the
+client operates and the engagement advises at $900/month (recommended);
+Option B, the consultant operates for 90 days at $2,000/month. Both start
+with the same $6,000 Launch Package and both lead to the coordinator hire.
+Do not collapse this back to one option.
 
 `costs/` itemises the console build as 60 working days and shows that the
 price range is driven by who builds it, not what gets built. **The day counts

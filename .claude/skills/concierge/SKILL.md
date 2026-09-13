@@ -19,6 +19,8 @@ jobs sourced through the platform.
 | `concierge/site/` | Homeowner landing page + contractor recruiting page | **Deployable** |
 | `concierge/proposal/` | Client-facing launch proposal | Sales asset |
 | `concierge/kickoff/` | Shared client requirements checklist (`db`) | Sales asset |
+| `concierge/costs/` | Build estimate, itemised | Sales asset |
+| `concierge/playbook/` | Coordinator operating manual | Deliverable |
 | `concierge/ARCHITECTURE.md` | Build plan for iOS/iPadOS/Android/web | Reference |
 | `concierge/CONTRACTOR-NETWORK.md` | Vendor data and operating requirements | Reference |
 
@@ -35,6 +37,12 @@ Scripts, agreement requirements, screening checklist and compliance tracker —
 not the calls. The client has the local relationships and the vendors end up
 being theirs. Running the outreach is a separately priced add-on. Do not let
 the launch package drift into doing it.
+
+**The client operates the business; the engagement advises.** Their own plan
+has the founder answering texts until 100-150 members, then hiring a
+coordinator. Proposal section 05 offers that as Option A ($900/mo advisory,
+recommended) against Option B (consultant operates 90 days, $2,000/mo). Both
+lead to the client's own coordinator, trained from `playbook/`.
 
 **Present options, do not decide for the client.** The proposal's section 03
 prices both paths side by side and names the honest reasons to pick the apps

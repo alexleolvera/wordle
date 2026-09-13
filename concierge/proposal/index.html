@@ -119,6 +119,23 @@ section:last-of-type{border-bottom:0}
 .opt li{font-size:14.5px; color:var(--ink-2); padding-left:24px; position:relative; line-height:1.5}
 .opt li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
 .tag{display:inline-block; padding:4px 10px; border-radius:999px; background:var(--cypress); color:var(--on-primary); font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:11px}
+.step1{border:2px solid var(--cypress); border-radius:16px; padding:22px; background:var(--card); box-shadow:var(--shadow-md)}
+.pair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px}
+@media (max-width:760px){ .pair{grid-template-columns:minmax(0,1fr)} }
+.path{border:1px solid var(--line); border-radius:16px; padding:20px; background:var(--card); display:flex; flex-direction:column}
+.path--lead{border-color:var(--cypress); border-width:2px}
+.path__k{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3); margin-bottom:9px; display:block}
+.path--lead .path__k{color:var(--cypress)}
+.path h3{font-size:19px; font-weight:700; margin-bottom:4px}
+.path__p{font-family:var(--disp); font-size:25px; font-weight:700; letter-spacing:-.025em; margin:10px 0 3px}
+.path__p small{font-family:var(--sans); font-size:13px; font-weight:400; color:var(--ink-3); letter-spacing:0}
+.path__d{font-size:14.5px; color:var(--ink-2); line-height:1.6; margin-top:9px}
+.path ul{margin-top:13px; display:flex; flex-direction:column; gap:7px}
+.path li{font-size:13.5px; color:var(--ink-2); padding-left:20px; position:relative; line-height:1.5}
+.path li::before{content:"✓"; position:absolute; left:0; color:var(--cypress); font-weight:700}
+.path__who{margin-top:auto; padding-top:14px; font-size:13px; color:var(--ink-3); line-height:1.55; border-top:1px solid var(--line-soft)}
+.path__who b{color:var(--ink)}
+.arrow{text-align:center; font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); padding:16px 0 4px}
 .cmp{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--card); margin-top:22px}
 .cmp table{border-collapse:collapse; width:100%; min-width:600px; font-size:14.5px}
 .cmp th, .cmp td{padding:12px 15px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.5}
@@ -379,49 +396,104 @@ section:last-of-type{border-bottom:0}
 <section>
   <div class="wrap">
     <div class="head"><span class="head__n">05</span><h2>Working together</h2></div>
-    <div class="opts">
-      <div class="opt opt--lead">
-        <span class="tag">Recommended</span>
-        <div class="opt__top">
-          <h3>Launch Package</h3>
-          <span class="opt__p">$6,000 <small>fixed</small></span>
-        </div>
-        <p class="opt__d">Thirty days from signature to your first paying member. Fixed fee, no hourly billing, no change orders.</p>
-        <ul>
-          <li>Website deployed on your domain, taking Stripe payments</li>
-          <li>Business phone and text number configured</li>
-          <li>Contractor recruiting kit — outreach scripts, vendor agreement requirements, screening checklist and the compliance tracker. <strong>You make the calls; we supply the system</strong>, because these end up being your vendors and your relationships</li>
-          <li>Everything you have already seen above, handed over as yours</li>
-          <li>The operating playbook — pricing, scripts, SLA targets, the KPIs to watch</li>
-          <li>Two weeks of support after launch</li>
-        </ul>
+    <p class="lede">Both routes start the same way. What differs is who runs the business once it is open.</p>
+
+    <div class="step1" style="margin-top:22px">
+      <span class="path__k" style="color:var(--cypress)">Step one · both options</span>
+      <div class="opt__top">
+        <h3 style="font-size:22px">Launch Package</h3>
+        <span class="opt__p">$6,000 <small>fixed</small></span>
       </div>
-      <div class="opt">
-        <div class="opt__top">
-          <h3>Launch &amp; Operate</h3>
-          <span class="opt__p">+ $2,000 <small>/ month</small></span>
-        </div>
-        <p class="opt__d">The Launch Package, then I run the coordination with you through the first 90 days — taking member texts, dispatching, chasing contractors, and building the vendor bench while you focus on selling memberships. Cancel any month.</p>
-      </div>
-      <div class="opt">
-        <div class="opt__top">
-          <h3>Software, later</h3>
-          <span class="opt__p">$12k–50k <small>deferred</small></span>
-        </div>
-        <p class="opt__d">
-          The dispatch console at roughly 150 members — $35k–50k in full, or <strong>$12k–19k if you
-          buy only the offer engine</strong>, which is the piece that actually gives you your hours
-          back. A member portal follows later at $12k–20k. If you choose the app route instead,
-          budget $80k–130k. Either way it is deferred, and none of it is something I would take
-          your money for today.
+      <p class="opt__d">Thirty days from signature to your first paying member. Fixed fee, no hourly billing, no change orders.</p>
+      <ul style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
+        <li>Website deployed on your domain, taking Stripe payments</li>
+        <li>Business phone and text number configured and registered for business texting</li>
+        <li>Contractor recruiting kit — outreach scripts, vendor agreement requirements, screening checklist and the compliance tracker. <strong>You make the calls; we supply the system</strong>, because these end up being your vendors and your relationships</li>
+        <li>Everything you have already seen above, handed over as yours</li>
+        <li>The operating playbook — pricing, scripts, SLA targets, the KPIs to watch</li>
+        <li>Two weeks of support after launch</li>
+      </ul>
+    </div>
+
+    <div class="arrow">Then pick how it runs</div>
+
+    <div class="pair">
+      <div class="path path--lead">
+        <span class="path__k">Option A · recommended</span>
+        <h3>You run it, I advise</h3>
+        <div class="path__p">$900 <small>/ month</small></div>
+        <p class="path__d">
+          You take the member texts and dispatch to your own bench. I stay on for the judgment
+          calls — not the day-to-day.
         </p>
-        <p class="opt__d" style="margin-top:11px">
-          <a href="https://claude.ai/code/artifact/0c3a6e3f-4d6d-40f8-a214-7e59623bc691" target="_blank" rel="noopener" style="font-weight:600">
-            See every day of work behind those numbers →</a>
-          Sixty days, itemised, plus three ways to pay less.
+        <ul>
+          <li>Weekly review of what is actually happening versus what we assumed</li>
+          <li>Contractor bench health — who is slow, who is lapsing, who comes off the list</li>
+          <li>A monthly numbers pack: retention, match time, fill rate, fees collected</li>
+          <li>On call for decisions — pricing, a difficult member, a vendor dispute</li>
+          <li>Cancel any month, no notice</li>
+        </ul>
+        <p class="path__who">
+          <b>Pick this if this business is your main focus.</b> Answering the first few hundred
+          texts yourself is how you learn what your coordinator will need to know — and it keeps
+          roughly $1,100 a month in the business.
+        </p>
+      </div>
+
+      <div class="path">
+        <span class="path__k">Option B</span>
+        <h3>I run it with you</h3>
+        <div class="path__p">$2,000 <small>/ month</small></div>
+        <p class="path__d">
+          I take the member texts, the dispatching and the contractor chasing for the first
+          90 days while you sell memberships and build the bench.
+        </p>
+        <ul>
+          <li>Member requests answered 7 AM – 7 PM, seven days</li>
+          <li>Dispatch, quote review, scheduling and follow-up handled</li>
+          <li>Every job logged so the data exists when you do build software</li>
+          <li>The same weekly review and monthly numbers pack</li>
+          <li>Steps down to Option A at 90 days, or whenever you are ready</li>
+        </ul>
+        <p class="path__who">
+          <b>Pick this if you still have a day job</b>, or if your first quarter is better spent
+          in front of realtors and contractors than in a text thread. It buys back roughly
+          twenty hours a week.
         </p>
       </div>
     </div>
+
+    <div class="opt" style="margin-top:14px">
+      <div class="opt__top">
+        <h3>Coordinator hire &amp; train</h3>
+        <span class="opt__p">$2,500 <small>one-time, later</small></span>
+      </div>
+      <p class="opt__d">
+        Around 120 members, when you should stop answering texts yourself: the written operating
+        procedure, help hiring the right person locally, training them, and two weeks of shadowing
+        before they are on their own. Either option leads here — it is the point of both.
+      </p>
+    </div>
+
+    <div class="opt" style="margin-top:14px">
+      <div class="opt__top">
+        <h3>Software, later</h3>
+        <span class="opt__p">$12k–50k <small>deferred</small></span>
+      </div>
+      <p class="opt__d">
+        The dispatch console at roughly 150 members — $35k–50k in full, or <strong>$12k–19k if you
+        buy only the offer engine</strong>, which is the piece that actually gives you your hours
+        back. A member portal follows later at $12k–20k. If you choose the app route instead,
+        budget $80k–130k. Either way it is deferred, and none of it is something I would take
+        your money for today.
+      </p>
+      <p class="opt__d" style="margin-top:11px">
+        <a href="https://claude.ai/code/artifact/0c3a6e3f-4d6d-40f8-a214-7e59623bc691" target="_blank" rel="noopener" style="font-weight:600">
+          See every day of work behind those numbers →</a>
+        Sixty days, itemised, plus three ways to pay less.
+      </p>
+    </div>
+
     <p class="note">
       Separately, budget roughly <strong>$35,000–$50,000</strong> of your own launch capital for
       entity formation, legal, insurance, branding, initial marketing and working capital. That is

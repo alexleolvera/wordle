@@ -1,0 +1,481 @@
+<title>Concierge Coordinator Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#FBFCFA; --card:#FFFFFF; --tint:#F1F5F0;
+  --line:#DCE3DB; --line-soft:#E9EEE8;
+  --ink:#14201A; --ink-2:#3E4E47; --ink-3:#6D7B75;
+  --cypress:#1F4D3D; --cypress-soft:#E2EDE7; --on-primary:#FFFFFF;
+  --brass:#A8761F; --brass-soft:#F6ECD8;
+  --good:#2E7D5B; --good-soft:#E1F0E8;
+  --warn:#A97615; --warn-soft:#F7EDD8;
+  --crit:#A8402F; --crit-soft:#F7E5E1;
+  --shadow-sm:0 1px 2px rgba(20,32,26,.06);
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --disp:"Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --gut:clamp(18px,5vw,36px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+    --line:#2A342E; --line-soft:#222B26;
+    --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+    --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+    --brass:#D7A448; --brass-soft:#2A2316;
+    --good:#59AE85; --good-soft:#162A21;
+    --warn:#D2A04A; --warn-soft:#2A2316;
+    --crit:#D4755F; --crit-soft:#2C1B17;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+  --line:#2A342E; --line-soft:#222B26;
+  --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+  --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+  --brass:#D7A448; --brass-soft:#2A2316;
+  --good:#59AE85; --good-soft:#162A21;
+  --warn:#D2A04A; --warn-soft:#2A2316;
+  --crit:#D4755F; --crit-soft:#2C1B17;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.62; -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0; font-family:var(--disp); letter-spacing:-.02em; text-wrap:balance; line-height:1.2}
+p{margin:0} ul,ol{margin:0; padding:0; list-style:none}
+button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
+:focus-visible{outline:2px solid var(--brass); outline-offset:2px; border-radius:5px}
+.wrap{max-width:800px; margin:0 auto; padding-inline:var(--gut)}
+.lbl{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-3)}
+
+.mast{border-bottom:1px solid var(--line); padding-block:clamp(26px,4vw,44px) clamp(18px,2.5vw,26px)}
+.mast h1{font-size:clamp(28px,4.4vw,40px); font-weight:700; margin-top:15px}
+.mast p{font-size:17px; color:var(--ink-2); margin-top:13px; max-width:58ch}
+
+.nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.nav__in{display:flex; gap:7px; overflow-x:auto; padding-block:11px; scrollbar-width:none}
+.nav__in::-webkit-scrollbar{display:none}
+.nav a{padding:6px 12px; border-radius:999px; background:var(--card); border:1px solid var(--line); font-size:13px; font-weight:600; color:var(--ink-2); text-decoration:none; white-space:nowrap}
+.nav a:hover{border-color:var(--cypress); color:var(--cypress)}
+
+section{padding-block:clamp(26px,3.6vw,40px); border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.head{display:flex; gap:12px; align-items:baseline; margin-bottom:12px}
+.head__n{font-family:var(--mono); font-size:11.5px; color:var(--brass); flex:none; padding-top:4px}
+.head h2{font-size:clamp(21px,2.9vw,27px); font-weight:700}
+.sub{font-size:16px; color:var(--ink-2); max-width:63ch; margin-bottom:18px}
+
+.rule{background:var(--card); border:1px solid var(--line-soft); border-radius:12px; padding:15px 17px; margin-bottom:10px}
+.rule h3{font-size:16.5px; font-weight:700; margin-bottom:6px}
+.rule p{font-size:14.5px; color:var(--ink-2); line-height:1.6}
+.rule p + p{margin-top:9px}
+.rule--warn{border-left:3px solid var(--warn); background:var(--warn-soft)}
+.rule--crit{border-left:3px solid var(--crit); background:var(--crit-soft)}
+.rule--crit h3{color:var(--crit)}
+.rule--good{border-left:3px solid var(--good); background:var(--good-soft)}
+
+.tpl{background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; margin-bottom:11px}
+.tpl__h{display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--tint); border-bottom:1px solid var(--line-soft)}
+.tpl__h b{font-size:13.5px; font-family:var(--disp)}
+.tpl__h .when{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-3); margin-left:auto; white-space:nowrap}
+.tpl__b{padding:14px; font-size:15px; line-height:1.6; white-space:pre-wrap; color:var(--ink)}
+.tpl__f{display:flex; gap:9px; align-items:center; padding:0 14px 13px}
+.copy{padding:6px 13px; border-radius:8px; background:var(--cypress); color:var(--on-primary); font-size:12.5px; font-weight:600}
+.copy:hover{filter:brightness(1.1)}
+.copy[data-done="1"]{background:var(--good)}
+.tpl__n{font-size:12.5px; color:var(--ink-3); line-height:1.5}
+.tag{display:inline-block; padding:2px 8px; border-radius:999px; font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; background:var(--cypress-soft); color:var(--cypress)}
+
+.tw{overflow-x:auto; border:1px solid var(--line-soft); border-radius:12px; background:var(--card)}
+table{border-collapse:collapse; width:100%; min-width:520px; font-size:14.5px}
+th,td{padding:11px 14px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.5}
+th{font-family:var(--mono); font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); background:var(--tint); white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+.pill{display:inline-block; padding:3px 9px; border-radius:999px; font-family:var(--mono); font-size:10px; white-space:nowrap}
+.pill--now{background:var(--crit-soft); color:var(--crit)}
+.pill--day{background:var(--warn-soft); color:var(--warn)}
+.pill--week{background:var(--good-soft); color:var(--good)}
+
+.never{display:flex; flex-direction:column; gap:9px}
+.never li{padding:12px 15px 12px 40px; position:relative; background:var(--crit-soft); border-radius:11px; font-size:15px; color:var(--ink-2); line-height:1.55}
+.never li::before{content:"✕"; position:absolute; left:15px; top:12px; color:var(--crit); font-weight:700}
+.never b{color:var(--ink)}
+
+.steps{display:flex; flex-direction:column; gap:11px; counter-reset:s}
+.steps li{counter-increment:s; padding-left:38px; position:relative; font-size:15.5px; color:var(--ink-2); line-height:1.6}
+.steps li::before{content:counter(s); position:absolute; left:0; top:1px; width:26px; height:26px; border-radius:8px; background:var(--cypress); color:var(--on-primary); display:grid; place-items:center; font-family:var(--mono); font-size:12px}
+.steps b{color:var(--ink)}
+
+.foot{padding-block:26px 44px; font-size:13px; color:var(--ink-3); line-height:1.65}
+.foot strong{color:var(--ink-2)}
+.foot p + p{margin-top:9px}
+.toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:var(--paper); padding:10px 18px; border-radius:999px; font-size:13.5px; font-weight:600; z-index:60}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <span class="lbl">Baton Rouge Home Concierge</span>
+    <h1>Coordinator playbook.</h1>
+    <p>
+      Everything you need to answer a member, dispatch a contractor, and know when to stop and
+      call the owner. Read it once; keep it open on your phone after that.
+    </p>
+  </div>
+</header>
+
+<nav class="nav"><div class="wrap nav__in">
+  <a href="#job">The job</a><a href="#clock">The clock</a><a href="#triage">Triage</a>
+  <a href="#texts">Texts to send</a><a href="#dispatch">Dispatch</a><a href="#quotes">Quotes</a>
+  <a href="#wrong">When it goes wrong</a><a href="#escalate">Escalate</a>
+  <a href="#routine">Daily routine</a><a href="#never">Never</a>
+</div></nav>
+
+<section id="job">
+  <div class="wrap">
+    <div class="head"><span class="head__n">01</span><h2>What this job actually is</h2></div>
+    <p class="sub">
+      A member pays us so they never have to wonder who to call. Your job is to make that true.
+      You are not a receptionist taking messages and you are not a contractor giving advice — you
+      are the person who makes something happen and then makes sure it happened.
+    </p>
+    <div class="rule rule--good">
+      <h3>The one sentence that decides everything</h3>
+      <p>
+        If you are unsure what to do, ask: <b>"what would make this member feel handled?"</b>
+        Usually the answer is a reply in under fifteen minutes that says what happens next and
+        when — even when the answer is "I don't know yet, I'll know by four."
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="clock">
+  <div class="wrap">
+    <div class="head"><span class="head__n">02</span><h2>The clock</h2></div>
+    <p class="sub">These are promises the business has sold. Missing them is the fastest way to lose a member.</p>
+    <div class="tw"><table>
+      <thead><tr><th>What</th><th>Target</th><th>If you can't hit it</th></tr></thead>
+      <tbody>
+        <tr><td>First reply to a member</td><td><span class="pill pill--now">15 min</span></td><td>Reply anyway and say when you will know more</td></tr>
+        <tr><td>Contractor matched</td><td><span class="pill pill--day">Same day</span></td><td>Tell the member which trade you are chasing and why it is slow</td></tr>
+        <tr><td>Quote back to member</td><td><span class="pill pill--day">24 hours</span></td><td>Chase the contractor at hour 18, not hour 25</td></tr>
+        <tr><td>Non-urgent job scheduled</td><td><span class="pill pill--week">Within a week</span></td><td>Escalate — this usually means the bench is too thin in that trade</td></tr>
+        <tr><td>Follow-up after work</td><td><span class="pill pill--day">Next day</span></td><td>Never skip this one. It is where you catch problems early</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rule" style="margin-top:14px">
+      <h3>Hours</h3>
+      <p>
+        7 AM – 7 PM, seven days. Outside those hours, requests wait until morning — except the
+        three emergencies in section 03, which you act on whenever you see them.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="triage">
+  <div class="wrap">
+    <div class="head"><span class="head__n">03</span><h2>Triage — what kind of thing is this?</h2></div>
+    <p class="sub">Sort every incoming request into one of four buckets before you do anything else.</p>
+
+    <div class="rule rule--crit">
+      <h3>Not our job — safety first</h3>
+      <p>
+        <b>Smell of gas</b> → tell them to leave the house now and call the gas company or 911
+        from outside. <b>Fire, smoke, sparking panel</b> → 911. <b>Water actively flooding</b> →
+        tell them where the main shutoff usually is, then dispatch emergency plumbing.
+      </p>
+      <p>
+        You are never the first call for a genuine emergency. Say so plainly, then help with what
+        comes after.
+      </p>
+    </div>
+
+    <div class="rule rule--warn">
+      <h3>Urgent — today if humanly possible</h3>
+      <p>
+        No cooling in summer, no heat in a freeze, no power to a significant part of the house,
+        an active leak that is contained, a lock-out, a fridge or freezer down with food in it.
+        Push these to the front and tell the member you are doing so.
+      </p>
+    </div>
+
+    <div class="rule">
+      <h3>Normal — this week</h3>
+      <p>
+        Everything else that is broken. Slow drains, a dead outlet, a sticking door, an appliance
+        misbehaving, water stains, gutters. Most of your work lives here.
+      </p>
+    </div>
+
+    <div class="rule">
+      <h3>Planned — whenever it fits</h3>
+      <p>
+        Pressure washing, gutter cleaning, a fan install, maintenance we reminded them about.
+        Batch these; they are where you fill a contractor's slow week and earn goodwill.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="texts">
+  <div class="wrap">
+    <div class="head"><span class="head__n">04</span><h2>Texts to send</h2></div>
+    <p class="sub">
+      Starting points, not scripts. Change the words so they sound like you — a member can tell
+      the difference, and sounding like a person is the product. Replace anything in
+      <span class="tag">brackets</span>.
+    </p>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>First reply</b><span class="when">Within 15 min</span></div>
+      <div class="tpl__b">Got it — thanks for sending that over. Let me take a look and find the right person. I'll come back to you within the hour with a name and a time.</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">Send this before you know anything. The reply is the product.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Asking for a photo</b><span class="when">Right after the first reply</span></div>
+      <div class="tpl__b">Could you send me a photo of [the pipe coming off the top / the panel / where the water is coming from]? It helps me get you the right person the first time, and it usually tightens up the price.</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">Always ask. A photo can turn a replacement quote into a repair quote.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Matched</b><span class="when">As soon as a contractor accepts</span></div>
+      <div class="tpl__b">Good news — [Contractor] is taking this. They're licensed, insured, and we've used them [X] times. They can come [day, time window]. I'll send their quote over as soon as I have it, before anything gets booked.</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">"Before anything gets booked" — members want to know nothing happens without them.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Sending a quote</b><span class="when">Within 24 hours</span></div>
+      <div class="tpl__b">[Contractor]'s quote came in at $[amount] for [scope]. I checked it against [two/three] similar jobs we've had done recently — those ran $[x] and $[y] — so it's in line. Want me to book it for [day, window]?</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">The comparison is the membership made visible. Never skip it.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Day before</b><span class="when">Afternoon before the visit</span></div>
+      <div class="tpl__b">Quick reminder — [Contractor] is coming tomorrow between [window]. They'll text about 30 minutes out. [Access note, e.g. "I've let them know about the gate code and the dog."]</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">Cuts no-shows on both sides. Two minutes that saves an hour.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Follow-up after the work</b><span class="when">Next day</span></div>
+      <div class="tpl__b">How did it go with [Contractor] yesterday? Anything not right, tell me now rather than later — it's much easier to get them back this week than next month.</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">This one catches problems while they are still cheap to fix.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>When you are slow or stuck</b><span class="when">Before they have to chase you</span></div>
+      <div class="tpl__b">Update — I haven't got you a firm time yet. [Trade] is stretched this week after [reason]. I've got [X] people looking and I'll have you an answer by [specific time]. Sorry to keep you waiting.</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">Members forgive delay. They do not forgive silence.</span></div>
+    </div>
+
+    <div class="tpl">
+      <div class="tpl__h"><b>Offer to a contractor</b><span class="when">Dispatch</span></div>
+      <div class="tpl__b">[Job ID] · [Trade] · [One-line problem]
+[Address] · [distance] mi · member wants it [today/this week]
+Typical for this type: $[range] · [N] photos: [link]
+Reply Y to take it, N to pass. Expires [time].</div>
+      <div class="tpl__f"><button class="copy">Copy</button><span class="tpl__n">Everything they decide on, in four lines. Never make them call you to find out more.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="dispatch">
+  <div class="wrap">
+    <div class="head"><span class="head__n">05</span><h2>Dispatch rules</h2></div>
+    <ol class="steps">
+      <li><b>Check the bench first.</b> Anyone whose insurance, licence or W-9 is expired does not get the job. No exceptions, no "just this once" — this is the rule that protects the whole business.</li>
+      <li><b>Send to two, not one</b>, for anything urgent. First to reply gets it; tell the other one straight away and thank them. Contractors forgive losing a race. They do not forgive being ignored.</li>
+      <li><b>Give them 30 minutes</b> during business hours. No reply, move to the next on the bench. Log the non-reply — that number decides who gets offers next month.</li>
+      <li><b>Rotate within a trade</b> until you have twenty jobs of history on each vendor. After that, favour the fast and the well-rated, but never let one vendor have everything: the day they are busy becomes your problem.</li>
+      <li><b>Match the job to the trade honestly.</b> A handyman is not an electrician. If you are unsure which trade it is, send a photo to the vendor you trust most and ask — they will tell you for free.</li>
+      <li><b>Share access details only on the day.</b> Gate codes and lockbox numbers go out the morning of the visit, never at booking.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="quotes">
+  <div class="wrap">
+    <div class="head"><span class="head__n">06</span><h2>Reviewing a quote</h2></div>
+    <p class="sub">This is the single most visible thing a member is paying for. Give it five real minutes.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Check</th><th>What you are looking for</th></tr></thead>
+      <tbody>
+        <tr><td>Scope matches the problem</td><td>Member said "slow drain", quote says "repipe". That gap is the conversation.</td></tr>
+        <tr><td>Against past jobs</td><td>Two or three comparable jobs in the same trade. Note the numbers so the next person has comparables too.</td></tr>
+        <tr><td>Repair vs replace</td><td>If a replacement is quoted, ask outright whether a repair would hold. Sometimes yes. Members remember when you ask.</td></tr>
+        <tr><td>Parts and labour split</td><td>Not always given, but ask when the number is large. A quote nobody can explain is a quote to question.</td></tr>
+        <tr><td>Over the owner's threshold</td><td>Anything above <b>$500</b> (or whatever the owner has set) goes to them before it goes to the member.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rule rule--warn" style="margin-top:14px">
+      <h3>How to push back on a contractor</h3>
+      <p>
+        Never haggle and never imply they are cheating. Ask a question instead: <i>"This came in
+        about 30% above the last two we've had done — is there something about this one I should
+        understand?"</i> Half the time there is a real reason and you have just learned something.
+        The other half, the number comes down on its own.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="wrong">
+  <div class="wrap">
+    <div class="head"><span class="head__n">07</span><h2>When it goes wrong</h2></div>
+
+    <div class="rule">
+      <h3>The contractor no-shows</h3>
+      <p>
+        Call the contractor first, then the member — in that order, so you have an answer before
+        you make the call. Apologise without excuses, give a new time, and log it. Two no-shows
+        and that vendor comes off the bench.
+      </p>
+    </div>
+
+    <div class="rule">
+      <h3>The member is unhappy with the work</h3>
+      <p>
+        Get specifics and photos. Go back to the contractor and ask them to make it right —
+        every vendor signed a re-service policy, so this is a reminder, not a favour. Keep the
+        member updated even when there is nothing new.
+      </p>
+      <p>
+        If the contractor refuses, stop and escalate. Do not promise a refund, a credit or a
+        replacement contractor on your own authority.
+      </p>
+    </div>
+
+    <div class="rule">
+      <h3>A contractor wants to pay us for the job</h3>
+      <p>
+        They cannot, and neither can the member pay us for the work. <b>The member pays the
+        contractor directly.</b> We invoice the contractor separately for the network fee.
+        If anyone tries to route repair money through us, say no and tell the owner.
+      </p>
+    </div>
+
+    <div class="rule">
+      <h3>Nobody in the trade will take it</h3>
+      <p>
+        Tell the member honestly and early. Offer what you can — a name outside the network,
+        or a date further out. A member who is told the truth stays. A member who is strung
+        along for a week does not.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="escalate">
+  <div class="wrap">
+    <div class="head"><span class="head__n">08</span><h2>Stop and call the owner</h2></div>
+    <p class="sub">Not a failure — these are the calls the owner is paid to make. Ring, don't text.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Situation</th><th>Why it stops with you</th></tr></thead>
+      <tbody>
+        <tr><td>Any injury, or damage to a member's property</td><td>Insurance and liability. Document everything, change nothing.</td></tr>
+        <tr><td>Quote over the threshold</td><td>Big numbers get a second set of eyes before the member sees them.</td></tr>
+        <tr><td>A member asks for a refund or to cancel</td><td>Retention is the owner's call, and usually a conversation worth having.</td></tr>
+        <tr><td>A contractor refuses to make work right</td><td>That is a bench decision, not a job decision.</td></tr>
+        <tr><td>Anyone mentions a lawyer, a claim or a licensing board</td><td>Stop replying on substance. Acknowledge receipt only.</td></tr>
+        <tr><td>A vendor's insurance has lapsed and they want the job anyway</td><td>The answer is no, but the owner needs to know it happened.</td></tr>
+        <tr><td>A request outside what we sell</td><td>Full remodels, anything over ~$7,500, ongoing lawn care. Say we will check, then ask.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="routine">
+  <div class="wrap">
+    <div class="head"><span class="head__n">09</span><h2>The routine</h2></div>
+    <div class="rule">
+      <h3>Every morning, before anything else</h3>
+      <p>
+        Read overnight messages. Reply to all of them, even the ones you cannot solve yet. Check
+        today's scheduled jobs and confirm each contractor is still coming.
+      </p>
+    </div>
+    <div class="rule">
+      <h3>Through the day</h3>
+      <p>
+        Triage as things arrive. Chase any quote older than eighteen hours. Chase any offer that
+        has been out over thirty minutes. Log every job as it moves — a job that is not logged
+        did not happen, and the fee on it will never be collected.
+      </p>
+    </div>
+    <div class="rule">
+      <h3>End of day</h3>
+      <p>
+        Nothing unanswered. Tomorrow's visits confirmed. Yesterday's completed jobs followed up.
+        If something is stuck, note it so the morning starts with it.
+      </p>
+    </div>
+    <div class="rule">
+      <h3>Every Friday</h3>
+      <p>
+        Check which vendor documents expire in the next 30 days and chase them. Note any vendor
+        who missed the response target twice this week. Send the owner: jobs done, median match
+        time, anything that went wrong, anything that nearly did.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="never">
+  <div class="wrap">
+    <div class="head"><span class="head__n">10</span><h2>Never, under any circumstances</h2></div>
+    <ul class="never">
+      <li><b>Never quote a price yourself.</b> Not even a ballpark, not even when pushed. Contractors quote; we review. A number from you becomes a promise.</li>
+      <li><b>Never send a vendor whose insurance, licence or W-9 has lapsed.</b> Not for a small job, not for a regular, not just this once.</li>
+      <li><b>Never take payment for the repair work.</b> The member pays the contractor. We are not in that transaction and the business depends on staying out of it.</li>
+      <li><b>Never give out access details before the day of the visit.</b> Gate codes, lockbox numbers, alarm codes — morning of, to the assigned contractor, nobody else.</li>
+      <li><b>Never promise a time you have not confirmed with the contractor.</b> "I'll find out and come straight back" is always available and always better.</li>
+      <li><b>Never go quiet on a member.</b> If you have no news, send the no-news text. Silence is the only unrecoverable mistake on this list.</li>
+      <li><b>Never diagnose.</b> You are not a plumber. "I don't know, but I know who will" is the right answer and members respect it.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>This is an operating document, not a contract.</strong> Thresholds — the quote limit, the hours, the response targets — are set by the owner and may differ from the defaults here. Confirm them on day one and write the real numbers in.</p>
+    <p><strong>Nothing here is legal advice.</strong> The rules about who pays whom, and about not quoting work, exist because the business depends on the platform not being the contractor. Do not work around them to solve a problem in the moment.</p>
+    <p style="margin-top:18px">Le’Olvera Consulting · <a href="mailto:alex@leolveraconsulting.com" style="color:var(--cypress)">alex@leolveraconsulting.com</a></p>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<script>
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('.copy');
+  if (!b) return;
+  var body = b.closest('.tpl').querySelector('.tpl__b');
+  var text = body.innerText;
+  function done() {
+    b.textContent = 'Copied';
+    b.setAttribute('data-done', '1');
+    setTimeout(function () { b.textContent = 'Copy'; b.removeAttribute('data-done'); }, 1600);
+  }
+  function fallback() {
+    // Clipboard access can be blocked; select the text so it can be copied by hand.
+    var r = document.createRange();
+    r.selectNodeContents(body);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+    var t = document.getElementById('toast');
+    t.innerHTML = '<div class="toast">Selected — press ' +
+      (/Mac/i.test(navigator.platform) ? '⌘C' : 'Ctrl+C') + ' to copy</div>';
+    setTimeout(function () { t.innerHTML = ''; }, 2600);
+  }
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+  } catch (err) { fallback(); }
+});
+</script>
