@@ -9,7 +9,7 @@ Rouge: homeowners pay a recurring fee for one number to text when something
 breaks; vetted contractors do the work, invoice the homeowner directly, and
 pay a 10% network fee on jobs sourced through the platform.
 
-Six surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
+Seven surfaces, all hand-written HTML/CSS/vanilla JS with **no build step and
 no dependencies**:
 
 | Path | What | Status |
@@ -19,6 +19,7 @@ no dependencies**:
 | `concierge/site/` | Landing page + contractor recruiting | **Deployable** |
 | `concierge/proposal/` | Client-facing launch proposal | Sales asset |
 | `concierge/kickoff/` | Shared client requirements checklist | Sales asset, `db` |
+| `concierge/costs/` | Line-by-line build estimate breakdown | Sales asset |
 | `concierge/*.md` | Build plan, contractor requirements | Reference |
 
 **Before editing anything under `concierge/`, load the `concierge` skill**
@@ -33,6 +34,7 @@ Published previews (private to the owner's account):
 - Site — https://claude.ai/code/artifact/d419450d-e6b0-42c6-82a9-ad296b669c84
 - Proposal — https://claude.ai/code/artifact/c1fa816f-c08c-4568-be67-013d9e157f16
 - Kickoff checklist — https://claude.ai/code/artifact/d2566ef2-2c60-4a89-aba4-2ceb44a7983a
+- Cost breakdown — https://claude.ai/code/artifact/0c3a6e3f-4d6d-40f8-a214-7e59623bc691
 
 Republishing keeps those URLs. See the skill for how.
 
@@ -46,6 +48,12 @@ of the product. Section 03 presents **both** build paths — web and text
 and names the genuine reasons to choose the apps anyway. Do not reduce it back
 to a single recommendation; the client makes that call, not us. Pricing and
 the consulting identity live in that file.
+
+`costs/` itemises the console build as 60 working days and shows that the
+price range is driven by who builds it, not what gets built. **The day counts
+and the dollar figures there are the source of truth** — the proposal quotes
+them, so change them in `costs/` first and carry them across. Cheaper paths
+(offer engine only at $12k–19k, no-code at $3k–8k) are priced there too.
 
 ### Open work
 

@@ -1,0 +1,268 @@
+<title>Where the Build Money Goes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#FBFCFA; --card:#FFFFFF; --tint:#F1F5F0;
+  --line:#DCE3DB; --line-soft:#E9EEE8;
+  --ink:#14201A; --ink-2:#3E4E47; --ink-3:#6D7B75;
+  --cypress:#1F4D3D; --cypress-soft:#E2EDE7; --on-primary:#FFFFFF;
+  --brass:#A8761F; --brass-soft:#F6ECD8;
+  --good:#2E7D5B; --good-soft:#E1F0E8;
+  --crit:#A8402F; --crit-soft:#F7E5E1;
+  --shadow-sm:0 1px 2px rgba(20,32,26,.06);
+  --sans:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --disp:"Archivo", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --gut:clamp(18px,5vw,38px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+    --line:#2A342E; --line-soft:#222B26;
+    --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+    --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+    --brass:#D7A448; --brass-soft:#2A2316;
+    --good:#59AE85; --good-soft:#162A21;
+    --crit:#D4755F; --crit-soft:#2C1B17;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1310; --card:#161D19; --tint:#1A221D;
+  --line:#2A342E; --line-soft:#222B26;
+  --ink:#E6ECE6; --ink-2:#A7B4AD; --ink-3:#7B8982;
+  --cypress:#5FA98A; --cypress-soft:#182C23; --on-primary:#0A120E;
+  --brass:#D7A448; --brass-soft:#2A2316;
+  --good:#59AE85; --good-soft:#162A21;
+  --crit:#D4755F; --crit-soft:#2C1B17;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0; font-family:var(--disp); letter-spacing:-.022em; text-wrap:balance; line-height:1.16}
+p{margin:0} ul{margin:0; padding:0; list-style:none}
+a{color:var(--cypress)}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:4px}
+.wrap{max-width:790px; margin:0 auto; padding-inline:var(--gut)}
+.lbl{font-family:var(--mono); font-size:10.5px; font-weight:500; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3)}
+.n{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+.mast{border-bottom:1px solid var(--line); padding-block:clamp(28px,4.5vw,48px) clamp(22px,3vw,34px)}
+.mast h1{font-size:clamp(30px,4.8vw,44px); font-weight:700; margin-top:16px}
+.mast p{font-size:17.5px; color:var(--ink-2); margin-top:15px; max-width:58ch}
+
+section{padding-block:clamp(28px,4vw,44px); border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.head{display:flex; gap:13px; align-items:baseline; margin-bottom:14px}
+.head__n{font-family:var(--mono); font-size:11.5px; color:var(--brass); flex:none; padding-top:4px}
+.head h2{font-size:clamp(22px,3vw,28px); font-weight:700}
+.sub{font-size:16px; color:var(--ink-2); max-width:63ch; margin-bottom:20px}
+
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:13px; background:var(--card)}
+table{border-collapse:collapse; width:100%; min-width:520px; font-size:14.5px}
+th,td{padding:11px 15px; text-align:left; border-bottom:1px solid var(--line-soft); vertical-align:top; line-height:1.5}
+th{font-family:var(--mono); font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-3); background:var(--tint); white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td.d{font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; color:var(--ink-2)}
+td.w{color:var(--ink-3); font-size:13.5px}
+tfoot td{border-top:2px solid var(--line); border-bottom:0; font-weight:700; background:var(--tint)}
+tr.pick td{background:var(--cypress-soft)}
+tr.pick td:first-child{font-weight:700}
+
+.why{display:flex; flex-direction:column; gap:12px; margin-top:6px}
+.why li{padding-left:22px; position:relative; font-size:15.5px; color:var(--ink-2); line-height:1.6}
+.why li::before{content:""; position:absolute; left:0; top:10px; width:8px; height:8px; border-radius:2px; background:var(--brass)}
+.why b{color:var(--ink)}
+
+.opt{border:1px solid var(--line); border-radius:14px; padding:19px 21px; background:var(--card); margin-bottom:12px}
+.opt--lead{border-color:var(--cypress); border-width:2px}
+.opt__top{display:flex; justify-content:space-between; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:9px}
+.opt h3{font-size:19px; font-weight:700}
+.opt__p{font-family:var(--disp); font-size:22px; font-weight:700; letter-spacing:-.02em; white-space:nowrap}
+.opt p{font-size:15px; color:var(--ink-2); line-height:1.6}
+.opt dl{margin:13px 0 0; display:flex; flex-direction:column; gap:8px}
+.opt .r{display:flex; gap:11px; font-size:14px; line-height:1.5}
+.opt .r dt{flex:none; width:80px; color:var(--ink-3); font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; padding-top:3px}
+.opt .r dd{margin:0; color:var(--ink-2)}
+
+.call{border-left:3px solid var(--brass); background:var(--brass-soft); padding:18px 20px; border-radius:0 13px 13px 0; margin-top:20px}
+.call h3{font-size:18px; margin-bottom:9px}
+.call p{font-size:15px; color:var(--ink-2); line-height:1.6}
+.call p + p{margin-top:11px}
+.call b{color:var(--ink)}
+
+.ladder{counter-reset:s; display:flex; flex-direction:column; gap:13px; margin-top:4px}
+.ladder li{counter-increment:s; padding-left:40px; position:relative; font-size:15.5px; color:var(--ink-2); line-height:1.6}
+.ladder li::before{content:counter(s); position:absolute; left:0; top:2px; width:26px; height:26px; border-radius:8px; background:var(--cypress); color:var(--on-primary); display:grid; place-items:center; font-family:var(--mono); font-size:12px}
+.ladder b{color:var(--ink)}
+
+.foot{padding-block:26px 44px; font-size:13px; color:var(--ink-3); line-height:1.65}
+.foot strong{color:var(--ink-2)}
+.foot p + p{margin-top:9px}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <span class="lbl">Baton Rouge Home Concierge</span>
+    <h1>Where the build money goes.</h1>
+    <p>
+      "Thirty-something thousand dollars for a web page and some text messages" is a fair thing
+      to balk at. So here is every day of work inside that number, what actually drives the
+      range, and three honest ways to pay a lot less than it.
+    </p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">01</span><h2>It is about sixty days of work</h2></div>
+    <p class="sub">
+      Not a website. A scheduling system that takes messages in, routes work to the right
+      person, tracks whether they answered, and keeps the money straight. Every line below is
+      something that has to exist before the thing is usable on a Tuesday morning.
+    </p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>What gets built</th><th>Why it exists</th><th style="text-align:right">Days</th></tr></thead>
+        <tbody>
+          <tr><td>Accounts and permissions</td><td class="w">You, a coordinator later, different access</td><td class="d">3</td></tr>
+          <tr><td>Database and data model</td><td class="w">Members, properties, jobs, vendors, fees</td><td class="d">3</td></tr>
+          <tr><td>Inbound texts become records</td><td class="w">A member's text turns into a tracked request, threaded to them</td><td class="d">5</td></tr>
+          <tr><td>Dispatch board</td><td class="w">Everything open, with the response clock running</td><td class="d">5</td></tr>
+          <tr><td>Contractor bench</td><td class="w">Vendors, documents, and automatic suspension when insurance lapses</td><td class="d">4</td></tr>
+          <tr class="pick"><td>Offer engine</td><td class="w">Send an offer by text, parse the reply, expire it, re-route to the next vendor</td><td class="d">6</td></tr>
+          <tr><td>Quote review</td><td class="w">Log it, compare against past jobs, approve or send back</td><td class="d">4</td></tr>
+          <tr><td>Scheduling and close-out</td><td class="w">Book a window, record what was actually invoiced</td><td class="d">3</td></tr>
+          <tr><td>Fee ledger</td><td class="w">Accrue 10%, invoice it, chase it, reconcile it</td><td class="d">4</td></tr>
+          <tr><td>Member and property records</td><td class="w">The home file — roof age, HVAC age, repair history</td><td class="d">3</td></tr>
+          <tr><td>Maintenance reminders</td><td class="w">Nightly job that finds what is coming due and texts about it</td><td class="d">3</td></tr>
+          <tr><td>Photos in and out</td><td class="w">Picture messages, stored against the job</td><td class="d">2</td></tr>
+          <tr><td>Stripe sync</td><td class="w">Who is actually a paying member right now</td><td class="d">2</td></tr>
+          <tr><td>Carrier registration</td><td class="w">Business texting has to be registered or it gets silently filtered</td><td class="d">2</td></tr>
+          <tr><td>Testing and fixing</td><td class="w">Roughly a fifth of any build that you intend to trust</td><td class="d">8</td></tr>
+          <tr><td>Deploy, monitoring, handover</td><td class="w">Live, watched, and documented enough that someone else can take it over</td><td class="d">3</td></tr>
+        </tbody>
+        <tfoot><tr><td>Total</td><td class="w">One developer, about twelve weeks</td><td class="d">60</td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">02</span><h2>The price is about who builds it, not what gets built</h2></div>
+    <p class="sub">
+      Sixty days is sixty days. What moves the number by a factor of three is the hourly rate
+      of the person doing them. This is the single most useful thing to understand before you
+      take quotes from anybody.
+    </p>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Who builds it</th><th style="text-align:right">Rate</th><th style="text-align:right">This scope</th><th>What you are trading</th></tr></thead>
+        <tbody>
+          <tr><td>Offshore agency</td><td class="d">$50–70</td><td class="d">$24k–34k</td><td class="w">Cheapest. Timezone gap, and quality varies enormously between shops</td></tr>
+          <tr class="pick"><td>Senior contractor, AI-assisted</td><td class="d">$70–110</td><td class="d">$34k–53k</td><td class="w">One accountable person who can move fast. Bus factor of one</td></tr>
+          <tr><td>US agency</td><td class="d">$125–175</td><td class="d">$60k–84k</td><td class="w">Project management, continuity, someone to sue. You pay for all three</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="call">
+      <h3>A correction worth making.</h3>
+      <p>
+        The proposal originally said $25k–40k for this. Working it out line by line, that was
+        <b>low</b> — it only holds at the cheapest end of the offshore range. The honest figure
+        for a senior contractor is <b>$35k–50k</b>, and I would rather tell you that now than
+        discover it in month three.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">03</span><h2>Why it costs more than a website</h2></div>
+    <ul class="why">
+      <li><b>A website shows information. This one moves work and money.</b> A brochure page that renders wrong is ugly. A dispatch board that loses a request means a member sat unanswered on the day their water heater failed.</li>
+      <li><b>Every edge case is a real person waiting.</b> The contractor who never replies. The text that says "sure thing" instead of Y. Two vendors accepting the same job four seconds apart. Each of those is a decision someone has to code, and the pleasant version of the software is mostly made of them.</li>
+      <li><b>The money has to reconcile.</b> A fee that accrues on the quoted price rather than what was collected, or a Stripe cancellation the system never noticed, is an invoice argument with a vendor you cannot afford to lose. Getting that right is careful, unglamorous work.</li>
+      <li><b>Compliance is not optional and not free.</b> Registered business texting, consent records, insurance certificates that suspend a vendor automatically when they expire. None of it is visible to a customer and all of it is the reason the business does not blow up.</li>
+      <li><b>Testing is a fifth of the build.</b> It is the fifth that decides whether you trust the fee number at the end of the month without checking it by hand — and if you do not trust it, you will check it by hand, and you have bought nothing.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">04</span><h2>Three ways to pay less</h2></div>
+    <p class="sub">All of them are real options. I would take any of them over spending $40,000 before you know the business works.</p>
+
+    <div class="opt opt--lead">
+      <div class="opt__top"><h3>Buy only the offer engine</h3><span class="opt__p">$12k–19k</span></div>
+      <p>
+        Inbound texts become tracked requests, offers go out by text, replies get parsed,
+        unanswered offers expire and re-route to the next vendor on the bench. A minimal board
+        to watch it happen. Nothing else.
+      </p>
+      <dl>
+        <div class="r"><dt>You get</dt><dd>The piece that actually gives you your hours back — no more calling three plumbers to find one who is free</dd></div>
+        <div class="r"><dt>You keep</dt><dd>Doing quotes, scheduling, fees and the home file the way you already do</dd></div>
+        <div class="r"><dt>Why first</dt><dd>It is a fifth of the scope and most of the time saved. Build the rest when it still hurts</dd></div>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt__top"><h3>No-code first</h3><span class="opt__p">$3k–8k</span></div>
+      <p>
+        Airtable for the data, Softr or Glide for the board, Make or Zapier to wire the
+        automation, Twilio for the texting. A working system in two or three weeks.
+      </p>
+      <dl>
+        <div class="r"><dt>You get</dt><dd>Almost all of the function, almost immediately, for a tenth of the money</dd></div>
+        <div class="r"><dt>You give up</dt><dd>Speed past roughly a hundred jobs a month, and the ability to export the logic when you outgrow it</dd></div>
+        <div class="r"><dt>Watch for</dt><dd>Tool subscriptions of $150–300 a month, and a rebuild later if this becomes the real system</dd></div>
+      </dl>
+    </div>
+
+    <div class="opt">
+      <div class="opt__top"><h3>Stay off the shelf longer</h3><span class="opt__p">$0</span></div>
+      <p>
+        Jobber for dispatch, OpenPhone for texting, a spreadsheet for the bench. What you are
+        launching on anyway.
+      </p>
+      <dl>
+        <div class="r"><dt>You get</dt><dd>Zero build cost and zero risk while you find out whether members renew</dd></div>
+        <div class="r"><dt>You give up</dt><dd>Nothing, until roughly 40–60 jobs a month, when the seams start to show</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><span class="head__n">05</span><h2>What I would actually do</h2></div>
+    <ol class="ladder">
+      <li><b>Launch on off-the-shelf tools and stay there</b> until tracking jobs by hand genuinely costs you hours. Probably six months. Possibly a year.</li>
+      <li><b>Then buy the offer engine alone, at $12k–19k</b>, because dispatch is where the hours go. Fund it out of membership revenue, not out of savings.</li>
+      <li><b>Then build the rest of the console only if it still hurts.</b> By then you will know which three screens you actually wanted, and the $35k–50k version may turn out to be a $20k version.</li>
+      <li><b>The member portal comes last</b>, at $12k–20k, and only once members are asking to see their own history — which they will not do in year one.</li>
+    </ol>
+    <div class="call">
+      <h3>The number that matters more than any of these.</h3>
+      <p>
+        At <b>350 members</b> this business does roughly <b>$116,000</b> a year. Spending $40,000
+        of it on software before you have the members is not a technology decision, it is a
+        solvency decision. Every option on this page exists so you do not have to make it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>These are estimates, not a quote.</strong> Day counts are my own from having built the working prototypes you have seen. Hourly rates are market ranges and move with who you talk to, when, and how well-specified the work is when you hand it over.</p>
+    <p><strong>Fixed-price quotes on work like this run 30–40% over</strong> unless the scope is unusually tight. If someone quotes the full console at $8,000, the question to ask is which of the sixty days above they have decided not to do.</p>
+    <p style="margin-top:18px">Le’Olvera Consulting · <a href="mailto:alex@leolveraconsulting.com">alex@leolveraconsulting.com</a></p>
+  </div>
+</footer>

@@ -76,6 +76,12 @@ product's shape, check those disclaimers still describe it.
 `$39/month` · `$399/year` · `$299 founding (first 50)` · `10% network fee` ·
 `12.5–15%` as the later test rate on new vendors.
 
+Build estimates live in `costs/` and are quoted by the proposal: the console
+is **60 working days**, $35k–50k at senior-contractor rates ($24k–34k
+offshore, $60k–84k US agency); the offer engine alone is $12k–19k; the member
+portal $12k–20k. If a figure changes, change it in `costs/` first — its table
+must still sum to the total it prints, and the proposal must match.
+
 These appear across all four surfaces. Before publishing any change that
 touches a figure, re-derive the arithmetic rather than eyeballing it — the
 prototypes assert totals that must actually add up (147 × $39 = $5,733;
