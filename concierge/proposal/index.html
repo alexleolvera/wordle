@@ -212,7 +212,7 @@ section:last-of-type{border-bottom:0}
         <span class="proto__ic">🛎️</span>
         <span>
           <span class="proto__t">The member experience</span>
-          <span class="proto__d">What the homeowner sees: one text box, a job timeline showing where the membership earns its keep, and the home file that tracks the age of their roof and HVAC. Switch roles at the top to see all three sides.</span>
+          <span class="proto__d">What the homeowner sees: one text box, a job timeline showing where the membership earns its keep, and the home file that tracks the age of their roof and HVAC. Switch roles at the top to see the same job from the contractor's side and ours.</span>
           <span class="proto__go">Open the demo →</span>
         </span>
       </a>
@@ -232,22 +232,43 @@ section:last-of-type{border-bottom:0}
   <div class="wrap">
     <div class="head"><span class="head__n">03</span><h2>What I am telling you not to buy</h2></div>
     <div class="counsel">
-      <h3>Do not build the mobile app yet.</h3>
+      <h3>You almost certainly never need a mobile app.</h3>
       <p>
-        A polished iPhone and Android app for this runs <strong>$25,000–$45,000</strong> and takes
-        three to four months. I could quote you that today. You should not pay it today.
+        Building this for the iPhone and Android app stores runs <strong>$80,000–$130,000</strong>
+        across the three pieces it would take, plus App Store review, a subscription-billing
+        fight with Apple, and two release cycles every time you change a word. I could quote
+        you that. You should not buy it.
       </p>
       <p>
-        Your first hundred members do not need an app. They need a phone number that a person
-        answers and a plumber who shows up Thursday. If we spend four months building software
-        for a business with zero members, we find out whether anyone wanted this in month five
-        instead of month one — and we spend $40,000 to learn it.
+        <strong>Your contractors will not open an app.</strong> A plumber is in a truck, hands
+        dirty, three jobs behind. He will answer a text at a red light in forty seconds — trade,
+        address, distance, likely ticket, reply Y or N — and he will never once install
+        something to do it. That is not a compromise. It is the better product.
       </p>
       <p>
-        The app becomes worth building somewhere around <strong>250 members</strong>, when push
-        notifications and the home file are worth more than the build cost. By then you will
-        know exactly what it needs to do, because you will have run the business by hand and
-        watched where the time goes. That is a far better spec than anything I could write now.
+        <strong>And your members will not hunt for an icon.</strong> Water is coming out from
+        under the water heater. The app they already have open is Messages. "Text us" has no
+        install step and no learning curve, and it is the entire promise you are selling.
+      </p>
+      <p>
+        Everything else lives in a browser. No app store, no review queue, no second codebase,
+        and one deploy that everybody sees immediately.
+      </p>
+    </div>
+
+    <div class="counsel" style="margin-top:16px">
+      <h3>And do not build the web software yet either.</h3>
+      <p>
+        Your first hundred members need a phone number that a person answers and a plumber who
+        shows up Thursday. If we spend four months building a dispatch console for a business
+        with zero members, we learn whether anyone wanted this in month five instead of month
+        one — and pay $30,000 for the privilege.
+      </p>
+      <p>
+        The console earns its place around <strong>150 members</strong>, when tracking jobs by
+        hand starts costing you real hours. By then you will know exactly what it needs to do,
+        because you will have run the business yourself and watched where the time goes. That is
+        a far better specification than anything I could write today.
       </p>
     </div>
     <div class="body-copy">
@@ -270,7 +291,7 @@ section:last-of-type{border-bottom:0}
         <p>Everything required to take the first membership payment, with no custom software.</p>
         <ul>
           <li>Website live and taking payments through Stripe</li>
-          <li>One Baton Rouge number that rings on your phone and takes texts</li>
+          <li>One Baton Rouge number that rings on your phone and takes texts — this is the product, not a placeholder for one</li>
           <li>15 vetted contractors signed, at least two in every major trade</li>
           <li>Vendor agreements, insurance and W-9 collection, compliance tracking</li>
           <li>Founding-member offer to the first 50 at $299 for the year</li>
@@ -294,11 +315,11 @@ section:last-of-type{border-bottom:0}
       <span class="phase__w">Month 6+</span>
       <div>
         <h3>Then, and only then, build software</h3>
-        <p>With real usage data in hand, build the dispatch console first — it is where your hours go.</p>
+        <p>With real usage data in hand, and all of it in a browser — nothing to install, on either side.</p>
         <ul>
-          <li>Operator console, so you are not the person answering texts at 8:30 Tuesday</li>
-          <li>Contractor app for job offers and close-out</li>
-          <li>Member app last, once notifications are worth the build</li>
+          <li>Dispatch console, so you are not the person answering texts at 8:30 Tuesday</li>
+          <li>Automated contractor offers by text, with expiry that re-routes to the next vendor</li>
+          <li>Member portal last — home file and job history, once it is worth logging in to see</li>
         </ul>
       </div>
     </div>
@@ -334,10 +355,10 @@ section:last-of-type{border-bottom:0}
       </div>
       <div class="opt">
         <div class="opt__top">
-          <h3>Software build</h3>
-          <span class="opt__p">$25k–45k <small>deferred</small></span>
+          <h3>Dispatch console</h3>
+          <span class="opt__p">$25k–40k <small>deferred</small></span>
         </div>
-        <p class="opt__d">Revisited at roughly 150 members, scoped against what the business has actually learned by then. Not part of this engagement and not something I would take your money for today.</p>
+        <p class="opt__d">Revisited at roughly 150 members, scoped against what the business has actually learned by then. A member portal follows later at $10k–18k. Both are web, both are deferred, and neither is something I would take your money for today.</p>
       </div>
     </div>
     <p class="note">
@@ -360,6 +381,13 @@ section:last-of-type{border-bottom:0}
         <li>We recruit contractors in weeks two and three, and you personally meet every one</li>
         <li>First founding members sign in week four</li>
       </ol>
+      <p style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.22)">
+        Everything I need from you is already written down — accounts to open, decisions to make,
+        and the paperwork that genuinely gates launch.
+        <a href="https://claude.ai/code/artifact/d2566ef2-2c60-4a89-aba4-2ceb44a7983a" target="_blank" rel="noopener"
+           style="color:inherit;font-weight:600;text-decoration-thickness:1px;text-underline-offset:3px">Open the kickoff checklist →</a>
+        It is shared, so we both see the same list as things get ticked off.
+      </p>
     </div>
   </div>
 </section>
